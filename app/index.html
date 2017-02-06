@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html ng-app="dost-pstc-x">
+<head>
+  <title>SETUP</title>
+  <link rel="icon" sizes="192x192" href="//www.gstatic.com/mobilesdk/160503_mobilesdk/logo/2x/firebase_96dp.png">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
+  <link rel="stylesheet" href="bower_components/angular-material/angular-material.css" />
+  <link rel="stylesheet" href="css/app.css" />
+  <link href="bower_components/angular-material-data-table/dist/md-data-table.min.css" rel="stylesheet" type="text/css"/>
+
+  <script src="bower_components/angular/angular.js"></script>
+  <script src="bower_components/angular-route/angular-route.js"></script>
+  <script src="bower_components/angular-aria/angular-aria.js"></script>
+  <script src="bower_components/angular-animate/angular-animate.js"></script>
+  <script src="bower_components/angular-material/angular-material.js"></script>
+  <script src="bower_components/angular-messages/angular-messages.js"></script>
+  <script src="bower_components/jquery/dist/jquery.js"></script>
+  <script src="bower_components/moment/min/moment.min.js"></script>
+  <script src="bower_components/moment/min/moment-with-locales.js"></script>
+  <script type="text/javascript" src="bower_components/angular-material-data-table/dist/md-data-table.min.js"></script>
+
+  <script src="js/app.module.js"></script>
+  <script src="js/app.config.js"></script>
+  <script src="js/app.directive.js"></script>
+
+  <script src="views/mainNav/main-nav.module.js"></script>
+  <script src="views/mainNav/main-nav.component.js"></script>
+  <script src="views/setupProject/setup-project.module.js"></script>
+  <script src="views/setupProject/setup-project.component.js"></script>
+
+  <!-- AngularFire -->
+  <script src="https://cdn.firebase.com/libs/angularfire/2.3.0/angularfire.min.js"></script>
+
+  <script src="https://www.gstatic.com/firebasejs/3.6.8/firebase.js"></script>
+  <script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyDeUcwBSRrN3sACMxEw19gowzIBABKSdpQ",
+    authDomain: "setupproject-c02f3.firebaseapp.com",
+    databaseURL: "https://setupproject-c02f3.firebaseio.com",
+    storageBucket: "setupproject-c02f3.appspot.com",
+    messagingSenderId: "793184684042"
+  };
+  firebase.initializeApp(config);
+  </script>
+</head>
+<body>
+  <main-nav></main-nav>
+</body>
+</html>
