@@ -11,13 +11,13 @@ controller("setupProjectController", function($scope, $firebaseArray, $mdDialog,
 
   $scope.options = {
     rowSelection: true,
-    multiSelect: true,
+    multiSelect: false,
     autoSelect: true,
     decapitate: false,
     largeEditDialog: false,
     boundaryLinks: false,
-    limitSelect: true,
-    pageSelect: true
+    limitSelect: false,
+    pageSelect: false
   };
 
   $scope.query = {
@@ -39,8 +39,10 @@ controller("setupProjectController", function($scope, $firebaseArray, $mdDialog,
     }
   }
   $scope.delete = function(ev, setupProject){
+    var proponent = setupProject.proponent;
+
     var confirm = $mdDialog.confirm()
-    .title('Would you like to delete '+ setupProject.proponent +' SETUP project?')
+    .title('Would you like to delete ' + proponent + ' SETUP project?')
     .ariaLabel('DELETE SETUP project')
     .targetEvent(ev)
     .ok('Delete')

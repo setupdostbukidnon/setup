@@ -24,3 +24,8 @@ md-menu-item > .md-button {
     min-width : 250px;
     width : 250px;
 }
+
+.selected {
+  background-color: #EEEEEE;
+  outline:none !important;
+}

@@ -1,0 +1,79 @@
+<md-card ng-controller="setupProjectController" flex>
+  <div>
+    <md-toolbar class="md-table-toolbar md-default" ng-hide="options.rowSelection && selected.length">
+      <div class="md-toolbar-tools">
+        <span flex></span>
+        <md-button aria-label="Open for menu" class="md-icon-button" ng-click="create($event)">
+          <md-icon class="material-icons">add</md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+
+    <md-toolbar class="md-table-toolbar alternate" ng-show="options.rowSelection && selected.length">
+      <div class="md-toolbar-tools">
+        <!-- <span>{{selected.length}} {{selected.length > 1 ? 'items' : 'item'}} selected</span> -->
+      </div>
+    </md-toolbar>
+
+    <md-table-container>
+      <table md-table md-row-select="options.rowSelection" multiple="{{options.multiSelect}}" ng-model="selected" md-progress="promise">
+        <thead md-head md-order="query.order">
+          <tr md-row>
+            <!-- <th md-column></th> -->
+            <th md-column md-order-by="proponent" class="my-th">Proponent</th>
+            <th md-column md-order-by="projectYear" style="text-align: right;">Project Year</th>
+            <th md-column style="text-align: right;">Date Approved</th>
+            <th md-column style="text-align: right;">Date Released</th>
+            <th md-column style="text-align: right;">Actual Fund Released</th>
+            <th md-column style="text-align: right;">Project Duration (start)</th>
+            <th md-column style="text-align: right;">Project Duration (end)</th>
+            <th md-column style="text-align: right;">Refund Schedule (start)</th>
+            <th md-column style="text-align: right;">Refund Schedule (end)</th>
+            <th md-column style="text-align: right;">Latest Project Extension</th>
+            <th md-column style="text-align: right;">Refund Made>
+              <th md-column style="text-align: right;">Balance</th>
+              <th md-column class="my-th">Status</th>
+            </tr>
+          </thead>
+          <tbody md-body>
+            <!-- <tr md-row md-auto-select ng-repeat="setupProject in setupProjects | orderBy: setupProject.projectYear"  id="rowSetupProject" ng-click="setSelected(setupProject.proponent)" ng-class="{selected : setupProject.proponent === selectedProponent}" ng-mouseover="hoverIn(setupProject)" ng-mouseleave="hoverOut()"> -->
+            <tr md-row md-auto-select ng-repeat="setupProject in setupProjects | orderBy: setupProject.projectYear"  id="rowSetupProject">
+              <!-- <td md-cell style="padding: 0px;">
+              <md-menu>
+              <md-button aria-label="Open for menu" class="md-icon-button" ng-click="$mdMenu.open($event)">
+              <md-icon class="material-icons">more_vert</md-icon>
+            </md-button>
+            <md-menu-content width="2">
+            <md-menu-item>
+            <md-button ng-click="edit($event, setupProject)">
+            <md-icon class="material-icons">mode_edit</md-icon><span>Edit</span>
+          </md-button>
+        </md-menu-item>
+        <md-menu-item>
+        <md-button ng-click="delete($event, setupProject)">
+        <md-icon class="material-icons">delete_forever</md-icon>Delete
+      </md-button>
+    </md-menu-item>
+  </md-menu-content>
+</md-menu>
+</td> -->
+<td md-cell>{{setupProject.proponent}}</td>
+<td md-cell>{{setupProject.projectYear}}</td>
+<td md-cell style="text-align: right;">{{setupProject.dateApproved}}</td>
+<td md-cell style="text-align: right;">{{setupProject.dateReleased}}</td>
+<td md-cell style="text-align: right;">{{setupProject.actualFundRelease}}</td>
+<td md-cell style="text-align: right;">{{setupProject.projectDurationStart}}</td>
+<td md-cell style="text-align: right;">{{setupProject.projectDurationEnd}}</td>
+<td md-cell style="text-align: right;">{{setupProject.refundScheduleStart}}</td>
+<td md-cell style="text-align: right;">{{setupProject.refundScheduleEnd}}</td>
+<td md-cell style="text-align: right;">{{setupProject.latestProjectExtension}}</td>
+<td md-cell style="text-align: right;">{{setupProject.refundMade}}</td>
+<td md-cell style="text-align: right;">{{setupProject.balance}}</td>
+<td md-cell>{{setupProject.status}}</td>
+</tr>
+</tbody>
+</table>
+</md-table-container>
+<!-- <md-table-pagination md-limit="query.limit" md-limit-options="[5, 10, 15]" md-page="query.page" md-total="{{desserts.count}}" md-on-paginate="getDesserts" md-page-select></md-table-pagination> -->
+</div>
+</md-card>

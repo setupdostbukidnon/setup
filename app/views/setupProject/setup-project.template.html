@@ -1,6 +1,6 @@
 <md-card ng-controller="setupProjectController" flex>
   <div>
-    <md-toolbar class="md-table-toolbar md-default" ng-show="!options.rowSelection || !selected.length">
+    <md-toolbar class="md-table-toolbar md-default" >
       <div class="md-toolbar-tools">
         <span flex></span>
         <md-button aria-label="Open for menu" class="md-icon-button" ng-click="create($event)">
@@ -8,13 +8,22 @@
         </md-button>
       </div>
     </md-toolbar>
+
+    <!-- <md-toolbar class="md-table-toolbar alternate" ng-show="options.rowSelection && selected.length">
+      <div class="md-toolbar-tools">
+        <md-button aria-label="Open for menu" class="md-icon-button" ng-click="customDelete($event)">
+          <md-icon class="material-icons">delete</md-icon>
+        </md-button>
+      </div>
+    </md-toolbar> -->
+
     <md-table-container>
-      <table md-table>
+      <table md-table md-row-select="options.rowSelection" ng-model="selected">
         <thead md-head>
           <tr md-row>
             <th md-column></th>
-            <th md-column class="my-th">Proponent</th>
-            <th md-column style="text-align: right;">Year Project</th>
+            <th md-column md-order-by="proponent" class="my-th">Proponent</th>
+            <th md-column style="text-align: right;">Project Year</th>
             <th md-column style="text-align: right;">Date Approved</th>
             <th md-column style="text-align: right;">Date Released</th>
             <th md-column style="text-align: right;">Actual Fund Released</th>
@@ -23,13 +32,13 @@
             <th md-column style="text-align: right;">Refund Schedule (start)</th>
             <th md-column style="text-align: right;">Refund Schedule (end)</th>
             <th md-column style="text-align: right;">Latest Project Extension</th>
-            <th md-column style="text-align: right;">Refund Made>
+            <th md-column style="text-align: right;">Refund Made></th>
             <th md-column style="text-align: right;">Balance</th>
             <th md-column class="my-th">Status</th>
           </tr>
         </thead>
         <tbody md-body>
-          <tr md-row md-auto-select ng-repeat="setupProject in setupProjects" id="rowSetupProject" ng-mouseover="hoverIn(setupProject)" ng-mouseleave="hoverOut()">
+          <tr md-row md-select="setupProject" md-select-id="proponent" md-auto-select="options.autoSelect" ng-repeat="setupProject in setupProjects">
             <td md-cell style="padding: 0px;">
               <md-menu>
                 <md-button aria-label="Open for menu" class="md-icon-button" ng-click="$mdMenu.open($event)">
