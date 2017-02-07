@@ -1,27 +1,42 @@
 <md-card ng-controller="setupProjectController" flex>
   <div>
-    <md-toolbar class="md-table-toolbar md-default" >
+    <md-toolbar class="md-table-toolbar md-default" ng-hide="options.rowSelection && selected.length">
       <div class="md-toolbar-tools">
+        <div layout="row">
+          <md-input-container md-no-float class="md-block" style="margin-top: 60px;">
+            <md-icon class="material-icons">filter_list</md-icon>
+            <input ng-model="setupProjectProponent" type="text" placeholder="Filter list...">
+          </md-input-container>
+        </div>
         <span flex></span>
         <md-button aria-label="Open for menu" class="md-icon-button" ng-click="create($event)">
+          <md-tooltip md-direction="{{demo.tipDirection}}">Add Proponent</md-tooltip>
           <md-icon class="material-icons">add</md-icon>
         </md-button>
       </div>
     </md-toolbar>
 
-    <!-- <md-toolbar class="md-table-toolbar alternate" ng-show="options.rowSelection && selected.length">
+    <md-toolbar class="md-table-toolbar alternate" ng-show="options.rowSelection && selected.length">
       <div class="md-toolbar-tools">
-        <md-button aria-label="Open for menu" class="md-icon-button" ng-click="customDelete($event)">
-          <md-icon class="material-icons">delete</md-icon>
+        <md-button aria-label="Open for menu" class="md-icon-button" ng-click="edit($event)">
+          <md-tooltip md-direction="{{demo.tipDirection}}">Edit Proponent</md-tooltip>
+          <md-icon class="material-icons">mode_edit</md-icon>
+        </md-button>
+        <md-button aria-label="Open for menu" class="md-icon-button" ng-click="delete($event)">
+          <md-tooltip md-direction="{{demo.tipDirection}}">Delete Proponent</md-tooltip>
+          <md-icon class="material-icons">delete_forever</md-icon>
+        </md-button>
+        <span flex></span>
+        <md-button aria-label="Open for menu" class="md-icon-button" ng-click="selected = []">
+          <md-icon class="material-icons">close</md-icon>
         </md-button>
       </div>
-    </md-toolbar> -->
+    </md-toolbar>
 
     <md-table-container>
       <table md-table md-row-select="options.rowSelection" ng-model="selected">
         <thead md-head>
           <tr md-row>
-            <th md-column></th>
             <th md-column md-order-by="proponent" class="my-th">Proponent</th>
             <th md-column style="text-align: right;">Project Year</th>
             <th md-column style="text-align: right;">Date Approved</th>
@@ -32,37 +47,21 @@
             <th md-column style="text-align: right;">Refund Schedule (start)</th>
             <th md-column style="text-align: right;">Refund Schedule (end)</th>
             <th md-column style="text-align: right;">Latest Project Extension</th>
-            <th md-column style="text-align: right;">Refund Made></th>
+            <th md-column style="text-align: right;">Refund Made</th>
             <th md-column style="text-align: right;">Balance</th>
             <th md-column class="my-th">Status</th>
           </tr>
         </thead>
         <tbody md-body>
-          <tr md-row md-select="setupProject" md-select-id="proponent" md-auto-select="options.autoSelect" ng-repeat="setupProject in setupProjects">
-            <td md-cell style="padding: 0px;">
-              <md-menu>
-                <md-button aria-label="Open for menu" class="md-icon-button" ng-click="$mdMenu.open($event)">
-                  <md-icon class="material-icons">more_vert</md-icon>
-                </md-button>
-                <md-menu-content width="2">
-                  <md-menu-item>
-                    <md-button ng-click="edit($event, setupProject)">
-                      <md-icon class="material-icons">mode_edit</md-icon><span>Edit</span>
-                    </md-button>
-                  </md-menu-item>
-                  <md-menu-item>
-                    <md-button ng-click="delete($event, setupProject)">
-                      <md-icon class="material-icons">delete_forever</md-icon>Delete
-                    </md-button>
-                  </md-menu-item>
-                </md-menu-content>
-              </md-menu>
-            </td>
+          <tr md-row md-select="setupProject" md-select-id="proponent" md-auto-select="options.autoSelect"
+              ng-dblclick="dbClick(setupProject)" ng-click="selectRow(setupProject)"
+              ng-repeat="setupProject in setupProjects | orderBy: !query.projectYear |
+              filter: setupProjectProponent">
             <td md-cell>{{setupProject.proponent}}</td>
             <td md-cell>{{setupProject.projectYear}}</td>
             <td md-cell style="text-align: right;">{{setupProject.dateApproved}}</td>
             <td md-cell style="text-align: right;">{{setupProject.dateReleased}}</td>
-            <td md-cell style="text-align: right;">{{setupProject.actualFundRelease}}</td>
+            <td md-cell style="text-align: right;">{{formatThousand(setupProject.actualFundRelease)}}</td>
             <td md-cell style="text-align: right;">{{setupProject.projectDurationStart}}</td>
             <td md-cell style="text-align: right;">{{setupProject.projectDurationEnd}}</td>
             <td md-cell style="text-align: right;">{{setupProject.refundScheduleStart}}</td>
@@ -75,6 +74,6 @@
         </tbody>
       </table>
     </md-table-container>
-    <!-- <md-table-pagination md-limit="query.limit" md-limit-options="[5, 10, 15]" md-page="query.page" md-total="{{desserts.count}}" md-on-paginate="getDesserts" md-page-select></md-table-pagination> -->
+    <md-table-pagination md-limit="query.limit" md-page="query.page" md-page-select></md-table-pagination>
   </div>
 </md-card>

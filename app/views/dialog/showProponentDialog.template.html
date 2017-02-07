@@ -1,4 +1,4 @@
-<md-dialog class="fullscreen-dialog" aria-label="Add Proponent Dialog">
+<md-dialog class="fullscreen-dialog" aria-label="Show Proponent Dialog">
   <md-toolbar>
     <div class="md-toolbar-tools">
       <md-button aria-label="Open for menu" class="md-icon-button" ng-click="closeDialog()">
@@ -17,28 +17,28 @@
           <div layout="row">
             <md-input-container class="md-block leftCard" flex style="margin-bottom: 0px;">
               <label>Proponent</label>
-              <input ng-model="proponent" required />
+              <input ng-model="proponent" ng-readonly="proponent" required />
             </md-input-container>
             <md-input-container class="md-block leftCard" flex="20" style="margin-bottom: 0px;">
               <label>Year</label>
-              <input ng-model="projectYear" min="2000" max="2100" step="1" type="number" required />
+              <input ng-model="projectYear" ng-readonly="projectYear" required />
             </md-input-container>
           </div>
           <div layout="row">
             <md-input-container class="leftCard" style="margin-bottom: 0px;">
               <label>Date Approved</label>
-              <md-datepicker ng-model="dateApproved" md-current-view="year" md-open-on-focus></md-datepicker>
+              <md-datepicker ng-model="dateApproved" ng-readonly="dateApproved" md-current-view="year" md-open-on-focus></md-datepicker>
             </md-input-container>
             <span flex="10"></span>
             <md-input-container class="leftCard" style="margin-bottom: 0px;">
               <label>Date Released</label>
-              <md-datepicker ng-model="dateReleased" md-current-view="year" md-open-on-focus></md-datepicker>
+              <md-datepicker ng-model="dateReleased" ng-readonly="dateReleased" md-current-view="year" md-open-on-focus></md-datepicker>
             </md-input-container>
           </div>
           <div layout="row">
             <md-input-container class="md-block leftCard" flex style="margin-bottom: 0px;">
               <label>Actual Fund Release</label>
-              <input currency-mask ng-model="actualFundRelease"/>
+              <input currency-mask ng-model="actualFundRelease" required/>
             </md-input-container>
           </div>
           <div layout="column">
