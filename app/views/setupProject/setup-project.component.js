@@ -10,9 +10,12 @@ controller("setupProjectController", function($scope, $firebaseArray, $mdDialog,
 
   $scope.setupProjects.$loaded().then(function (setupProjects){
     console.log(setupProjects.length);
+    $scope.setupProjectsLength = setupProjects.length;
   });
 
   $scope.selected = [];
+
+  $scope.limitOptions = [5, 10, 15];
 
   $scope.options = {
     rowSelection: true,
@@ -22,15 +25,20 @@ controller("setupProjectController", function($scope, $firebaseArray, $mdDialog,
     largeEditDialog: false,
     boundaryLinks: false,
     limitSelect: false,
-    pageSelect: false
+    pageSelect: true
   };
 
   $scope.query = {
+    filter: '',
+    limit: '7',
     order: 'proponent',
-    projectYear: 'projectYear',
-    limit: 8,
     page: 1
   };
+
+  $scope.logPagination = function (page, limit) {
+    console.log('page: ', page);
+    console.log('limit: ', limit);
+  }
 
   $scope.demo = {
     showTooltip: false,
@@ -58,6 +66,7 @@ controller("setupProjectController", function($scope, $firebaseArray, $mdDialog,
     .targetEvent(ev)
     .ok('Delete')
     .cancel('Cancel');
+
     $mdDialog.show(confirm).then(function() {
       $scope.setupProjects.$remove(THIS.SETUPPROJECT);
     }, function() {
@@ -110,52 +119,6 @@ controller("setupProjectController", function($scope, $firebaseArray, $mdDialog,
     }
   }
 
-  // $scope.delete = function(ev, setupProject){
-  //
-  //   var confirm = $mdDialog.confirm()
-  //   .title('Would you like to delete ' + setupProject.proponent + ' SETUP project?')
-  //   .ariaLabel('DELETE SETUP project')
-  //   .targetEvent(ev)
-  //   .ok('Delete')
-  //   .cancel('Cancel');
-  //   $mdDialog.show(confirm).then(function() {
-  //     $scope.setupProjects.$remove(setupProject);
-  //   }, function() {
-  //     $mdDialog.hide();
-  //   });
-  // }
-  //
-  // $scope.edit = function(ev, setupProject){
-  //   var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'))  && $scope.customFullscreen;
-  //   $mdDialog.show({
-  //     controller: editProponentController,
-  //     templateUrl: 'views/dialog/proponentDialog.template.html',
-  //     parent: angular.element(document.body),
-  //     targetEvent: ev,
-  //     locals: {
-  //       setupProject: {
-  //         id: setupProject.$id,
-  //         projectYear: setupProject.projectYear,
-  //         proponent: setupProject.proponent,
-  //         dateReleased: setupProject.dateReleased,
-  //         dateApproved: setupProject.dateApproved,
-  //         actualFundRelease: setupProject.actualFundRelease,
-  //         projectDurationStart: setupProject.projectDurationStart,
-  //         projectDurationEnd: setupProject.projectDurationEnd,
-  //         refundScheduleStart: setupProject.refundScheduleStart,
-  //         refundScheduleEnd: setupProject.refundScheduleEnd,
-  //         latestProjectExtension: setupProject.latestProjectExtension,
-  //         refundMade: setupProject.refundMade,
-  //         balance: setupProject.balance,
-  //         status: setupProject.status
-  //       }
-  //     }
-  //   });
-  //
-  //   $scope.closeDialog = function() {
-  //     $mdDialog.hide();
-  //   }
-  // }
 });
 
 function addProponentDialogController($scope, $firebaseArray, $mdDialog, $mdToast, $timeout) {

@@ -3,9 +3,9 @@
     <md-toolbar class="md-table-toolbar md-default" ng-hide="options.rowSelection && selected.length">
       <div class="md-toolbar-tools">
         <div layout="row">
-          <md-input-container md-no-float class="md-block" style="margin-top: 60px;">
+          <md-input-container md-no-float class="md-block" style="margin-top: 60px;" ng-hide="query.page > 1">
             <md-icon class="material-icons">filter_list</md-icon>
-            <input ng-model="setupProjectProponent" type="text" placeholder="Filter list...">
+            <input ng-model="setupProjectProponent" ng-change="setupProjectProponent" type="text" placeholder="Filter list...">
           </md-input-container>
         </div>
         <span flex></span>
@@ -55,8 +55,8 @@
         <tbody md-body>
           <tr md-row md-select="setupProject" md-select-id="proponent" md-auto-select="options.autoSelect"
               ng-dblclick="dbClick(setupProject)" ng-click="selectRow(setupProject)"
-              ng-repeat="setupProject in setupProjects | orderBy: !query.projectYear |
-              filter: setupProjectProponent">
+              ng-repeat="setupProject in setupProjects | orderBy: 'projectYear' |
+              filter: setupProjectProponent | limitTo: query.limit : (query.page -1) * query.limit">
             <td md-cell>{{setupProject.proponent}}</td>
             <td md-cell>{{setupProject.projectYear}}</td>
             <td md-cell style="text-align: right;">{{setupProject.dateApproved}}</td>
@@ -74,6 +74,6 @@
         </tbody>
       </table>
     </md-table-container>
-    <md-table-pagination md-limit="query.limit" md-page="query.page" md-page-select></md-table-pagination>
+    <md-table-pagination md-limit="query.limit" md-page="query.page" md-total="{{setupProjectsLength}}" md-boundary-links="options.boundaryLinks" md-page-select="options.pageSelect"md-on-paginate="logPagination" ></md-table-pagination>
   </div>
 </md-card>
