@@ -23,7 +23,7 @@
           </md-input-container>
         </div>
         <span flex></span>
-        <md-table-pagination md-limit="query.limit" md-page="query.page" md-total="{{setupProjectsLength}}" md-boundary-links="options.boundaryLinks" md-page-select="options.pageSelect"md-on-paginate="logPagination" ></md-table-pagination>
+        <md-table-pagination md-limit="query.limit" md-page="query.page" md-total="{{filteredItems.length}}" md-boundary-links="options.boundaryLinks" md-page-select="options.pageSelect" md-on-paginate="logPagination" ></md-table-pagination>
       </div>
     </md-toolbar>
     <md-toolbar class="md-table-toolbar alternate" ng-show="options.rowSelection && selected.length" ng-hide="!hideOption">
@@ -46,7 +46,7 @@
       <table md-table md-row-select="options.rowSelection" ng-model="selected">
         <thead md-head>
           <tr md-row>
-            <th md-column md-order-by="proponent" class="my-th">Proponent</th>
+            <th md-column class="my-th">Proponent</th>
             <th md-column style="text-align: right;">Project Year</th>
             <th md-column style="text-align: right;">Date Approved</th>
             <th md-column style="text-align: right;">Date Released</th>
@@ -62,7 +62,7 @@
           </tr>
         </thead>
         <tbody md-body>
-            <tr md-row md-select="setupProject" md-select-id="proponent" md-auto-select="options.autoSelect" ng-click="selectRow(setupProject)" ng-repeat="setupProject in setupProjects | filter: {projectYear: (filterProjectYear == 'All' ? '' : filterProjectYear)} | filter: filterProponent | limitTo: query.limit: (query.page -1) * query.limit">
+            <tr md-row md-select="setupProject" md-select-id="proponent" md-auto-select="options.autoSelect" ng-click="selectRow(setupProject)" ng-repeat="setupProject in (filteredItems = (setupProjects | filter: filterProponent | filter: {projectYear: (filterProjectYear == 'All' ? '' : filterProjectYear)})) | limitTo: query.limit: (query.page -1) * query.limit | orderBy: proponent">
             <td md-cell>{{setupProject.proponent}}</td>
             <td md-cell>{{setupProject.projectYear}}</td>
             <td md-cell style="text-align: right;">{{setupProject.dateApproved}}</td>

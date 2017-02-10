@@ -41,3 +41,11 @@ md-table-pagination {
 .dialogTitle {
   font-size: 16px;
 }
+
+md-tooltip {
+  font-size: 20px;
+}
+
+.md-datepicker-input-container {
+  width: 200px;
+}
