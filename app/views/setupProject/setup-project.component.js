@@ -13,6 +13,11 @@ controller("setupProjectController", function($scope, $firebaseArray, $mdDialog,
     $scope.setupProjectsLength = setupProjects.length;
   });
 
+  $scope.setupProjects.$watch(function(e){
+    console.log($scope.setupProjects.length);
+    $scope.setupProjectsLength = $scope.setupProjects.length;
+  });
+
   $scope.selected = [];
 
   $scope.limitOptions = [5, 10, 15];
@@ -30,7 +35,7 @@ controller("setupProjectController", function($scope, $firebaseArray, $mdDialog,
 
   $scope.query = {
     filter: '',
-    limit: '7',
+    limit: '10',
     order: 'proponent',
     page: 1
   };
@@ -57,8 +62,17 @@ controller("setupProjectController", function($scope, $firebaseArray, $mdDialog,
     THIS.SETUPPROJECT = param;
   }
 
+  $scope.projectYear = '';
+  $scope.years = ['2010', '2011', '2012', '2013',
+                  '2014', '2015', '2016', '2017',
+                  '2018', '2019', '2020', '2021',
+                  '2022', '2023', '2024', '2025',
+                  '2026', '2027', '2028', '2029',
+                  '2030', '2031', '2032', '2033'];
+
   $scope.delete = function(ev){
     console.log(THIS.SETUPPROJECT.proponent);
+
 
     var confirm = $mdDialog.confirm()
     .title('Would you like to delete ' + THIS.SETUPPROJECT.proponent + ' SETUP project?')
@@ -69,6 +83,8 @@ controller("setupProjectController", function($scope, $firebaseArray, $mdDialog,
 
     $mdDialog.show(confirm).then(function() {
       $scope.setupProjects.$remove(THIS.SETUPPROJECT);
+      $scope.selected = [];
+      $scope.hideOption = false;
     }, function() {
       $mdDialog.hide();
     });

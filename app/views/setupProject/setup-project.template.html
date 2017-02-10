@@ -1,22 +1,32 @@
-<md-card ng-controller="setupProjectController" flex>
+<md-card ng-controller="setupProjectController" flex style="margin: 0px;">
   <div>
     <md-toolbar class="md-table-toolbar md-default" ng-hide="options.rowSelection && selected.length">
       <div class="md-toolbar-tools">
-        <div layout="row">
-          <md-input-container md-no-float class="md-block" style="margin-top: 60px;" ng-hide="query.page > 1">
-            <md-icon class="material-icons">filter_list</md-icon>
-            <input ng-model="setupProjectProponent" ng-change="setupProjectProponent" type="text" placeholder="Filter list...">
+        <div layout="row"  style="margin-top: 40px;" flex>
+          <md-button aria-label="Open for menu" class="md-icon-button" ng-click="create($event)">
+            <md-tooltip md-direction="{{demo.tipDirection}}">Add Proponent</md-tooltip>
+            <md-icon class="material-icons">add</md-icon>
+          </md-button>
+          <span flex></span>
+          <md-input-container md-no-float class="md-block">
+            <md-select ng-model="filterProjectYear" placeholder="Year" class="toolbarFontsize">
+              <md-option>All</md-option>
+              <md-option ng-repeat="year in years" ng-value="year">
+                {{year}}
+              </md-option>
+            </md-select>
+          </md-input-container>
+          <span flex></span>
+          <md-input-container md-no-float class="md-block">
+            <md-icon class="material-icons">search</md-icon>
+            <input ng-model="filterProponent" ng-change="setupProjectProponent" class="toolbarFontsize" type="text" placeholder="Search Proponent...">
           </md-input-container>
         </div>
         <span flex></span>
-        <md-button aria-label="Open for menu" class="md-icon-button" ng-click="create($event)">
-          <md-tooltip md-direction="{{demo.tipDirection}}">Add Proponent</md-tooltip>
-          <md-icon class="material-icons">add</md-icon>
-        </md-button>
+        <md-table-pagination md-limit="query.limit" md-page="query.page" md-total="{{setupProjectsLength}}" md-boundary-links="options.boundaryLinks" md-page-select="options.pageSelect"md-on-paginate="logPagination" ></md-table-pagination>
       </div>
     </md-toolbar>
-
-    <md-toolbar class="md-table-toolbar alternate" ng-show="options.rowSelection && selected.length">
+    <md-toolbar class="md-table-toolbar alternate" ng-show="options.rowSelection && selected.length" ng-hide="!hideOption">
       <div class="md-toolbar-tools">
         <md-button aria-label="Open for menu" class="md-icon-button" ng-click="edit($event)">
           <md-tooltip md-direction="{{demo.tipDirection}}">Edit Proponent</md-tooltip>
@@ -27,13 +37,12 @@
           <md-icon class="material-icons">delete_forever</md-icon>
         </md-button>
         <span flex></span>
-        <md-button aria-label="Open for menu" class="md-icon-button" ng-click="selected = []">
+        <md-button class="md-icon-button" ng-click="selected = []">
           <md-icon class="material-icons">close</md-icon>
         </md-button>
       </div>
     </md-toolbar>
-
-    <md-table-container>
+    <md-table-container style="height: 90vh;">
       <table md-table md-row-select="options.rowSelection" ng-model="selected">
         <thead md-head>
           <tr md-row>
@@ -53,10 +62,7 @@
           </tr>
         </thead>
         <tbody md-body>
-          <tr md-row md-select="setupProject" md-select-id="proponent" md-auto-select="options.autoSelect"
-              ng-dblclick="dbClick(setupProject)" ng-click="selectRow(setupProject)"
-              ng-repeat="setupProject in setupProjects | orderBy: 'projectYear' |
-              filter: setupProjectProponent | limitTo: query.limit : (query.page -1) * query.limit">
+            <tr md-row md-select="setupProject" md-select-id="proponent" md-auto-select="options.autoSelect" ng-click="selectRow(setupProject)" ng-repeat="setupProject in setupProjects | filter: {projectYear: (filterProjectYear == 'All' ? '' : filterProjectYear)} | filter: filterProponent | limitTo: query.limit: (query.page -1) * query.limit">
             <td md-cell>{{setupProject.proponent}}</td>
             <td md-cell>{{setupProject.projectYear}}</td>
             <td md-cell style="text-align: right;">{{setupProject.dateApproved}}</td>
@@ -74,6 +80,5 @@
         </tbody>
       </table>
     </md-table-container>
-    <md-table-pagination md-limit="query.limit" md-page="query.page" md-total="{{setupProjectsLength}}" md-boundary-links="options.boundaryLinks" md-page-select="options.pageSelect"md-on-paginate="logPagination" ></md-table-pagination>
   </div>
 </md-card>

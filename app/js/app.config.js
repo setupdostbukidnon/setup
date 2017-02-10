@@ -12,13 +12,14 @@ function config($locationProvider, $routeProvider, $mdThemingProvider){
 
   $mdThemingProvider.theme('default')
   .primaryPalette('blue', {
-     'default': '300'
-   })
+    'default': '300'
+  })
   .accentPalette('blue-grey');
 
   $routeProvider.
   when('/setupProject', {
     template: '<setup-project></setup-project>'
-  });
+  }).
+  otherwise('/setupProject');
 }
 ]);
