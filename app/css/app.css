@@ -49,3 +49,8 @@ md-tooltip {
 .md-datepicker-input-container {
   width: 200px;
 }
+
+table[md-table] .md-checkbox-column,
+table[md-table] .md-checkbox-cell {
+  display: none;
+}

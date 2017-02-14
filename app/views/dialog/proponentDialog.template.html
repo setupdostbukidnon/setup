@@ -19,10 +19,16 @@
               <label>Proponent</label>
               <input ng-model="proponent" required />
             </md-input-container>
-            <md-input-container class="md-block leftCard" flex="20" style="margin-bottom: 0px;">
-              <label>Year</label>
-              <input ng-model="projectYear" min="2000" max="2100" step="1" type="number" required />
+
+            <md-input-container md-no-float class="md-block" flex="20" >
+              <md-select ng-model="projectYear" placeholder="Year" class="toolbarFontsize">
+                <md-option>All</md-option>
+                <md-option ng-repeat="year in years" ng-value="year">
+                  {{year}}
+                </md-option>
+              </md-select>
             </md-input-container>
+
           </div>
           <div layout="row">
             <md-input-container class="leftCard" style="margin-bottom: 0px;">
@@ -92,6 +98,13 @@
               <label>Status</label>
               <input ng-model="status" />
             </md-input-container>
+            <!-- <md-input-container md-no-float class="md-block" flex >
+              <md-select ng-model="remindRefund" placeholder="reminder" class="toolbarFontsize">
+                <md-option ng-repeat="remind in remindValues" ng-value="remind">
+                  {{remind}}
+                </md-option>
+              </md-select>
+            </md-input-container> -->
           </div>
         </md-card>
       </div>

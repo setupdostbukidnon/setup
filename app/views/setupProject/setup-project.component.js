@@ -8,10 +8,10 @@ controller("setupProjectController", function($scope, $firebaseArray, $mdDialog,
   var ref = firebase.database().ref().child("setupProject");
   $scope.setupProjects = $firebaseArray(ref);
 
-  $scope.setupProjects.$loaded().then(function (setupProjects){
-    console.log(setupProjects.length);
-    $scope.setupProjectsLength = setupProjects.length;
-  });
+  // $scope.setupProjects.$loaded().then(function (setupProjects){
+  //   console.log(setupProjects.length);
+  //   $scope.setupProjectsLength = setupProjects.length;
+  // });
 
   $scope.setupProjects.$watch(function(e){
     console.log($scope.setupProjects.length);
@@ -45,17 +45,45 @@ controller("setupProjectController", function($scope, $firebaseArray, $mdDialog,
     console.log('limit: ', limit);
   }
 
-  $scope.demo = {
+  $scope.tooltip = {
     showTooltip: false,
     tipDirection: 'bottom'
   };
+
+  $scope.remindRefundIcon = function(param){
+    // console.log(param.remindRefund);
+
+    var nowDate = new Date().getTime();
+    var startDate = (param.refundScheduleStart == "" ? null : new Date(param.refundScheduleStart).getTime());
+    var endDate = (param.refundScheduleEnd == "" ? null : new Date(param.refundScheduleEnd).getTime());
+
+    if (startDate <= nowDate && nowDate <= endDate) {
+      console.log('Its in range');
+      console.log(param.remindRefund);
+
+      if (param.remindRefund){
+        console.log('reminded...');
+        return param.remindRefund;
+      } else {
+        console.log('remind refund...');
+        return param.remindRefund;
+      }
+
+    } else {
+      return true;
+    }
+  }
+
+  $scope.rightClick = function(param){
+    console.log(param.proponent);
+  }
 
   $scope.formatThousand = function(param){
     return param.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 
-  $scope.dbClick = function(setupProject){
-    console.log(setupProject.proponent);
+  $scope.formatDate = function(param){
+    return param == "" ? "" : moment(param).format('MMM DD, YYYY');
   }
 
   $scope.selectRow = function(param){
@@ -63,16 +91,16 @@ controller("setupProjectController", function($scope, $firebaseArray, $mdDialog,
   }
 
   $scope.projectYear = '';
+
   $scope.years = ['2010', '2011', '2012', '2013',
-                  '2014', '2015', '2016', '2017',
-                  '2018', '2019', '2020', '2021',
-                  '2022', '2023', '2024', '2025',
-                  '2026', '2027', '2028', '2029',
-                  '2030', '2031', '2032', '2033'];
+  '2014', '2015', '2016', '2017',
+  '2018', '2019', '2020', '2021',
+  '2022', '2023', '2024', '2025',
+  '2026', '2027', '2028', '2029',
+  '2030', '2031', '2032', '2033'];
 
   $scope.delete = function(ev){
     console.log(THIS.SETUPPROJECT.proponent);
-
 
     var confirm = $mdDialog.confirm()
     .title('Would you like to delete ' + THIS.SETUPPROJECT.proponent + ' SETUP project?')
@@ -111,14 +139,14 @@ controller("setupProjectController", function($scope, $firebaseArray, $mdDialog,
           latestProjectExtension: THIS.SETUPPROJECT.latestProjectExtension,
           refundMade: THIS.SETUPPROJECT.refundMade,
           balance: THIS.SETUPPROJECT.balance,
-          status: THIS.SETUPPROJECT.status
+          status: THIS.SETUPPROJECT.status,
+          remindRefund: THIS.SETUPPROJECT.remindRefund
         }
       }
     });
 
     $scope.closeDialog = function() {
       $mdDialog.hide();
-      THIS.$scope.selected = [];
     }
   }
 
@@ -141,34 +169,63 @@ function addProponentDialogController($scope, $firebaseArray, $mdDialog, $mdToas
   var ref = firebase.database().ref().child("setupProject");
   $scope.setupProject = $firebaseArray(ref);
 
+  $scope.years = ['2010', '2011', '2012', '2013',
+  '2014', '2015', '2016', '2017',
+  '2018', '2019', '2020', '2021',
+  '2022', '2023', '2024', '2025',
+  '2026', '2027', '2028', '2029',
+  '2030', '2031', '2032', '2033'];
+
+  $scope.remindValues = [true, false];
+
   $scope.dialogTitle = "Add Proponent"
 
   $scope.submitProponent = function() {
     $scope.setupProject.$add({
       proponent: ($scope.proponent == null ? "" : $scope.proponent),
       projectYear: ($scope.projectYear == null ? "" : $scope.projectYear),
-      dateApproved: ($scope.dateApproved == null ? "" : moment($scope.dateApproved).format('MMM DD, YYYY')),
-      dateReleased: ($scope.dateReleased == null ? "" : moment($scope.dateReleased).format('MMM DD, YYYY')),
+      dateApproved: ($scope.dateApproved == null ? "" : moment($scope.dateApproved).format('MM DD YYYY')),
+      dateReleased: ($scope.dateReleased == null ? "" : moment($scope.dateReleased).format('MM DD YYYY')),
       actualFundRelease: ($scope.actualFundRelease == null ? "" : $scope.actualFundRelease),
-      projectDurationStart: ($scope.projectDurationStart == null ? "" : moment($scope.projectDurationStart).format('MMM DD, YYYY')),
-      projectDurationEnd: ($scope.projectDurationEnd == null ? "" : moment($scope.projectDurationEnd).format('MMM DD, YYYY')),
-      refundScheduleStart: ($scope.refundScheduleStart == null ? "" : moment($scope.refundScheduleStart).format('MMM DD, YYYY')),
-      refundScheduleEnd: ($scope.refundScheduleEnd == null ? "" : moment($scope.refundScheduleEnd).format('MMM DD, YYYY')),
+      projectDurationStart: ($scope.projectDurationStart == null ? "" : moment($scope.projectDurationStart).format('MM DD YYYY')),
+      projectDurationEnd: ($scope.projectDurationEnd == null ? "" : moment($scope.projectDurationEnd).format('MM DD YYYY')),
+      refundScheduleStart: ($scope.refundScheduleStart == null ? "" : moment($scope.refundScheduleStart).format('MM DD YYYY')),
+      refundScheduleEnd: ($scope.refundScheduleEnd == null ? "" : moment($scope.refundScheduleEnd).format('MM DD YYYY')),
       latestProjectExtension: ($scope.latestProjectExtension == null ? "" : $scope.latestProjectExtension),
       refundMade: ($scope.refundMade == null ? "" : $scope.refundMade),
       balance: ($scope.balance == null ? "" : $scope.balance),
-      status: ($scope.status == null ? "" : $scope.status)
+      status: ($scope.status == null ? "" : $scope.status),
+      remindRefund: 'false'
     });
     $mdDialog.hide();
   }
+
   $scope.closeDialog = function() {
     $mdDialog.hide();
   }
+
 }
 
 function editProponentController($scope, $firebaseArray, $mdDialog, setupProject) {
   var ref = firebase.database().ref().child("setupProject");
   $scope.setupProject = $firebaseArray(ref);
+
+  $scope.years = ['2010', '2011', '2012', '2013',
+  '2014', '2015', '2016', '2017',
+  '2018', '2019', '2020', '2021',
+  '2022', '2023', '2024', '2025',
+  '2026', '2027', '2028', '2029',
+  '2030', '2031', '2032', '2033'];
+
+  $scope.remindValues = [true, false];
+
+
+
+  // console.log(nowDate + ' nowDate');
+  // console.log(startDate + ' startDate');
+  // console.log(endDate + ' endDate');
+
+
 
   $scope.dialogTitle = "Edit Proponent"
 
@@ -185,22 +242,24 @@ function editProponentController($scope, $firebaseArray, $mdDialog, setupProject
   $scope.refundMade = setupProject.refundMade;
   $scope.balance = setupProject.balance;
   $scope.status = setupProject.status;
+  $scope.remindRefund = setupProject.remindRefund;
 
   $scope.submitProponent = function() {
     var record = $scope.setupProject.$getRecord(setupProject.id);
     record.proponent = $scope.proponent;
     record.projectYear = $scope.projectYear;
-    record.dateApproved = ($scope.dateApproved == null ? "" : moment($scope.dateApproved).format('MMM DD, YYYY'));
-    record.dateReleased = ($scope.dateReleased == null ? "" : moment($scope.dateReleased).format('MMM DD, YYYY'));
+    record.dateApproved = ($scope.dateApproved == null ? "" : moment($scope.dateApproved).format('MM DD YYYY'));
+    record.dateReleased = ($scope.dateReleased == null ? "" : moment($scope.dateReleased).format('MM DD YYYY'));
     record.actualFundRelease = $scope.actualFundRelease;
-    record.projectDurationStart = ($scope.projectDurationStart == null ? "" : moment($scope.projectDurationStart).format('MMM DD, YYYY'));
-    record.projectDurationEnd = ($scope.projectDurationEnd == null ? "" : moment($scope.projectDurationEnd).format('MMM DD, YYYY'));
-    record.refundScheduleStart = ($scope.refundScheduleStart == null ? "" : moment($scope.refundScheduleStart).format('MMM DD, YYYY'));
-    record.refundScheduleEnd = ($scope.refundScheduleEnd == null ? "" : moment($scope.refundScheduleEnd).format('MMM DD, YYYY'));
+    record.projectDurationStart = ($scope.projectDurationStart == null ? "" : moment($scope.projectDurationStart).format('MM DD YYYY'));
+    record.projectDurationEnd = ($scope.projectDurationEnd == null ? "" : moment($scope.projectDurationEnd).format('MM DD YYYY'));
+    record.refundScheduleStart = ($scope.refundScheduleStart == null ? "" : moment($scope.refundScheduleStart).format('MM DD YYYY'));
+    record.refundScheduleEnd = ($scope.refundScheduleEnd == null ? "" : moment($scope.refundScheduleEnd).format('MM DD YYYY'));
     record.latestProjectExtension = $scope.latestProjectExtension;
     record.refundMade = $scope.refundMade;
     record.balance = $scope.balance;
     record.status = $scope.status;
+    record.remindRefund = $scope.remindRefund;
 
     $scope.setupProject.$save(record);
     $mdDialog.hide();
@@ -208,5 +267,6 @@ function editProponentController($scope, $firebaseArray, $mdDialog, setupProject
 
   $scope.closeDialog = function() {
     $mdDialog.hide();
+    $scope.selected = [];
   }
 }

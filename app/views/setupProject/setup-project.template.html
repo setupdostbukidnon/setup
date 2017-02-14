@@ -4,7 +4,7 @@
       <div class="md-toolbar-tools">
         <div layout="row"  style="margin-top: 40px;" flex>
           <md-button aria-label="Open for menu" class="md-icon-button" ng-click="create($event)">
-            <md-tooltip md-direction="{{demo.tipDirection}}">Add Proponent</md-tooltip>
+            <md-tooltip md-direction="{{tooltip.tipDirection}}">Add Proponent</md-tooltip>
             <md-icon class="material-icons">add</md-icon>
           </md-button>
           <span flex></span>
@@ -29,11 +29,11 @@
     <md-toolbar class="md-table-toolbar alternate" ng-show="options.rowSelection && selected.length" ng-hide="!hideOption">
       <div class="md-toolbar-tools">
         <md-button aria-label="Open for menu" class="md-icon-button" ng-click="edit($event)">
-          <md-tooltip md-direction="{{demo.tipDirection}}">Edit Proponent</md-tooltip>
+          <md-tooltip md-direction="{{tooltip.tipDirection}}">Edit Proponent</md-tooltip>
           <md-icon class="material-icons">mode_edit</md-icon>
         </md-button>
         <md-button aria-label="Open for menu" class="md-icon-button" ng-click="delete($event)">
-          <md-tooltip md-direction="{{demo.tipDirection}}">Delete Proponent</md-tooltip>
+          <md-tooltip md-direction="{{tooltip.tipDirection}}">Delete Proponent</md-tooltip>
           <md-icon class="material-icons">delete_forever</md-icon>
         </md-button>
         <span flex></span>
@@ -46,7 +46,8 @@
       <table md-table md-row-select="options.rowSelection" ng-model="selected">
         <thead md-head>
           <tr md-row>
-            <th md-column class="my-th">Proponent</th>
+            <th md-column></th>
+            <th md-column md-order="myOrder" class="my-th">Proponent</th>
             <th md-column style="text-align: right;">Project Year</th>
             <th md-column style="text-align: right;">Date Approved</th>
             <th md-column style="text-align: right;">Date Released</th>
@@ -62,19 +63,20 @@
           </tr>
         </thead>
         <tbody md-body>
-            <tr md-row md-select="setupProject" md-select-id="proponent" md-auto-select="options.autoSelect" ng-click="selectRow(setupProject)" ng-repeat="setupProject in (filteredItems = (setupProjects | filter: filterProponent | filter: {projectYear: (filterProjectYear == 'All' ? '' : filterProjectYear)})) | limitTo: query.limit: (query.page -1) * query.limit | orderBy: proponent">
-            <td md-cell>{{setupProject.proponent}}</td>
+          <tr md-row md-select="setupProject" md-select-id="proponent" md-auto-select="options.autoSelect" ng-right-click="rightClick(setupProject)" ng-click="selectRow(setupProject)" ng-repeat="setupProject in (filteredItems = (setupProjects | filter: filterProponent | filter: {projectYear: (filterProjectYear == 'All' ? '' : filterProjectYear)})) | limitTo: query.limit: (query.page -1) * query.limit">
+            <td md-cell><md-icon class="material-icons" ng-show="remindRefundIcon(setupProject) == 'false'" style="color: red;">priority_high</md-icon></td>
+            <td md-cell id="setupProjectNotification">{{setupProject.proponent}}</td>
             <td md-cell>{{setupProject.projectYear}}</td>
-            <td md-cell style="text-align: right;">{{setupProject.dateApproved}}</td>
-            <td md-cell style="text-align: right;">{{setupProject.dateReleased}}</td>
+            <td md-cell style="text-align: right;">{{formatDate(setupProject.dateApproved)}}</td>
+            <td md-cell style="text-align: right;">{{formatDate(setupProject.dateReleased)}}</td>
             <td md-cell style="text-align: right;">{{formatThousand(setupProject.actualFundRelease)}}</td>
-            <td md-cell style="text-align: right;">{{setupProject.projectDurationStart}}</td>
-            <td md-cell style="text-align: right;">{{setupProject.projectDurationEnd}}</td>
-            <td md-cell style="text-align: right;">{{setupProject.refundScheduleStart}}</td>
-            <td md-cell style="text-align: right;">{{setupProject.refundScheduleEnd}}</td>
+            <td md-cell style="text-align: right;">{{formatDate(setupProject.projectDurationStart)}}</td>
+            <td md-cell style="text-align: right;">{{formatDate(setupProject.projectDurationEnd)}}</td>
+            <td md-cell style="text-align: right;">{{formatDate(setupProject.refundScheduleStart)}}</td>
+            <td md-cell style="text-align: right;">{{formatDate(setupProject.refundScheduleEnd)}}</td>
             <td md-cell style="text-align: right;">{{setupProject.latestProjectExtension}}</td>
-            <td md-cell style="text-align: right;">{{setupProject.refundMade}}</td>
-            <td md-cell style="text-align: right;">{{setupProject.balance}}</td>
+            <td md-cell style="text-align: right;">{{formatThousand(setupProject.refundMade)}}</td>
+            <td md-cell style="text-align: right;">{{formatThousand(setupProject.balance)}}</td>
             <td md-cell>{{setupProject.status}}</td>
           </tr>
         </tbody>
