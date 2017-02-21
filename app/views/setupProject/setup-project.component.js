@@ -8,11 +8,6 @@ controller("setupProjectController", function($scope, $firebaseArray, $mdDialog,
   var ref = firebase.database().ref().child("setupProject");
   $scope.setupProjects = $firebaseArray(ref);
 
-  // $scope.setupProjects.$loaded().then(function (setupProjects){
-  //   console.log(setupProjects.length);
-  //   $scope.setupProjectsLength = setupProjects.length;
-  // });
-
   $scope.setupProjects.$watch(function(e){
     console.log($scope.setupProjects.length);
     $scope.setupProjectsLength = $scope.setupProjects.length;
@@ -36,63 +31,62 @@ controller("setupProjectController", function($scope, $firebaseArray, $mdDialog,
   $scope.query = {
     filter: '',
     limit: '10',
-    order: 'proponent',
+    order: '-projectYear',
     page: 1
   };
 
   $scope.logPagination = function (page, limit) {
     console.log('page: ', page);
     console.log('limit: ', limit);
-  }
+  };
 
   $scope.tooltip = {
     showTooltip: false,
     tipDirection: 'bottom'
   };
 
-  $scope.remindRefundIcon = function(param){
-    // console.log(param.remindRefund);
+  $scope.redirectToGmail = function(){
+    var email = "janfrancistagadiad@gmail.com";
+    var subject = "SETUP REFUND SCHEDULE";
+    var body = setupProject.proponent;
+    var url = "https://mail.google.com/mail/u/0/?view=cm&fs=1&to=" + email + "&su=" + subject + "&body=" + body + "&tf=1";
+    $window.open(url, '_blank');
+  };
 
+  $scope.remindRefundIcon = function(param){
     var nowDate = new Date().getTime();
+    var currentDay = new Date().getDate();
     var startDate = (param.refundScheduleStart == "" ? null : new Date(param.refundScheduleStart).getTime());
     var endDate = (param.refundScheduleEnd == "" ? null : new Date(param.refundScheduleEnd).getTime());
 
-    if (startDate <= nowDate && nowDate <= endDate) {
-      console.log('Its in range');
-      console.log(param.remindRefund);
-
-      if (param.remindRefund){
-        console.log('reminded...');
-        return param.remindRefund;
-      } else {
-        console.log('remind refund...');
-        return param.remindRefund;
-      }
-
+    if (startDate <= nowDate && nowDate <= endDate && param.remindRefund == "false" && 10 <= currentDay && currentDay <= 25){
+      var proponent = param.proponent;
+      console.log(param.remindRefund + " " + param.proponent);
+      return param.remindRefund;
     } else {
-      return true;
+      return "true";
     }
-  }
+  };
 
   $scope.rightClick = function(param){
     console.log(param.proponent);
-  }
-
-  $scope.formatThousand = function(param){
-    return param.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  }
-
-  $scope.formatDate = function(param){
-    return param == "" ? "" : moment(param).format('MMM DD, YYYY');
-  }
+  };
 
   $scope.selectRow = function(param){
     THIS.SETUPPROJECT = param;
-  }
+  };
+
+  $scope.formatThousand = function(param){
+    return param.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
+
+  $scope.formatDate = function(param){
+    return param == "" ? "" : moment(param).format('MMM DD YYYY');
+  };
 
   $scope.projectYear = '';
 
-  $scope.years = ['2010', '2011', '2012', '2013',
+  $scope.filterOptions = ['All', '2010', '2011', '2012', '2013',
   '2014', '2015', '2016', '2017',
   '2018', '2019', '2020', '2021',
   '2022', '2023', '2024', '2025',
@@ -116,7 +110,7 @@ controller("setupProjectController", function($scope, $firebaseArray, $mdDialog,
     }, function() {
       $mdDialog.hide();
     });
-  }
+  };
 
   $scope.edit = function(ev){
     $mdDialog.show({
@@ -147,8 +141,8 @@ controller("setupProjectController", function($scope, $firebaseArray, $mdDialog,
 
     $scope.closeDialog = function() {
       $mdDialog.hide();
-    }
-  }
+    };
+  };
 
   $scope.create = function(ev, setupProject){
     $mdDialog.show({
@@ -161,13 +155,13 @@ controller("setupProjectController", function($scope, $firebaseArray, $mdDialog,
     $scope.closeDialog = function() {
       $mdDialog.hide();
     }
-  }
+  };
 
 });
 
 function addProponentDialogController($scope, $firebaseArray, $mdDialog, $mdToast, $timeout) {
   var ref = firebase.database().ref().child("setupProject");
-  $scope.setupProject = $firebaseArray(ref);
+  $scope.setupProjects = $firebaseArray(ref);
 
   $scope.years = ['2010', '2011', '2012', '2013',
   '2014', '2015', '2016', '2017',
@@ -176,12 +170,13 @@ function addProponentDialogController($scope, $firebaseArray, $mdDialog, $mdToas
   '2026', '2027', '2028', '2029',
   '2030', '2031', '2032', '2033'];
 
-  $scope.remindValues = [true, false];
+  // $scope.remindValues = [true, false];
+  $scope.remindValues = ['true', 'false'];
 
-  $scope.dialogTitle = "Add Proponent"
+  $scope.dialogTitle = "Add Proponent";
 
   $scope.submitProponent = function() {
-    $scope.setupProject.$add({
+    $scope.setupProjects.$add({
       proponent: ($scope.proponent == null ? "" : $scope.proponent),
       projectYear: ($scope.projectYear == null ? "" : $scope.projectYear),
       dateApproved: ($scope.dateApproved == null ? "" : moment($scope.dateApproved).format('MM DD YYYY')),
@@ -198,17 +193,70 @@ function addProponentDialogController($scope, $firebaseArray, $mdDialog, $mdToas
       remindRefund: 'false'
     });
     $mdDialog.hide();
-  }
+  };
 
   $scope.closeDialog = function() {
     $mdDialog.hide();
-  }
+  };
 
 }
 
-function editProponentController($scope, $firebaseArray, $mdDialog, setupProject) {
+function editProponentController($scope, $firebaseArray, $mdDialog, $window, setupProject) {
   var ref = firebase.database().ref().child("setupProject");
-  $scope.setupProject = $firebaseArray(ref);
+  $scope.setupProjects = $firebaseArray(ref);
+  var email = "janfrancistagadiad@gmail.com";
+  var subject = "SETUP REFUND SCHEDULE";
+  var body = setupProject.proponent;
+  var url = "https://mail.google.com/mail/u/0/?view=cm&fs=1&to=" + email + "&su=" + subject + "&body=" + body + "&tf=1";
+
+  $scope.redirectToGmail = function(){
+    $window.open(url, '_blank');
+  };
+
+  $scope.remindRefundIcon = function(){
+    var nowDate = new Date().getTime();
+    var currentDay = new Date().getDate();
+    var startDate = (setupProject.refundScheduleStart == "" ? null : new Date(setupProject.refundScheduleStart).getTime());
+    var endDate = (setupProject.refundScheduleEnd == "" ? null : new Date(setupProject.refundScheduleEnd).getTime());
+
+    console.log(startDate + " startDate  " + endDate + " endDate");
+
+    if (startDate <= nowDate && nowDate <= endDate && setupProject.remindRefund == "false" && 10 <= currentDay && currentDay <= 25){
+      console.log(setupProject.remindRefund + " " + setupProject.proponent);
+      return setupProject.remindRefund;
+    } else {
+      return "true";
+    }
+  };
+
+  $scope.changeMe = function () {
+    console.log($scope.checkBoxValue);
+
+
+    if ($scope.checkBoxValue == true) {
+      console.log("'true'");
+    } else if ($scope.checkBoxValue == false) {
+      console.log("'false'");
+    }
+  }
+
+  $scope.sendMe = function () {
+    // parameters: service_id, template_id, template_parameters
+    emailjs.send("gmail","template_4nILbpzO",{
+      from_name: "janfrancistagadiad",
+      to_name: "Maam Leslie",
+      message_html: "Due refund proponent: " + setupProject.proponent,
+      notes: "Check this out!"
+    }).
+    then(
+      function(response) {
+        console.log("SUCCESS", response);
+      },
+      function(error) {
+        console.log("FAILED", error);
+      }
+    );
+  };
 
   $scope.years = ['2010', '2011', '2012', '2013',
   '2014', '2015', '2016', '2017',
@@ -217,17 +265,9 @@ function editProponentController($scope, $firebaseArray, $mdDialog, setupProject
   '2026', '2027', '2028', '2029',
   '2030', '2031', '2032', '2033'];
 
-  $scope.remindValues = [true, false];
+  $scope.remindValues = ['true', 'false'];
 
-
-
-  // console.log(nowDate + ' nowDate');
-  // console.log(startDate + ' startDate');
-  // console.log(endDate + ' endDate');
-
-
-
-  $scope.dialogTitle = "Edit Proponent"
+  $scope.dialogTitle = "Edit Proponent";
 
   $scope.proponent = setupProject.proponent;
   $scope.projectYear = setupProject.projectYear;
@@ -245,7 +285,8 @@ function editProponentController($scope, $firebaseArray, $mdDialog, setupProject
   $scope.remindRefund = setupProject.remindRefund;
 
   $scope.submitProponent = function() {
-    var record = $scope.setupProject.$getRecord(setupProject.id);
+    var record = $scope.setupProjects.$getRecord(setupProject.id);
+    console.log("id --- " + setupProject.id);
     record.proponent = $scope.proponent;
     record.projectYear = $scope.projectYear;
     record.dateApproved = ($scope.dateApproved == null ? "" : moment($scope.dateApproved).format('MM DD YYYY'));
@@ -261,12 +302,12 @@ function editProponentController($scope, $firebaseArray, $mdDialog, setupProject
     record.status = $scope.status;
     record.remindRefund = $scope.remindRefund;
 
-    $scope.setupProject.$save(record);
+    $scope.setupProjects.$save(record);
     $mdDialog.hide();
-  }
+  };
 
   $scope.closeDialog = function() {
     $mdDialog.hide();
     $scope.selected = [];
-  }
+  };
 }

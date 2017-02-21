@@ -4,6 +4,7 @@
       <md-button aria-label="Open for menu" class="md-icon-button" ng-click="closeDialog()">
         <md-icon class="material-icons">close</md-icon>
       </md-button>
+
       <p flex="flex" class="dialogTitle">{{dialogTitle}}</p>
       <span flex></span>
       <md-button onClick="document.getElementById('submit').click()">Submit</md-button>
@@ -105,6 +106,11 @@
                 </md-option>
               </md-select>
             </md-input-container> -->
+            <md-checkbox ng-model="remindRefund" checked="true" ng-show="remindRefundIcon() == 'false'" ng-true-value="'true'" ng-false-value="'false'">
+              <span>Remind refund due</span>
+            </md-checkbox>
+            <!-- <md-button class="md-primary" ng-click="redirectToGmail()"  ng-show="remindRefundIcon() == 'false'">Send email</md-button> -->
+            <md-button class="md-raised" ng-click="sendMe()" ng-show="remindRefundIcon() == 'false'">Send email</md-button>
           </div>
         </md-card>
       </div>
