@@ -8,7 +8,7 @@ controller("setupProjectController", function($scope, $firebaseArray, $mdDialog,
   var ref = firebase.database().ref().child("setupProject");
   $scope.setupProjects = $firebaseArray(ref);
 
-  $scope.setupProjects.$watch(function(e){
+  $scope.setupProjects.$watch(function(e) {
     console.log($scope.setupProjects.length);
     $scope.setupProjectsLength = $scope.setupProjects.length;
   });
@@ -16,6 +16,15 @@ controller("setupProjectController", function($scope, $firebaseArray, $mdDialog,
   $scope.selected = [];
 
   $scope.limitOptions = [5, 10, 15];
+
+  $scope.filterOptions = ['All', '2010', '2011', '2012', '2013',
+  '2014', '2015', '2016', '2017',
+  '2018', '2019', '2020', '2021',
+  '2022', '2023', '2024', '2025',
+  '2026', '2027', '2028', '2029',
+  '2030', '2031', '2032', '2033'];
+
+  $scope.projectYear = '';
 
   $scope.options = {
     rowSelection: true,
@@ -35,17 +44,17 @@ controller("setupProjectController", function($scope, $firebaseArray, $mdDialog,
     page: 1
   };
 
-  $scope.logPagination = function (page, limit) {
-    console.log('page: ', page);
-    console.log('limit: ', limit);
-  };
-
   $scope.tooltip = {
     showTooltip: false,
     tipDirection: 'bottom'
   };
 
-  $scope.redirectToGmail = function(){
+  $scope.logPagination = function (page, limit) {
+    console.log('page: ', page);
+    console.log('limit: ', limit);
+  };
+
+  $scope.redirectToGmail = function() {
     var email = "janfrancistagadiad@gmail.com";
     var subject = "SETUP REFUND SCHEDULE";
     var body = setupProject.proponent;
@@ -53,7 +62,7 @@ controller("setupProjectController", function($scope, $firebaseArray, $mdDialog,
     $window.open(url, '_blank');
   };
 
-  $scope.remindRefundIcon = function(param){
+  $scope.remindRefundIcon = function(param) {
     var nowDate = new Date().getTime();
     var currentDay = new Date().getDate();
     var startDate = (param.refundScheduleStart == "" ? null : new Date(param.refundScheduleStart).getTime());
@@ -68,32 +77,30 @@ controller("setupProjectController", function($scope, $firebaseArray, $mdDialog,
     }
   };
 
-  $scope.rightClick = function(param){
+  $scope.rightClick = function(param) {
     console.log(param.proponent);
   };
 
-  $scope.selectRow = function(param){
+  $scope.selectRow = function(param) {
     THIS.SETUPPROJECT = param;
+    console.log(THIS.SETUPPROJECT.proponent);
   };
 
-  $scope.formatThousand = function(param){
+  $scope.formatThousand = function(param) {
     return param.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
-  $scope.formatDate = function(param){
+  $scope.formatDate = function(param) {
     return param == "" ? "" : moment(param).format('MMM DD YYYY');
   };
 
-  $scope.projectYear = '';
+  $scope.janCallMe = function(param) {
+    console.log(param.proponent);
+    // console.log(THIS.SETUPPROJECT.proponent);
+    // return "binahon";
+  }
 
-  $scope.filterOptions = ['All', '2010', '2011', '2012', '2013',
-  '2014', '2015', '2016', '2017',
-  '2018', '2019', '2020', '2021',
-  '2022', '2023', '2024', '2025',
-  '2026', '2027', '2028', '2029',
-  '2030', '2031', '2032', '2033'];
-
-  $scope.delete = function(ev){
+  $scope.delete = function(ev) {
     console.log(THIS.SETUPPROJECT.proponent);
 
     var confirm = $mdDialog.confirm()
@@ -112,7 +119,7 @@ controller("setupProjectController", function($scope, $firebaseArray, $mdDialog,
     });
   };
 
-  $scope.edit = function(ev){
+  $scope.edit = function(ev) {
     $mdDialog.show({
       controller: editProponentController,
       templateUrl: 'views/dialog/proponentDialog.template.html',
@@ -144,7 +151,7 @@ controller("setupProjectController", function($scope, $firebaseArray, $mdDialog,
     };
   };
 
-  $scope.create = function(ev, setupProject){
+  $scope.create = function(ev, setupProject) {
     $mdDialog.show({
       controller: addProponentDialogController,
       templateUrl: 'views/dialog/proponentDialog.template.html',
@@ -209,11 +216,11 @@ function editProponentController($scope, $firebaseArray, $mdDialog, $window, set
   var body = setupProject.proponent;
   var url = "https://mail.google.com/mail/u/0/?view=cm&fs=1&to=" + email + "&su=" + subject + "&body=" + body + "&tf=1";
 
-  $scope.redirectToGmail = function(){
+  $scope.redirectToGmail = function() {
     $window.open(url, '_blank');
   };
 
-  $scope.remindRefundIcon = function(){
+  $scope.remindRefundIcon = function() {
     var nowDate = new Date().getTime();
     var currentDay = new Date().getDate();
     var startDate = (setupProject.refundScheduleStart == "" ? null : new Date(setupProject.refundScheduleStart).getTime());
@@ -221,7 +228,7 @@ function editProponentController($scope, $firebaseArray, $mdDialog, $window, set
 
     console.log(startDate + " startDate  " + endDate + " endDate");
 
-    if (startDate <= nowDate && nowDate <= endDate && setupProject.remindRefund == "false" && 10 <= currentDay && currentDay <= 25){
+    if (startDate <= nowDate && nowDate <= endDate && setupProject.remindRefund == "false" && 10 <= currentDay && currentDay <= 25) {
       console.log(setupProject.remindRefund + " " + setupProject.proponent);
       return setupProject.remindRefund;
     } else {
@@ -232,7 +239,6 @@ function editProponentController($scope, $firebaseArray, $mdDialog, $window, set
   $scope.changeMe = function () {
     console.log($scope.checkBoxValue);
 
-
     if ($scope.checkBoxValue == true) {
       console.log("'true'");
     } else if ($scope.checkBoxValue == false) {
@@ -242,20 +248,19 @@ function editProponentController($scope, $firebaseArray, $mdDialog, $window, set
 
   $scope.sendMe = function () {
     // parameters: service_id, template_id, template_parameters
-    emailjs.send("gmail","template_4nILbpzO",{
+    emailjs.send("gmail","template_4nILbpzO", {
+      email_to: "janfrancistagadiad@gmail.com",
       from_name: "janfrancistagadiad",
       to_name: "Maam Leslie",
       message_html: "Due refund proponent: " + setupProject.proponent,
       notes: "Check this out!"
     }).
-    then(
-      function(response) {
-        console.log("SUCCESS", response);
-      },
-      function(error) {
-        console.log("FAILED", error);
-      }
-    );
+    then(function(response) {
+      console.log("SUCCESS", response);
+    },
+    function(error) {
+      console.log("FAILED", error);
+    });
   };
 
   $scope.years = ['2010', '2011', '2012', '2013',

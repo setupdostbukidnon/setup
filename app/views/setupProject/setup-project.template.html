@@ -10,7 +10,6 @@
           <span flex></span>
           <md-input-container md-no-float class="md-block">
             <md-select ng-model="filterOption" placeholder="Year" class="toolbarFontsize" ng-init="filterOption = 'All'">
-              <!-- <md-option>All</md-option> -->
               <md-option ng-repeat="filterOption in filterOptions" ng-value="filterOption">
                 {{filterOption}}
               </md-option>
@@ -46,7 +45,7 @@
       <table md-table md-row-select="options.rowSelection" ng-model="selected">
         <thead md-head md-order="query.order">
           <tr md-row>
-            <!-- <th md-column></th> -->
+            <th md-column></th>
             <th md-column md-order-by="proponent" class="my-th">Proponent</th>
             <th md-column md-order-by="projectYear" style="text-align: right;">Project Year</th>
             <th md-column style="text-align: right;">Date Approved</th>
@@ -63,10 +62,12 @@
           </tr>
         </thead>
         <tbody md-body>
-          <tr md-row md-select="setupProject" md-select-id="proponent" md-auto-select="options.autoSelect" ng-right-click="remindRefundIcon(setupProject)" ng-click="selectRow(setupProject)" ng-repeat="setupProject in (filteredItems = (setupProjects | filter: filterProponent | filter: {projectYear: (filterOption == 'All' ? '' : filterOption)} )) | orderBy: query.order | limitTo: query.limit: (query.page -1) * query.limit">
-            <!-- <td md-cell><md-icon class="material-icons" ng-show="remindRefundIcon(setupProject) == 'false'" style="color: red;">priority_high</md-icon></td> -->
-            <td md-cell id="setupProjectNotification">
+          <tr md-row md-select="setupProject" md-select-id="proponent" md-auto-select="options.autoSelect" ng-right-click="remindRefundIcon(setupProject)" ng-dblclick="edit($event)" ng-click="selectRow(setupProject)" ng-repeat="setupProject in (filteredItems = (setupProjects | filter: filterProponent | filter: {projectYear: (filterOption == 'All' ? '' : filterOption)} )) | orderBy: query.order | limitTo: query.limit: (query.page -1) * query.limit">
+            <td md-cell>
               <md-icon class="material-icons" ng-show="remindRefundIcon(setupProject) == 'false'" style="color: red;">priority_high</md-icon>
+              <md-icon class="material-icons" ng-show="remindRefundIcon(setupProject) != 'false'" style="color: white;">priority_high</md-icon
+            </td>
+            <td md-cell id="setupProjectNotification">
               {{setupProject.proponent}}
             </td>
             <td md-cell>{{setupProject.projectYear}}</td>

@@ -56,21 +56,31 @@ table[md-table] .md-checkbox-cell {
 }
 
 .checkboxdemoBasicUsage .checkboxDemo1 div {
-  clear: both; }
+  clear: both;
+}
 
 .checkboxdemoBasicUsage p {
-  padding-left: 8px; }
+  padding-left: 8px;
+}
 
 .checkboxdemoBasicUsage fieldset.standard {
   border-style: solid;
-  border-width: 1px; }
+  border-width: 1px;
+}
 
 .checkboxdemoBasicUsage legend {
-  color: #3F51B5; }
+  color: #3F51B5;
+}
 
 .checkboxdemoBasicUsage legend code {
   color: #3F51B5;
-  font-weight: normal; }
+  font-weight: normal;
+}
 
 .checkboxdemoBasicUsage .ipsum {
-  color: saddlebrown; }
+  color: saddlebrown;
+}
+
+.test {
+  color: red;
+}
