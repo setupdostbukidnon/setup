@@ -1,3 +1,5 @@
+// These rules give anyone, even people who are not users of your app,
+// read and write access to your database
 {
   "rules": {
     ".read": true,

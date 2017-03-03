@@ -1,18 +1,18 @@
-'use strict'
+"use strict"
 
 angular.
-module('dost-pstc-x').
-directive('currencyMask', function() {
+module("dost-pstc-x").
+directive("currencyMask", function() {
   return {
-    restrict: 'A',
-    require: 'ngModel',
+    restrict: "A",
+    require: "ngModel",
     link: function(scope, element, attrs, ngModelController) {
 
       var formatNumber = function(value) {
 
         value = value.toString();
         value = value.replace(/[^0-9\.]/g, "");
-        var parts = value.split('.');
+        var parts = value.split(".");
         parts[0] = parts[0].replace(/\d{1,3}(?=(\d{3})+(?!\d))/g, "$&,");
         if (parts[1] && parts[1].length > 2) {
           parts[1] = parts[1].substring(0, 2);
@@ -29,10 +29,10 @@ directive('currencyMask', function() {
         value = formatNumber(value);
         if (value != original) {
           element.val(value);
-          element.triggerHandler('input')
+          element.triggerHandler("input")
         }
       };
-      element.bind('keyup', function(e) {
+      element.bind("keyup", function(e) {
         var keycode = e.keyCode;
         var isTextInputKey =
           (keycode > 47 && keycode < 58) || // number keys
@@ -40,25 +40,25 @@ directive('currencyMask', function() {
           (keycode > 64 && keycode < 91) || // letter keys
           (keycode > 95 && keycode < 112) || // numpad keys
           (keycode > 185 && keycode < 193) || // ;=,-./` (in order)
-          (keycode > 218 && keycode < 223); // [\]' (in order)
+          (keycode > 218 && keycode < 223); // [\]" (in order)
         if (isTextInputKey) {
           applyFormatting();
         }
       });
-      element.bind('blur', function(evt) {
+      element.bind("blur", function(evt) {
         if (angular.isDefined(ngModelController.$modelValue)) {
-          var val = ngModelController.$modelValue.split('.');
+          var val = ngModelController.$modelValue.split(".");
           if (val && val.length == 1) {
             if (val != "") {
-              ngModelController.$setViewValue(val + '.00');
+              ngModelController.$setViewValue(val + ".00");
               ngModelController.$render();
             }
           } else if (val && val.length == 2) {
             if (val[1] && val[1].length == 1) {
-              ngModelController.$setViewValue(val[0] + '.' + val[1] + '0');
+              ngModelController.$setViewValue(val[0] + "." + val[1] + "0");
               ngModelController.$render();
             } else if (val[1].length == 0) {
-              ngModelController.$setViewValue(val[0] + '.00');
+              ngModelController.$setViewValue(val[0] + ".00");
               ngModelController.$render();
             }
             applyFormatting();
@@ -83,14 +83,25 @@ directive('currencyMask', function() {
     }
   };
 }).
-directive('ngRightClick', function($parse) {
+directive("ngRightClick", function($parse) {
     return function(scope, element, attrs) {
         var fn = $parse(attrs.ngRightClick);
-        element.bind('contextmenu', function(event) {
+        element.bind("contextmenu", function(event) {
             scope.$apply(function() {
                 event.preventDefault();
                 fn(scope, {$event:event});
             });
         });
     };
+}).
+directive("formOnChange", function($parse, $interpolate){
+  return {
+    require: "form",
+    link: function(scope, element, attrs, form){
+      var cb = $parse(attrs.formOnChange);
+      element.on("change", function(){
+        cb(scope);
+      });
+    }
+  };
 });

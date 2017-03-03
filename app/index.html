@@ -18,16 +18,7 @@
   <script src="bower_components/jquery/dist/jquery.js"></script>
   <script src="bower_components/moment/min/moment.min.js"></script>
   <script src="bower_components/moment/min/moment-with-locales.js"></script>
-  <script type="text/javascript" src="bower_components/angular-material-data-table/dist/md-data-table.min.js"></script>
-
-  <script src="js/app.module.js"></script>
-  <script src="js/app.config.js"></script>
-  <script src="js/app.directive.js"></script>
-
-  <script src="views/mainNav/main-nav.module.js"></script>
-  <script src="views/mainNav/main-nav.component.js"></script>
-  <script src="views/setupProject/setup-project.module.js"></script>
-  <script src="views/setupProject/setup-project.component.js"></script>
+  <script src="bower_components/angular-material-data-table/dist/md-data-table.min.js"></script>
 
   <!-- AngularFire -->
   <script src="https://cdn.firebase.com/libs/angularfire/2.3.0/angularfire.min.js"></script>
@@ -47,12 +38,30 @@
 
   <script type="text/javascript" src="https://cdn.emailjs.com/dist/email.min.js"></script>
   <script type="text/javascript">
-     (function(){
-        emailjs.init("user_lJFvwMpAPNnPRWycbweQF");
-     })();
+  (function(){
+    emailjs.init("user_lJFvwMpAPNnPRWycbweQF");
+  })();
   </script>
 </head>
 <body>
-  <main-nav></main-nav>
+
+  <div ng-view></div>
+
+  <script src="js/app.module.js"></script>
+  <script src="js/app.config.js"></script>
+  <script src="js/app.directive.js"></script>
+
+  <!-- <script src="views/mainNav/main-nav.module.js"></script> -->
+  <!-- <script src="views/mainNav/main-nav.component.js"></script> -->
+  <!-- modules and components -->
+  <script src="views/setupProject/setup-project.module.js"></script>
+  <script src="views/setupProject/setup-project.component.js"></script>
+  <script src="views/userAuth/user-auth.module.js"></script>
+  <script src="views/userAuth/user-auth.component.js"></script>
+
+  <!-- controller -->
+  <script src="views/setupProject/addProponent.controller.js"></script>
+  <script src="views/setupProject/editProponent.controller.js"></script>
+
 </body>
 </html>

@@ -1,11 +1,12 @@
-'use strict'
+"use strict"
 
-angular.module('dost-pstc-x', [
-  'ngMaterial',
-  'ngMessages',
-  'ngRoute',
-  'firebase',
-  'md.data.table',
-  'mainNav',
-  'setupProject'
+angular.module("dost-pstc-x", [
+  "ngMaterial",
+  "ngMessages",
+  "ngRoute",
+  "firebase",
+  "md.data.table",
+  // "userAuth"
+  // "mainNav",
+  "setupProject"
 ]);

@@ -4,23 +4,21 @@
       <md-button aria-label="Open for menu" class="md-icon-button" ng-click="closeDialog()">
         <md-icon class="material-icons">close</md-icon>
       </md-button>
-
       <p flex="flex" class="dialogTitle">{{dialogTitle}}</p>
       <span flex></span>
-      <md-button onClick="document.getElementById('submit').click()">Submit</md-button>
+      <md-button ng-show="formProponent.$dirty" onClick="document.getElementById('submit').click()">Submit</md-button>
     </div>
   </md-toolbar>
 
   <md-dialog-content class="md-inline-form" layout-padding>
-    <form ng-submit="submitProponent()">
+    <form name="formProponent" ng-submit="submitProponent()">
       <div layout="row">
-        <md-card flex layout-padding>
+        <md-card flex layout-padding style="padding-top: 20px;">
           <div layout="row">
             <md-input-container class="md-block leftCard" flex style="margin-bottom: 0px;">
               <label>Proponent</label>
               <input ng-model="proponent" required />
             </md-input-container>
-
             <md-input-container md-no-float class="md-block" flex="20" >
               <md-select ng-model="projectYear" placeholder="Year" class="toolbarFontsize">
                 <md-option>All</md-option>
@@ -29,7 +27,6 @@
                 </md-option>
               </md-select>
             </md-input-container>
-
           </div>
           <div layout="row">
             <md-input-container class="leftCard" style="margin-bottom: 0px;">
@@ -81,7 +78,7 @@
             </div>
           </div>
         </md-card>
-        <md-card flex layout-padding>
+        <md-card flex layout-padding style="padding-top: 20px;">
           <div layout="column">
             <md-input-container class="md-block" flex>
               <label>Latest Project extension</label>
@@ -100,21 +97,33 @@
               <input ng-model="status" />
             </md-input-container>
             <!-- <md-input-container md-no-float class="md-block" flex >
-              <md-select ng-model="remindRefund" placeholder="reminder" class="toolbarFontsize">
-                <md-option ng-repeat="remind in remindValues" ng-value="remind">
-                  {{remind}}
-                </md-option>
-              </md-select>
-            </md-input-container> -->
-            <md-checkbox ng-model="remindRefund" checked="true" ng-show="remindRefundIcon() == 'false'" ng-true-value="'true'" ng-false-value="'false'">
-              <span>Remind refund due</span>
-            </md-checkbox>
-            <!-- <md-button class="md-primary" ng-click="redirectToGmail()"  ng-show="remindRefundIcon() == 'false'">Send email</md-button> -->
-            <md-button class="md-raised" ng-click="sendMe()" ng-show="remindRefundIcon() == 'false'">Send email</md-button>
-          </div>
-        </md-card>
+            <md-select ng-model="remindRefund" placeholder="reminder" class="toolbarFontsize">
+            <md-option ng-repeat="remind in remindValues" ng-value="remind">
+            {{remind}}
+          </md-option>
+        </md-select>
+      </md-input-container> -->
+      <div flex layout="row">
+        <md-input-container class="md-block" flex="50">
+          <label>Email address</label>
+          <input ng-model="emailAddress" />
+        </md-input-container>
+        <md-input-container class="md-block" flex="50">
+          <label>Contact Number</label>
+          <input ng-model="contactNumber" />
+        </md-input-container>
       </div>
-      <md-button id="submit" type="submit" ng-show="false">Submit</md-button>
-    </form>
-  </md-dialog-content>
+      <md-input-container class="md-block" flex>
+        <md-checkbox ng-model="remindRefund" checked="true" ng-show="remindRefundIcon() == 'false'" ng-true-value="'true'" ng-false-value="'false'">
+          <span>Remind refund due</span>
+        </md-checkbox>
+        <md-button class="md-raised" ng-click="sendMe()" ng-show="remindRefundIcon() == 'false'">Send email</md-button>
+      </md-input-container>
+
+    </div>
+  </md-card>
+</div>
+<md-button id="submit" type="submit" ng-show="false" >Submit</md-button>
+</form>
+</md-dialog-content>
 </md-dialog>

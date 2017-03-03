@@ -1,0 +1,20 @@
+<div layout="row" layout-align="center center" ng-controller="userAuthController" ng-cloak style="padding-top: 25vh;">
+  <md-content layout-padding flex="40">
+    <!-- <div ng-show="firebaseUser" layout="row">
+      <p>Hello, {{ firebaseUser.email }}</p>
+      <button ng-click="auth.$signOut()">Sign Out</button>
+    </div> -->
+    <md-card layout-padding style="padding-top: 45px; padding-left: 20px; padding-right: 20px;">
+      <md-input-container class="md-block">
+        <label>Email Address</label>
+        <input ng-model="user.emailAddress" type="email">
+      </md-input-container>
+      <md-input-container class="md-block">
+        <label>Password</label>
+        <input ng-model="user.password" type="password">
+      </md-input-container>
+      <md-button class="md-raised md-primary" ng-click="signIn()">Sign In</md-button>
+    </md-card>
+
+  </md-content>
+</div>
