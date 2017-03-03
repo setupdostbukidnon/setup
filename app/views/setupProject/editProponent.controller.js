@@ -11,18 +11,17 @@ controller("editProponentController", function($scope, $firebaseArray, $mdDialog
   '2026', '2027', '2028', '2029',
   '2030', '2031', '2032', '2033'];
 
-  $scope.remindRefundIcon = function(param) {
+  $scope.remindRefundIcon = function() {
     var dueDateStart = 3;
     var dueDateEnd = 10;
     var nowDate = new Date().getTime();
     var currentDay = new Date().getDate();
-    var startDate = (param.refundScheduleStart == "" ? null : new Date(param.refundScheduleStart).getTime());
-    var endDate = (param.refundScheduleEnd == "" ? null : new Date(param.refundScheduleEnd).getTime());
+    var startDate = (setupProject.refundScheduleStart == "" ? null : new Date(setupProject.refundScheduleStart).getTime());
+    var endDate = (setupProject.refundScheduleEnd == "" ? null : new Date(setupProject.refundScheduleEnd).getTime());
 
-    if (startDate <= nowDate && nowDate <= endDate && param.remindRefund == "false" && dueDateStart <= currentDay && currentDay <= dueDateEnd){
-      var proponent = param.proponent;
-      // console.log(param.remindRefund + " " + param.proponent);
-      return param.remindRefund;
+    if (startDate <= nowDate && nowDate <= endDate && setupProject.remindRefund == "false" && dueDateStart <= currentDay && currentDay <= dueDateEnd){
+      var proponent = setupProject.proponent;
+      return setupProject.remindRefund;
     } else {
       return "true";
     }

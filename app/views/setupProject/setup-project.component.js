@@ -17,6 +17,8 @@ controller("setupProjectController", function($scope, $firebaseArray, $mdDialog,
     $scope.setupProjectsLength = $scope.setupProjects.length;
   });
 
+  $scope.selected = [];
+
   $scope.promise = $timeout(function () {
      // ...
    }, 5000);
