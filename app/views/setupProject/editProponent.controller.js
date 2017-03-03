@@ -1,6 +1,6 @@
 angular.
 module("setupProject").
-controller("editProponentController", function($scope, $firebaseArray, $mdDialog, $window, $mdToast, setupProject) {
+controller("editProponentController", function($scope, $rootScope, $firebaseArray, $mdDialog, $window, $mdToast, setupProject) {
   var ref = firebase.database().ref().child("setupProject");
   $scope.setupProjects = $firebaseArray(ref);
 
@@ -92,6 +92,7 @@ controller("editProponentController", function($scope, $firebaseArray, $mdDialog
   };
 
   $scope.closeDialog = function() {
+    $rootScope.$emit("setupProjectMainController", selected = []);
     $mdDialog.hide();
   };
 });

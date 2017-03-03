@@ -1,7 +1,7 @@
 <md-dialog class="fullscreen-dialog" aria-label="Add Proponent Dialog">
   <md-toolbar>
     <div class="md-toolbar-tools">
-      <md-button aria-label="Open for menu" class="md-icon-button" ng-click="closeDialog()">
+      <md-button aria-label="Open for menu" class="md-icon-button" ng-click="closeDialog(); selected=[];">
         <md-icon class="material-icons">close</md-icon>
       </md-button>
       <p flex="flex" class="dialogTitle">{{dialogTitle}}</p>
@@ -96,34 +96,27 @@
               <label>Status</label>
               <input ng-model="status" />
             </md-input-container>
-            <!-- <md-input-container md-no-float class="md-block" flex >
-            <md-select ng-model="remindRefund" placeholder="reminder" class="toolbarFontsize">
-            <md-option ng-repeat="remind in remindValues" ng-value="remind">
-            {{remind}}
-          </md-option>
-        </md-select>
-      </md-input-container> -->
-      <div flex layout="row">
-        <md-input-container class="md-block" flex="50">
-          <label>Email address</label>
-          <input ng-model="emailAddress" />
-        </md-input-container>
-        <md-input-container class="md-block" flex="50">
-          <label>Contact Number</label>
-          <input ng-model="contactNumber" />
-        </md-input-container>
-      </div>
-      <md-input-container class="md-block" flex>
-        <md-checkbox ng-model="remindRefund" checked="true" ng-show="remindRefundIcon() == 'false'" ng-true-value="'true'" ng-false-value="'false'">
-          <span>Remind refund due</span>
-        </md-checkbox>
-        <md-button class="md-raised" ng-click="sendMe()" ng-show="remindRefundIcon() == 'false'">Send email</md-button>
-      </md-input-container>
+            <div flex layout="row">
+              <md-input-container class="md-block" flex="50">
+                <label>Email address</label>
+                <input ng-model="emailAddress" />
+              </md-input-container>
+              <md-input-container class="md-block" flex="50">
+                <label>Contact Number</label>
+                <input ng-model="contactNumber" />
+              </md-input-container>
+            </div>
+            <md-input-container class="md-block" flex>
+              <md-checkbox ng-model="remindRefund" checked="true" ng-show="remindRefundIcon() == 'false'" ng-true-value="'true'" ng-false-value="'false'">
+                <span>Remind refund due</span>
+              </md-checkbox>
+              <md-button class="md-raised" ng-click="sendMe()" ng-show="remindRefundIcon() == 'false'">Send email</md-button>
+            </md-input-container>
 
-    </div>
-  </md-card>
-</div>
-<md-button id="submit" type="submit" ng-show="false" >Submit</md-button>
-</form>
-</md-dialog-content>
+          </div>
+        </md-card>
+      </div>
+      <md-button id="submit" type="submit" ng-show="false" >Submit</md-button>
+    </form>
+  </md-dialog-content>
 </md-dialog>

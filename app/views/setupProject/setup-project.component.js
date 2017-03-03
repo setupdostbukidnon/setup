@@ -3,10 +3,7 @@ module("setupProject").
 component("setupProject", {
   templateUrl: "views/setupProject/setup-project.template.html"
 }).
-controller("setupProjectController", function($scope, $firebaseArray, $mdDialog, $mdMedia, $mdToast, $timeout, $mdSidenav, $log){
-
-  // window.staticValue = "jan";
-  // console.log(staticValue);
+controller("setupProjectController", function($scope, $rootScope, $firebaseArray, $mdDialog, $mdMedia, $mdToast, $timeout, $mdSidenav, $log){
 
   var THIS = this;
   var ref = firebase.database().ref().child("setupProject");
@@ -19,9 +16,14 @@ controller("setupProjectController", function($scope, $firebaseArray, $mdDialog,
 
   $scope.selected = [];
 
-  $scope.promise = $timeout(function () {
-     // ...
-   }, 5000);
+  $rootScope.$on("setupProjectMainController", function(param){
+    $scope.parentmethod(param);
+  });
+  $scope.parentmethod = function(param) {
+      $scope.selected = [];
+  }
+
+  $scope.promise = $scope.setupProjects;
 
   $scope.limitOptions = [5, 10, 15];
 
@@ -91,25 +93,18 @@ controller("setupProjectController", function($scope, $firebaseArray, $mdDialog,
     console.log("limit: ", limit);
   };
 
-  $scope.redirectToGmail = function() {
-    var email = "janfrancistagadiad@gmail.com";
-    var subject = "SETUP REFUND SCHEDULE";
-    var body = setupProject.proponent;
-    var url = "https://mail.google.com/mail/u/0/?view=cm&fs=1&to=" + email + "&su=" + subject + "&body=" + body + "&tf=1";
-    $window.open(url, "_blank");
-  };
-
   $scope.remindRefundIcon = function(param) {
-    var dueDateStart = 3;
-    var dueDateEnd = 10;
+    // var dueDateStart = 3;
+    // var dueDateEnd = 10;
+    // console.log("dueStart: " + dueDateStart + " dueDateEnd: " + dueDateEnd);
     var nowDate = new Date().getTime();
     var currentDay = new Date().getDate();
     var startDate = (param.refundScheduleStart == "" ? null : new Date(param.refundScheduleStart).getTime());
     var endDate = (param.refundScheduleEnd == "" ? null : new Date(param.refundScheduleEnd).getTime());
 
-    if (startDate <= nowDate && nowDate <= endDate && param.remindRefund == "false" && dueDateStart <= currentDay && currentDay <= dueDateEnd){
+    if (startDate <= nowDate && nowDate <= endDate && param.remindRefund == "false" &&
+    dueDateStart <= currentDay && currentDay <= dueDateEnd) {
       var proponent = param.proponent;
-      // console.log(param.remindRefund + " " + param.proponent);
       return param.remindRefund;
     } else {
       return "true";
@@ -133,40 +128,11 @@ controller("setupProjectController", function($scope, $firebaseArray, $mdDialog,
     return param == "" ? "" : moment(param).format("MMM DD YYYY");
   };
 
-
   // $scope.toggleLeft = buildDelayedToggler('left');
   $scope.toggleLeft = buildToggler('left');
   $scope.isOpenLeft = function(){
     return $mdSidenav('left').isOpen();
   };
-
-  function debounce(func, wait, context) {
-    var timer;
-
-    return function debounced() {
-      var context = $scope,
-      args = Array.prototype.slice.call(arguments);
-      $timeout.cancel(timer);
-      timer = $timeout(function() {
-        timer = undefined;
-        func.apply(context, args);
-      }, wait || 10);
-    };
-  }
-
-  /**
-  * Build handler to open/close a SideNav; when animation finishes
-  * report completion in console
-  */
-  function buildDelayedToggler(navID) {
-    return debounce(function() {
-      $mdSidenav(navID)
-      .toggle()
-      .then(function () {
-        $log.debug("toggle " + navID + " is done");
-      });
-    }, 200);
-  }
 
   function buildToggler(navID) {
     return function() {
@@ -184,14 +150,6 @@ controller("setupProjectController", function($scope, $firebaseArray, $mdDialog,
       $log.debug("close RIGHT is done");
     });
   };
-
-
-
-
-
-
-
-
 
   $scope.delete = function(ev) {
     console.log(THIS.SETUPPROJECT.proponent);

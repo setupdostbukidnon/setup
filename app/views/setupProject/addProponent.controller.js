@@ -39,6 +39,7 @@ controller("addProponentDialogController", function($scope, $firebaseArray, $mdD
   };
 
   $scope.closeDialog = function() {
+    window.selected = [];
     $mdDialog.hide();
   };
 });
