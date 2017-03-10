@@ -2,13 +2,14 @@
   <div>
     <md-toolbar class="md-table-toolbar md-default" ng-hide="options.rowSelection && selected.length">
       <div class="md-toolbar-tools">
-        <div layout="row"  style="margin-top: 40px;" flex="70">
-          <md-button class="md-icon-button md-primary" ng-click="toggleLeft()" ng-hide="isOpenLeft()" aria-label="menu">
+        <div layout="row"  style="margin-top: 26px;" flex="70">
+          <md-button class="md-icon-button md-primary" ng-click="toggleLeft()" aria-label="menu">
             <md-icon class="material-icons">menu</md-icon>
           </md-button>
+          <span flex></span>
           <md-input-container md-no-float class="md-block">
             <md-icon class="material-icons">search</md-icon>
-            <input ng-model="filterProponent" ng-change="search.setupProjectProponent" class="toolbarFontsize" type="text" placeholder="Search Proponent...">
+            <input ng-model="filterProponent" ng-change="search.setupProjectProponent" class="toolbarFontsize" type="text" placeholder="Search Proponent..." style="width: 400px;">
           </md-input-container>
           <span flex></span>
           <md-input-container md-no-float class="md-block">
@@ -18,12 +19,6 @@
               </md-option>
             </md-select>
           </md-input-container>
-          <span flex></span>
-          <md-button class="md-icon-button md-primary"  ng-click="create($event)">
-            <md-tooltip md-direction="{{tooltip.tipDirection}}">Add Proponent</md-tooltip>
-            <md-icon class="material-icons">add</md-icon>
-          </md-button>
-
         </div>
         <span flex></span>
         <md-table-pagination md-limit="query.limit" md-page="query.page" md-total="{{filteredItems.length}}" md-boundary-links="options.boundaryLinks" md-page-select="options.pageSelect" md-on-paginate="logPagination" style="margin-top: 12px;"></md-table-pagination>
@@ -67,45 +62,56 @@
         </thead>
         <tbody md-body>
           <!-- ng-dblclick="edit($event)"  -->
-          <tr md-row md-select="setupProject" md-select-id="proponent" md-auto-select="options.autoSelect" ng-right-click="remindRefundIcon(setupProject)" ng-click="selectRow(setupProject)" ng-repeat="setupProject in filteredItems = (setupProjects | filter: filterProponent | filter: {projectYear: (filterOption == 'All' ? '' : filterOption)} ) | orderBy: query.order | limitTo: query.limit: (query.page -1) * query.limit">
+          <tr md-row md-select="setupProject" md-select-id="proponent" md-auto-select="options.autoSelect" ng-right-click="remindRefundIcon(setupProject)" ng-click="selectRow(setupProject)" ng-repeat="setupProject in filteredItems = (setupProjects | filter: filterProponent | filter: {projectYear: (filterOption == 'All' ? '' : filterOption)} | filter: (showProponentWithDue == 'true' ? filterRemindRefund : '') ) | orderBy: query.order | limitTo: query.limit: (query.page -1) * query.limit">
             <td md-cell>
               <md-icon class="material-icons" ng-show="remindRefundIcon(setupProject) == 'false'" style="color: red;">priority_high</md-icon>
-              <md-icon class="material-icons" ng-show="remindRefundIcon(setupProject) == 'true'" style="color: white;">priority_high</md-icon
-              </td>
-              <td md-cell id="setupProjectNotification">{{setupProject.proponent}}</td>
-              <td md-cell>{{setupProject.projectYear}}</td>
-              <td md-cell style="text-align: right;">{{formatDate(setupProject.dateApproved)}}</td>
-              <td md-cell style="text-align: right;">{{formatDate(setupProject.dateReleased)}}</td>
-              <td md-cell style="text-align: right;">{{formatThousand(setupProject.actualFundRelease)}}</td>
-              <td md-cell style="text-align: right;">{{formatDate(setupProject.projectDurationStart)}}</td>
-              <td md-cell style="text-align: right;">{{formatDate(setupProject.projectDurationEnd)}}</td>
-              <td md-cell style="text-align: right;">{{formatDate(setupProject.refundScheduleStart)}}</td>
-              <td md-cell style="text-align: right;">{{formatDate(setupProject.refundScheduleEnd)}}</td>
-              <td md-cell style="text-align: right;">{{setupProject.latestProjectExtension}}</td>
-              <td md-cell style="text-align: right;">{{formatThousand(setupProject.refundMade)}}</td>
-              <td md-cell style="text-align: right;">{{formatThousand(setupProject.balance)}}</td>
-              <td md-cell>{{setupProject.status}}</td>
-            </tr>
-          </tbody>
-        </table>
-      </md-table-container>
-      <md-sidenav class="md-sidenav-left md-whiteframe-4dp" md-component-id="left">
-        <md-toolbar>
-          <div class="md-toolbar-tools">
-            <md-button class="md-icon-button" ng-click="closeSideNav()">
-              <md-icon class="material-icons">arrow_back</md-icon>
-            </md-button>
-            <h1 class="md-toolbar-tools">Sidenav left</h1>
-          </div>
-        </md-toolbar>
-        <md-content layout-padding>
-          <div layout="column" layout-align="space-between stretch">
-            <h1>asdasdasdasd</h1>
-            <span flex></span>
-            <h1>asdasdasdasd</h1>
-          </div>
-        </md-content>
-      </md-sidenav>
-    </div>
-
-  </md-card>
+              <md-icon class="material-icons" ng-show="remindRefundIcon(setupProject) == 'true'" style="color: white;">priority_high</md-icon>
+            </td>
+            <td md-cell id="setupProjectNotification">{{setupProject.proponent}}</td>
+            <td md-cell>{{setupProject.projectYear}}</td>
+            <td md-cell style="text-align: right;">{{formatDate(setupProject.dateApproved)}}</td>
+            <td md-cell style="text-align: right;">{{formatDate(setupProject.dateReleased)}}</td>
+            <td md-cell style="text-align: right;">{{formatThousand(setupProject.actualFundRelease)}}</td>
+            <td md-cell style="text-align: right;">{{formatDate(setupProject.projectDurationStart)}}</td>
+            <td md-cell style="text-align: right;">{{formatDate(setupProject.projectDurationEnd)}}</td>
+            <td md-cell style="text-align: right;">{{formatDate(setupProject.refundScheduleStart)}}</td>
+            <td md-cell style="text-align: right;">{{formatDate(setupProject.refundScheduleEnd)}}</td>
+            <td md-cell style="text-align: right;">{{setupProject.latestProjectExtension}}</td>
+            <td md-cell style="text-align: right;">{{formatThousand(setupProject.refundMade)}}</td>
+            <td md-cell style="text-align: right;">{{formatThousand(setupProject.balance)}}</td>
+            <td md-cell>{{setupProject.status}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </md-table-container>
+    <md-sidenav class="md-sidenav-left md-whiteframe-4dp" md-component-id="left" style="width: 45vh;">
+      <md-toolbar>
+        <div class="md-toolbar-tools">
+          <md-button class="md-icon-button" ng-click="closeSideNav()">
+            <md-icon class="material-icons">arrow_back</md-icon>
+          </md-button>
+          <h1 class="md-toolbar-tools">SETUP Project</h1>
+        </div>
+      </md-toolbar>
+      <md-content>
+        <md-list>
+          <md-list-item ng-click="create($event)">
+            <md-icon class="material-icons md-dark md-24">add</md-icon>
+            <p class="md-body-2">Add Proponent</p>
+          </md-list-item>
+          <md-list-item>
+            <md-checkbox ng-model="showProponentWithDue" checked="true" ng-change="remindJanJan()" ng-true-value="'true'" ng-false-value="'false'"></md-checkbox>
+            <span>Show Proponents With Due</span>
+          </md-list-item>
+          <md-list-item>
+             <md-button ng-click="showList()">show list</md-button>
+          </md-list-item>
+          <md-list-item ng-click="null">
+            <md-icon class="material-icons md-dark md-24">exit_to_app</md-icon>
+            <p class="md-body-2">Sign Out</p>
+          </md-list-item>
+        </md-list>
+      </md-content>
+    </md-sidenav>
+  </div>
+</md-card>

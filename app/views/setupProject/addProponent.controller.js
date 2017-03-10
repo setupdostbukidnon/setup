@@ -12,6 +12,34 @@ controller("addProponentDialogController", function($scope, $firebaseArray, $mdD
   '2026', '2027', '2028', '2029',
   '2030', '2031', '2032', '2033'];
 
+  var last = {
+    bottom: true,
+    top: false,
+    left: false,
+    right: true
+  };
+
+  $scope.toastPosition = angular.extend({},last);
+
+  $scope.getToastPosition = function() {
+    sanitizePosition();
+
+    return Object.keys($scope.toastPosition)
+    .filter(function(pos) { return $scope.toastPosition[pos]; })
+    .join(" ");
+  };
+
+  function sanitizePosition() {
+    var current = $scope.toastPosition;
+
+    if ( current.bottom && last.top ) current.top = false;
+    if ( current.top && last.bottom ) current.bottom = false;
+    if ( current.right && last.left ) current.left = false;
+    if ( current.left && last.right ) current.right = false;
+
+    last = angular.extend({},current);
+  }
+
   $scope.remindValues = ["true", "false"];
 
   $scope.dialogTitle = "Add Proponent";
@@ -35,6 +63,12 @@ controller("addProponentDialogController", function($scope, $firebaseArray, $mdD
       contactNumber: ($scope.contactNumber == null ? "" : $scope.contactNumber),
       remindRefund: "false"
     });
+    $mdToast.show(
+      $mdToast.simple()
+      .textContent($scope.proponent + " project successfully added...")
+      .position(pinTo)
+      .hideDelay(5000)
+    );
     $mdDialog.hide();
   };
 

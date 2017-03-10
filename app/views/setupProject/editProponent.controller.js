@@ -19,7 +19,7 @@ controller("editProponentController", function($scope, $rootScope, $firebaseArra
     var startDate = (setupProject.refundScheduleStart == "" ? null : new Date(setupProject.refundScheduleStart).getTime());
     var endDate = (setupProject.refundScheduleEnd == "" ? null : new Date(setupProject.refundScheduleEnd).getTime());
 
-    if (startDate <= nowDate && nowDate <= endDate && setupProject.remindRefund == "false" && dueDateStart <= currentDay && currentDay <= dueDateEnd){
+    if (startDate <= nowDate && nowDate <= endDate && setupProject.remindRefund == "false" && dueDateStart <= currentDay && currentDay <= dueDateEnd) {
       var proponent = setupProject.proponent;
       return setupProject.remindRefund;
     } else {
@@ -43,6 +43,34 @@ controller("editProponentController", function($scope, $rootScope, $firebaseArra
       console.log("FAILED", error);
     });
   };
+
+  var last = {
+    bottom: true,
+    top: false,
+    left: false,
+    right: true
+  };
+
+  $scope.toastPosition = angular.extend({},last);
+
+  $scope.getToastPosition = function() {
+    sanitizePosition();
+
+    return Object.keys($scope.toastPosition)
+    .filter(function(pos) { return $scope.toastPosition[pos]; })
+    .join(" ");
+  };
+
+  function sanitizePosition() {
+    var current = $scope.toastPosition;
+
+    if ( current.bottom && last.top ) current.top = false;
+    if ( current.top && last.bottom ) current.bottom = false;
+    if ( current.right && last.left ) current.left = false;
+    if ( current.left && last.right ) current.right = false;
+
+    last = angular.extend({},current);
+  }
 
   $scope.remindValues = ['true', 'false'];
 
@@ -87,8 +115,16 @@ controller("editProponentController", function($scope, $rootScope, $firebaseArra
 
     $scope.setupProjects.$save(record);
 
-    $mdDialog.hide();
+    var pinTo = $scope.getToastPosition();
 
+    $mdToast.show(
+      $mdToast.simple()
+      .textContent($scope.proponent + " project successfully updated...")
+      .position(pinTo)
+      .hideDelay(5000)
+    );
+
+    $mdDialog.hide();
   };
 
   $scope.closeDialog = function() {
