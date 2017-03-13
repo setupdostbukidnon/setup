@@ -5,9 +5,9 @@ component("setupProject", {
 }).
 controller("setupProjectController", function($scope, $rootScope, $firebaseArray, $mdDialog, $mdMedia, $mdToast, $timeout, $mdSidenav, $log) {
 
-
   $scope.selected = [];
   $scope.proponentWithDue = new Array();
+  $scope.projectYear = "";
   var THIS = this;
   var ref = firebase.database().ref().child("setupProject");
   $scope.setupProjects = $firebaseArray(ref);
@@ -20,6 +20,7 @@ controller("setupProjectController", function($scope, $rootScope, $firebaseArray
   $rootScope.$on("setupProjectMainController", function(param) {
     $scope.parentmethod(param);
   });
+
   $scope.parentmethod = function(param) {
     $scope.selected = [];
   }
@@ -35,8 +36,6 @@ controller("setupProjectController", function($scope, $rootScope, $firebaseArray
   "2022", "2023", "2024", "2025",
   "2026", "2027", "2028", "2029",
   "2030", "2031", "2032", "2033"];
-
-  $scope.projectYear = "";
 
   $scope.options = {
     rowSelection: true,
@@ -63,6 +62,8 @@ controller("setupProjectController", function($scope, $rootScope, $firebaseArray
 
   $scope.remindJanJan = function() {
     console.log($scope.showProponentWithDue);
+    $scope.filterProponent = "";
+    $scope.filterOption = "All";
   }
 
   var last = {
@@ -72,13 +73,15 @@ controller("setupProjectController", function($scope, $rootScope, $firebaseArray
     right: true
   };
 
-  $scope.toastPosition = angular.extend({},last);
+  $scope.toastPosition = angular.extend({}, last);
 
   $scope.getToastPosition = function() {
     sanitizePosition();
 
     return Object.keys($scope.toastPosition)
-    .filter(function(pos) { return $scope.toastPosition[pos]; })
+    .filter(function(pos) {
+      return $scope.toastPosition[pos];
+    })
     .join(" ");
   };
 
@@ -119,7 +122,7 @@ controller("setupProjectController", function($scope, $rootScope, $firebaseArray
     var startDate = (param.refundScheduleStart == "" ? null : new Date(param.refundScheduleStart).getTime());
     var endDate = (param.refundScheduleEnd == "" ? null : new Date(param.refundScheduleEnd).getTime());
 
-    if (startDate <= nowDate && nowDate <= endDate && param.remindRefund == "false" &&
+    if (startDate <= nowDate && nowDate <= endDate &&
     dueDateStart <= currentDay && currentDay <= dueDateEnd) {
       $scope.proponentWithDue.push(param.proponent);
 
@@ -127,20 +130,33 @@ controller("setupProjectController", function($scope, $rootScope, $firebaseArray
     }
   };
 
-  $scope.showList = function() {
+  $scope.sendEmail = function() {
     $scope.filteredItems = new Array();
     $scope.filteredItems = $scope.proponentWithDue.filter(function(elem, index, self) {
       return index == self.indexOf(elem);
     });
-    
+
+    var temp = "";
+    for(var i = 0; i < $scope.filteredItems.length; i++) {
+      temp += i+1 + ". " + $scope.filteredItems[i] + '<br>';
+    }
+
     emailjs.send("gmail","template_4nILbpzO", {
       email_to: "janfrancistagadiad@gmail.com",
-      from_name: "janfrancistagadiad",
+      from_name: "jan weak",
       to_name: "Maam Leslie",
-      message_html: "Proponents with Due this Month: "
+      message_body: "Proponents :<br><br>" + temp
     }).
     then(function(response) {
       console.log("SUCCESS", response);
+      var pinTo = $scope.getToastPosition();
+
+      $mdToast.show(
+        $mdToast.simple()
+        .textContent("Email sent...")
+        .position(pinTo)
+        .hideDelay(3000)
+      );
     },
     function(error) {
       console.log("FAILED", error);

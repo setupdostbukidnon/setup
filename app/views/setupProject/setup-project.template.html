@@ -62,7 +62,7 @@
         </thead>
         <tbody md-body>
           <!-- ng-dblclick="edit($event)"  -->
-          <tr md-row md-select="setupProject" md-select-id="proponent" md-auto-select="options.autoSelect" ng-right-click="remindRefundIcon(setupProject)" ng-click="selectRow(setupProject)" ng-repeat="setupProject in filteredItems = (setupProjects | filter: filterProponent | filter: {projectYear: (filterOption == 'All' ? '' : filterOption)} | filter: (showProponentWithDue == 'true' ? filterRemindRefund : '') ) | orderBy: query.order | limitTo: query.limit: (query.page -1) * query.limit">
+          <tr md-row md-select="setupProject" md-select-id="proponent" md-auto-select="options.autoSelect" ng-right-click="remindRefundIcon(setupProject)" ng-click="selectRow(setupProject)" ng-repeat="setupProject in filteredItems = (setupProjects | filter: {proponent: filterProponent} | filter: {projectYear: (filterOption == 'All' ? '' : filterOption)} | filter: (showProponentWithDue == 'true' ? filterRemindRefund : '') ) | orderBy: query.order | limitTo: query.limit: (query.page -1) * query.limit">
             <td md-cell>
               <md-icon class="material-icons" ng-show="remindRefundIcon(setupProject) == 'false'" style="color: red;">priority_high</md-icon>
               <md-icon class="material-icons" ng-show="remindRefundIcon(setupProject) == 'true'" style="color: white;">priority_high</md-icon>
@@ -103,8 +103,9 @@
             <md-checkbox ng-model="showProponentWithDue" checked="true" ng-change="remindJanJan()" ng-true-value="'true'" ng-false-value="'false'"></md-checkbox>
             <span>Show Proponents With Due</span>
           </md-list-item>
-          <md-list-item>
-             <md-button ng-click="showList()">show list</md-button>
+          <md-list-item ng-click="sendEmail()" ng-show="showProponentWithDue == 'true'">
+            <md-icon class="material-icons md-dark md-24">email</md-icon>
+            <p class="md-body-2">Send Email</p>
           </md-list-item>
           <md-list-item ng-click="null">
             <md-icon class="material-icons md-dark md-24">exit_to_app</md-icon>

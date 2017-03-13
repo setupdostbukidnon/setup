@@ -19,7 +19,8 @@ controller("editProponentController", function($scope, $rootScope, $firebaseArra
     var startDate = (setupProject.refundScheduleStart == "" ? null : new Date(setupProject.refundScheduleStart).getTime());
     var endDate = (setupProject.refundScheduleEnd == "" ? null : new Date(setupProject.refundScheduleEnd).getTime());
 
-    if (startDate <= nowDate && nowDate <= endDate && setupProject.remindRefund == "false" && dueDateStart <= currentDay && currentDay <= dueDateEnd) {
+    if (startDate <= nowDate && nowDate <= endDate && param.remindRefund == "false" &&
+    dueDateStart <= currentDay && currentDay <= dueDateEnd) {
       var proponent = setupProject.proponent;
       return setupProject.remindRefund;
     } else {

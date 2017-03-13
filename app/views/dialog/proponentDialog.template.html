@@ -1,12 +1,12 @@
 <md-dialog class="fullscreen-dialog" aria-label="Add Proponent Dialog">
   <md-toolbar>
     <div class="md-toolbar-tools">
+      <md-button ng-show="formProponent.$dirty" onClick="document.getElementById('submit').click()">Submit</md-button>
+      <span flex></span>
+      <p class="dialogTitle">{{dialogTitle}}</p>
       <md-button aria-label="Open for menu" class="md-icon-button" ng-click="closeDialog(); selected=[];">
         <md-icon class="material-icons">close</md-icon>
       </md-button>
-      <p flex="flex" class="dialogTitle">{{dialogTitle}}</p>
-      <span flex></span>
-      <md-button ng-show="formProponent.$dirty" onClick="document.getElementById('submit').click()">Submit</md-button>
     </div>
   </md-toolbar>
 
@@ -99,7 +99,7 @@
             <div flex layout="row">
               <md-input-container class="md-block" flex="50">
                 <label>Email address</label>
-                <input ng-model="emailAddress" />
+                <input ng-model="emailAddress" type="email" />
               </md-input-container>
               <md-input-container class="md-block" flex="50">
                 <label>Contact Number</label>
@@ -110,9 +110,7 @@
               <md-checkbox ng-model="remindRefund" checked="true" ng-show="remindRefundIcon() == 'false'" ng-true-value="'true'" ng-false-value="'false'">
                 <span>Remind refund due</span>
               </md-checkbox>
-              <md-button class="md-raised" ng-click="sendMe()" ng-show="remindRefundIcon() == 'false'">Send email</md-button>
             </md-input-container>
-
           </div>
         </md-card>
       </div>
