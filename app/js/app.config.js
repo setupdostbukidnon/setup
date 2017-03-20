@@ -2,6 +2,11 @@
 
 angular.
 module("dost-pstc-x").
+factory("Auth", ["$firebaseAuth",
+  function($firebaseAuth) {
+    return $firebaseAuth();
+  }
+]).
 config(["$locationProvider", "$routeProvider",  "$mdThemingProvider",
 function config($locationProvider, $routeProvider, $mdThemingProvider){
   // $mdDateLocaleProvider.formatDate = function(date) {
@@ -16,9 +21,14 @@ function config($locationProvider, $routeProvider, $mdThemingProvider){
   })
   .accentPalette("blue-grey");
 
-  $routeProvider.when("/setupProject", {
+  $routeProvider
+  .when("/setupProject", {
     template: "<setup-project></setup-project>"
-  }).otherwise({
-    redirectTo: "/setupProject"
+  })
+  .when("/userAuth", {
+    template: "<user-auth></user-auth>"
+  })
+  .otherwise({
+    redirectTo: "/userAuth"
   });
 }]);

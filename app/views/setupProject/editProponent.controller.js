@@ -4,32 +4,27 @@ controller("editProponentController", function($scope, $rootScope, $firebaseArra
   var ref = firebase.database().ref().child("setupProject");
   $scope.setupProjects = $firebaseArray(ref);
 
-  $scope.years = ['2010', '2011', '2012', '2013',
-  '2014', '2015', '2016', '2017',
-  '2018', '2019', '2020', '2021',
-  '2022', '2023', '2024', '2025',
-  '2026', '2027', '2028', '2029',
-  '2030', '2031', '2032', '2033'];
+  $scope.years = years;
 
   $scope.remindRefundIcon = function() {
-    var dueDateStart = 3;
-    var dueDateEnd = 10;
-    var nowDate = new Date().getTime();
-    var currentDay = new Date().getDate();
     var startDate = (setupProject.refundScheduleStart == "" ? null : new Date(setupProject.refundScheduleStart).getTime());
     var endDate = (setupProject.refundScheduleEnd == "" ? null : new Date(setupProject.refundScheduleEnd).getTime());
 
-    if (startDate <= nowDate && nowDate <= endDate && param.remindRefund == "false" &&
-    dueDateStart <= currentDay && currentDay <= dueDateEnd) {
+    console.clear();
+    console.log(`Edit Proponent id --- ${setupProject.id}`);
+    console.info(`dueDateStart: ${dueDateStart}, dueDateEnd: ${dueDateEnd}, currentDay: ${currentDay}, nowDate: ${nowDate}`);
+    console.log(`${setupProject.proponent} - startDate: ${startDate}, endDate: ${endDate}`);
+
+    // if (startDate <= nowDate && nowDate <= endDate && dueDateStart <= currentDay && currentDay <= dueDateEnd) {
+    if (startDate <= nowDate <= endDate && dueDateStart <= currentDay <= dueDateStart) {
+      console.info(`if-statement = true`);
       var proponent = setupProject.proponent;
-      return setupProject.remindRefund;
-    } else {
-      return "true";
+      // return setupProject.remindRefund;
+      return 'false';
     }
   };
 
   $scope.sendMe = function () {
-    // parameters: service_id, template_id, template_parameters
     emailjs.send("gmail","template_4nILbpzO", {
       email_to: "janfrancistagadiad@gmail.com",
       from_name: "janfrancistagadiad",
@@ -43,13 +38,6 @@ controller("editProponentController", function($scope, $rootScope, $firebaseArra
     function(error) {
       console.log("FAILED", error);
     });
-  };
-
-  var last = {
-    bottom: true,
-    top: false,
-    left: false,
-    right: true
   };
 
   $scope.toastPosition = angular.extend({},last);
@@ -73,8 +61,6 @@ controller("editProponentController", function($scope, $rootScope, $firebaseArra
     last = angular.extend({},current);
   }
 
-  $scope.remindValues = ['true', 'false'];
-
   $scope.dialogTitle = "Edit Proponent";
 
   $scope.proponent = setupProject.proponent;
@@ -96,7 +82,6 @@ controller("editProponentController", function($scope, $rootScope, $firebaseArra
 
   $scope.submitProponent = function() {
     var record = $scope.setupProjects.$getRecord(setupProject.id);
-    console.log("id --- " + setupProject.id);
     record.proponent = $scope.proponent;
     record.projectYear = $scope.projectYear;
     record.dateApproved = ($scope.dateApproved == null ? "" : moment($scope.dateApproved).format('MM DD YYYY'));
@@ -120,11 +105,10 @@ controller("editProponentController", function($scope, $rootScope, $firebaseArra
 
     $mdToast.show(
       $mdToast.simple()
-      .textContent($scope.proponent + " project successfully updated...")
+      .textContent(`${$scope.proponent} project successfully updated...`)
       .position(pinTo)
       .hideDelay(5000)
     );
-
     $mdDialog.hide();
   };
 

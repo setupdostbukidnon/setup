@@ -4,20 +4,7 @@ controller("addProponentDialogController", function($scope, $firebaseArray, $mdD
   var ref = firebase.database().ref().child("setupProject");
   $scope.setupProjects = $firebaseArray(ref);
 
-  $scope.years = [
-  '2010', '2011', '2012', '2013',
-  '2014', '2015', '2016', '2017',
-  '2018', '2019', '2020', '2021',
-  '2022', '2023', '2024', '2025',
-  '2026', '2027', '2028', '2029',
-  '2030', '2031', '2032', '2033'];
-
-  var last = {
-    bottom: true,
-    top: false,
-    left: false,
-    right: true
-  };
+  $scope.years = years;
 
   $scope.toastPosition = angular.extend({},last);
 
@@ -40,8 +27,6 @@ controller("addProponentDialogController", function($scope, $firebaseArray, $mdD
     last = angular.extend({},current);
   }
 
-  $scope.remindValues = ["true", "false"];
-
   $scope.dialogTitle = "Add Proponent";
 
   $scope.submitProponent = function() {
@@ -63,6 +48,9 @@ controller("addProponentDialogController", function($scope, $firebaseArray, $mdD
       contactNumber: ($scope.contactNumber == null ? "" : $scope.contactNumber),
       remindRefund: "false"
     });
+
+    var pinTo = $scope.getToastPosition();
+
     $mdToast.show(
       $mdToast.simple()
       .textContent($scope.proponent + " project successfully added...")

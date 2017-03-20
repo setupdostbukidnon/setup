@@ -1,3 +1,4 @@
+
 angular.
 module('userAuth').
 component('userAuth', {
@@ -7,7 +8,7 @@ controller('userAuthController', function($scope, $firebaseAuth, $mdToast, $loca
   $scope.authObj = $firebaseAuth();
   $scope.auth = Auth;
 
-  if (!$scope.firebaseUser) {
+  if ($scope.firebaseUser != null) {
     $location.path("/setupProject").replace();
   }
 
@@ -41,7 +42,13 @@ controller('userAuthController', function($scope, $firebaseAuth, $mdToast, $loca
 
   // any time auth state changes, add the user data to scope
   $scope.auth.$onAuthStateChanged(function(firebaseUser) {
-    $scope.firebaseUser = firebaseUser;
+    if (firebaseUser) {
+      $location.path("/setupProject").replace();
+      console.log("Signed in as:", firebaseUser.uid);
+    } else {
+      $location.path("/userAuth").replace();
+      console.log("Signed out");
+    }
   });
 
   $scope.signIn = function() {
@@ -52,15 +59,7 @@ controller('userAuthController', function($scope, $firebaseAuth, $mdToast, $loca
     }).catch(function(error) {
       if (error.code == "auth/user-not-found") {
         console.log("Authentication failed: ", "User not found.");
-        var pinTo = $scope.getToastPosition();
-        $mdToast.show(
-          $mdToast.simple()
-          .textContent('User not found.')
-          .position(pinTo )
-          .hideDelay(3000)
-        );
       }
-
     })
   }
 

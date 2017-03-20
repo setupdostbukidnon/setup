@@ -3,16 +3,41 @@ module("setupProject").
 component("setupProject", {
   templateUrl: "views/setupProject/setup-project.template.html"
 }).
-controller("setupProjectController", function($scope, $rootScope, $firebaseArray, $mdDialog, $mdMedia, $mdToast, $timeout, $mdSidenav, $log) {
-
+controller("setupProjectController", function($scope, $rootScope, $firebaseAuth, $location, $firebaseArray, $mdDialog, $mdMedia, $mdToast, $timeout, $mdSidenav, $log, Auth) {
+  $scope.authObj = $firebaseAuth();
+  $scope.auth = Auth;
   $scope.selected = [];
-  $scope.proponentWithDue = new Array();
+  $scope.proponenstWithDue = new Array();
   $scope.projectYear = "";
   var THIS = this;
   var ref = firebase.database().ref().child("setupProject");
   $scope.setupProjects = $firebaseArray(ref);
 
-  $scope.setupProjects.$watch(function(e) {
+  $scope.promise = $scope.setupProjects.$loaded(function(item) {
+    item === $scope.setupProjects; // true
+    angular.forEach($scope.setupProjects, function(value, key) {
+      // console.log(`${value.$id} - ${value.proponent}: ${key}`);
+      if (true) {
+        var record = $scope.setupProjects.$getRecord(value.$id);
+        record.remindRefund = "false";
+        $scope.setupProjects.$save(record);
+      }
+    });
+  });
+
+  // any time auth state changes, add the user data to scope
+  $scope.auth.$onAuthStateChanged(function(firebaseUser) {
+    if (firebaseUser) {
+      // console.log("Signed in as:", firebaseUser.uid );
+      console.log(`Signed in as ${firebaseUser.uid} - email: ${firebaseUser.email}`);
+      $scope.currentEmail = firebaseUser.email;
+    } else {
+      $location.path("/userAuth").replace();
+      console.log("Signed out");
+    }
+  });
+
+  $scope.setupProjects.$watch(function(event) {
     // displays total number of items from firebase database
     $scope.setupProjectsLength = $scope.setupProjects.length;
   });
@@ -25,53 +50,20 @@ controller("setupProjectController", function($scope, $rootScope, $firebaseArray
     $scope.selected = [];
   }
 
-  $scope.promise = $scope.setupProjects;
-
   $scope.limitOptions = [5, 10, 15];
 
-  $scope.filterOptions = ["All",
-  "2010", "2011", "2012", "2013",
-  "2014", "2015", "2016", "2017",
-  "2018", "2019", "2020", "2021",
-  "2022", "2023", "2024", "2025",
-  "2026", "2027", "2028", "2029",
-  "2030", "2031", "2032", "2033"];
+  $scope.filterOptions = years;
 
-  $scope.options = {
-    rowSelection: true,
-    multiSelect: false,
-    autoSelect: true,
-    decapitate: false,
-    largeEditDialog: false,
-    boundaryLinks: false,
-    limitSelect: false,
-    pageSelect: true
-  };
+  $scope.options = options;
 
-  $scope.query = {
-    filter: "",
-    limit: "10",
-    order: "-projectYear",
-    page: 1
-  };
+  $scope.query = query;
 
-  $scope.tooltip = {
-    showTooltip: false,
-    tipDirection: "bottom"
-  };
+  $scope.tooltip = tooltip;
 
-  $scope.remindJanJan = function() {
-    console.log($scope.showProponentWithDue);
+  $scope.clearFilter = function() {
     $scope.filterProponent = "";
-    $scope.filterOption = "All";
+    $scope.filterOption = "All"
   }
-
-  var last = {
-    bottom: true,
-    top: false,
-    left: false,
-    right: true
-  };
 
   $scope.toastPosition = angular.extend({}, last);
 
@@ -96,48 +88,45 @@ controller("setupProjectController", function($scope, $rootScope, $firebaseArray
     last = angular.extend({},current);
   }
 
-  $scope.logPagination = function (page, limit) {
+  $scope.logPagination = function(page, limit) {
     console.log("page: ", page);
     console.log("limit: ", limit);
-  };
+  }
+
+  $scope.reset = function() {
+    $scope.query.page = 1;
+  }
 
   $scope.remindRefundIcon = function(param) {
-    var nowDate = new Date().getTime();
-    var currentDay = new Date().getDate();
     var startDate = (param.refundScheduleStart == "" ? null : new Date(param.refundScheduleStart).getTime());
     var endDate = (param.refundScheduleEnd == "" ? null : new Date(param.refundScheduleEnd).getTime());
 
-    if (startDate <= nowDate && nowDate <= endDate && param.remindRefund == "false" &&
-    dueDateStart <= currentDay && currentDay <= dueDateEnd) {
+    // if (startDate <= nowDate && nowDate <= endDate && dueDateStart <= currentDay && currentDay <= dueDateEnd) {
+    if (startDate <= nowDate <= endDate && dueDateStart <= currentDay <= dueDateEnd) {
       var proponent = param.proponent;
       return param.remindRefund;
-    } else {
-      return "true";
     }
   };
 
-  $scope.filterRemindRefund = function(param) {
-    var nowDate = new Date().getTime();
-    var currentDay = new Date().getDate();
+  $scope.filterWithRefund = function(param) {
     var startDate = (param.refundScheduleStart == "" ? null : new Date(param.refundScheduleStart).getTime());
     var endDate = (param.refundScheduleEnd == "" ? null : new Date(param.refundScheduleEnd).getTime());
 
-    if (startDate <= nowDate && nowDate <= endDate &&
-    dueDateStart <= currentDay && currentDay <= dueDateEnd) {
-      $scope.proponentWithDue.push(param.proponent);
-
+    if (startDate <= nowDate && nowDate <= endDate && dueDateStart <= currentDay && currentDay <= dueDateEnd) {
+      // if (startDate <= nowDate <= endDate && dueDateStart <= currentDay <= dueDateEnd) {
+      $scope.proponenstWithDue.push(param.proponent);
       return param;
     }
   };
 
   $scope.sendEmail = function() {
     $scope.filteredItems = new Array();
-    $scope.filteredItems = $scope.proponentWithDue.filter(function(elem, index, self) {
+    $scope.filteredItems = $scope.proponenstWithDue.filter(function(elem, index, self) {
       return index == self.indexOf(elem);
     });
 
     var temp = "";
-    for(var i = 0; i < $scope.filteredItems.length; i++) {
+    for (var i = 0; i < $scope.filteredItems.length; i++) {
       temp += i+1 + ". " + $scope.filteredItems[i] + '<br>';
     }
 
@@ -192,7 +181,7 @@ controller("setupProjectController", function($scope, $rootScope, $firebaseArray
       $mdSidenav(navID)
       .toggle()
       .then(function () {
-        $log.debug("toggle " + navID + " is done");
+        $log.debug(`toggle ${navID} is done.`);
       });
     }
   }
@@ -205,10 +194,10 @@ controller("setupProjectController", function($scope, $rootScope, $firebaseArray
   };
 
   $scope.delete = function(ev) {
-    console.log(THIS.SETUPPROJECT.proponent);
+    console.log(`for delete ${THIS.SETUPPROJECT.proponent}`);
 
     var confirm = $mdDialog.confirm()
-    .title("Would you like to delete " + THIS.SETUPPROJECT.proponent + " SETUP project?")
+    .title(`Would you like to delete ${THIS.SETUPPROJECT.proponent} SETUP project?`)
     .ariaLabel("DELETE SETUP project")
     .targetEvent(ev)
     .ok("Delete")
@@ -238,6 +227,7 @@ controller("setupProjectController", function($scope, $rootScope, $firebaseArray
       templateUrl: "views/dialog/proponentDialog.template.html",
       parent: angular.element(document.body),
       targetEvent: ev,
+      escapeToClose: false,
       locals: {
         setupProject: {
           id: THIS.SETUPPROJECT.$id,
@@ -267,7 +257,8 @@ controller("setupProjectController", function($scope, $rootScope, $firebaseArray
       controller: "addProponentDialogController",
       templateUrl: "views/dialog/proponentDialog.template.html",
       parent: angular.element(document.body),
-      targetEvent: ev
+      targetEvent: ev,
+      escapeToClose: false
     });
 
     $scope.closeDialog = function() {
