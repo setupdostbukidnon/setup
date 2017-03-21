@@ -10,6 +10,7 @@ controller('userAuthController', function($scope, $rootScope, $firebaseAuth, $fi
   var ref = firebase.database().ref().child("users");
   $scope.users = $firebaseArray(ref);
 
+<<<<<<< HEAD
   $scope.showSignIn = true;
   $scope.showSignUp = false;
 
@@ -50,5 +51,8 @@ controller('userAuthController', function($scope, $rootScope, $firebaseAuth, $fi
       console.error("Error: ", error);
     });
   }
+=======
+  
+>>>>>>> 34dac5e5e9d802724c45d6765685cf74e92dd43e
 
 });
