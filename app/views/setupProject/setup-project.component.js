@@ -3,54 +3,34 @@ module("setupProject").
 component("setupProject", {
   templateUrl: "views/setupProject/setup-project.template.html"
 }).
-controller("setupProjectController", function($scope, $rootScope, $firebaseAuth, $location, $firebaseArray, $mdDialog, $mdMedia, $mdToast, $timeout, $mdSidenav, $log, Auth) {
+controller("setupProjectController", function($location, $scope, $rootScope, $firebaseArray,$firebaseAuth, $mdDialog, $mdMedia, $mdToast, $timeout, $mdSidenav, $log, Auth) {
   $scope.authObj = $firebaseAuth();
   $scope.auth = Auth;
   $scope.selected = [];
-  $scope.proponenstWithDue = new Array();
+  $scope.proponentWithDue = new Array();
   $scope.projectYear = "";
   var THIS = this;
   var ref = firebase.database().ref().child("setupProject");
   $scope.setupProjects = $firebaseArray(ref);
 
-  $scope.promise = $scope.setupProjects.$loaded(function(item) {
-    item === $scope.setupProjects; // true
-    angular.forEach($scope.setupProjects, function(value, key) {
-      // console.log(`${value.$id} - ${value.proponent}: ${key}`);
-      if (true) {
-        var record = $scope.setupProjects.$getRecord(value.$id);
-        record.remindRefund = "false";
-        $scope.setupProjects.$save(record);
-      }
-    });
-  });
-
-  // any time auth state changes, add the user data to scope
-  $scope.auth.$onAuthStateChanged(function(firebaseUser) {
-    if (firebaseUser) {
-      // console.log("Signed in as:", firebaseUser.uid );
-      console.log(`Signed in as ${firebaseUser.uid} - email: ${firebaseUser.email}`);
-      $scope.currentEmail = firebaseUser.email;
-    } else {
-      $location.path("/userAuth").replace();
-      console.log("Signed out");
-    }
-  });
-
-  $scope.setupProjects.$watch(function(event) {
+  $scope.setupProjects.$watch(function(e) {
     // displays total number of items from firebase database
     $scope.setupProjectsLength = $scope.setupProjects.length;
   });
 
-  $rootScope.$on("setupProjectMainController", function(param) {
-    $scope.parentmethod(param);
+  $scope.promise = $scope.setupProjects.$loaded(function(item) {
+    item === $scope.setupProjects; // true
+    angular.forEach($scope.setupProjects, function(value, key) {
+      // console.log(`${value.$id} - ${value.proponent}: ${key}`);
+      // if (false) {
+      //   var record = $scope.setupProjects.$getRecord(value.$id);
+      //   record.remindRefund = "false";
+      //   $scope.setupProjects.$save(record);
+      // }
+    });
   });
 
-  $scope.parentmethod = function(param) {
-    $scope.selected = [];
-  }
-
-  $scope.limitOptions = [5, 10, 15];
+  $scope.limitOptions = limitOptions;
 
   $scope.filterOptions = years;
 
@@ -59,11 +39,6 @@ controller("setupProjectController", function($scope, $rootScope, $firebaseAuth,
   $scope.query = query;
 
   $scope.tooltip = tooltip;
-
-  $scope.clearFilter = function() {
-    $scope.filterProponent = "";
-    $scope.filterOption = "All"
-  }
 
   $scope.toastPosition = angular.extend({}, last);
 
@@ -88,16 +63,14 @@ controller("setupProjectController", function($scope, $rootScope, $firebaseAuth,
     last = angular.extend({},current);
   }
 
-  $scope.logPagination = function(page, limit) {
+  $scope.logPagination = function (page, limit) {
     console.log("page: ", page);
     console.log("limit: ", limit);
-  }
-
-  $scope.reset = function() {
-    $scope.query.page = 1;
-  }
+  };
 
   $scope.remindRefundIcon = function(param) {
+    var nowDate = new Date().getTime();
+    var currentDay = new Date().getDate();
     var startDate = (param.refundScheduleStart == "" ? null : new Date(param.refundScheduleStart).getTime());
     var endDate = (param.refundScheduleEnd == "" ? null : new Date(param.refundScheduleEnd).getTime());
 
@@ -108,25 +81,28 @@ controller("setupProjectController", function($scope, $rootScope, $firebaseAuth,
     }
   };
 
-  $scope.filterWithRefund = function(param) {
+  $scope.filterRemindRefund = function(param) {
+    var nowDate = new Date().getTime();
+    var currentDay = new Date().getDate();
     var startDate = (param.refundScheduleStart == "" ? null : new Date(param.refundScheduleStart).getTime());
     var endDate = (param.refundScheduleEnd == "" ? null : new Date(param.refundScheduleEnd).getTime());
 
     if (startDate <= nowDate && nowDate <= endDate && dueDateStart <= currentDay && currentDay <= dueDateEnd) {
-      // if (startDate <= nowDate <= endDate && dueDateStart <= currentDay <= dueDateEnd) {
-      $scope.proponenstWithDue.push(param.proponent);
+    // if (startDate <= nowDate <= endDate && dueDateStart <= currentDay <= dueDateEnd) {
+      $scope.proponentWithDue.push(param.proponent);
+
       return param;
     }
   };
 
   $scope.sendEmail = function() {
     $scope.filteredItems = new Array();
-    $scope.filteredItems = $scope.proponenstWithDue.filter(function(elem, index, self) {
+    $scope.filteredItems = $scope.proponentWithDue.filter(function(elem, index, self) {
       return index == self.indexOf(elem);
     });
 
     var temp = "";
-    for (var i = 0; i < $scope.filteredItems.length; i++) {
+    for(var i = 0; i < $scope.filteredItems.length; i++) {
       temp += i+1 + ". " + $scope.filteredItems[i] + '<br>';
     }
 
@@ -181,7 +157,7 @@ controller("setupProjectController", function($scope, $rootScope, $firebaseAuth,
       $mdSidenav(navID)
       .toggle()
       .then(function () {
-        $log.debug(`toggle ${navID} is done.`);
+        $log.debug("toggle " + navID + " is done");
       });
     }
   }
@@ -194,10 +170,10 @@ controller("setupProjectController", function($scope, $rootScope, $firebaseAuth,
   };
 
   $scope.delete = function(ev) {
-    console.log(`for delete ${THIS.SETUPPROJECT.proponent}`);
+    console.log(THIS.SETUPPROJECT.proponent);
 
     var confirm = $mdDialog.confirm()
-    .title(`Would you like to delete ${THIS.SETUPPROJECT.proponent} SETUP project?`)
+    .title("Would you like to delete " + THIS.SETUPPROJECT.proponent + " SETUP project?")
     .ariaLabel("DELETE SETUP project")
     .targetEvent(ev)
     .ok("Delete")
@@ -227,7 +203,6 @@ controller("setupProjectController", function($scope, $rootScope, $firebaseAuth,
       templateUrl: "views/dialog/proponentDialog.template.html",
       parent: angular.element(document.body),
       targetEvent: ev,
-      escapeToClose: false,
       locals: {
         setupProject: {
           id: THIS.SETUPPROJECT.$id,
@@ -257,13 +232,22 @@ controller("setupProjectController", function($scope, $rootScope, $firebaseAuth,
       controller: "addProponentDialogController",
       templateUrl: "views/dialog/proponentDialog.template.html",
       parent: angular.element(document.body),
-      targetEvent: ev,
-      escapeToClose: false
+      targetEvent: ev
     });
 
     $scope.closeDialog = function() {
       $mdDialog.hide();
     }
   };
+
+  $scope.authObj.$onAuthStateChanged(function(firebaseUser) {
+    if (firebaseUser) {
+      $location.path("/setupProject");
+      console.log("Signed in as:", firebaseUser.uid);
+    } else {
+      console.log("Signed out");
+      $location.path("/userAuth");
+    }
+  });
 
 });

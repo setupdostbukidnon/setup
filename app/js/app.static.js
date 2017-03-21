@@ -1,5 +1,5 @@
 window.dueDateStart = 10;
-window.dueDateEnd = 20;
+window.dueDateEnd = 25;
 window.selected = [];
 window.currentDay = new Date().getDate();
 window.nowDate = new Date().getTime();
@@ -9,6 +9,7 @@ window.last = {
   left: false,
   right: true
 };
+window.limitOptions = [5, 10, 15];
 window.years = ["All",
 "2010", "2011", "2012", "2013",
 "2014", "2015", "2016", "2017",

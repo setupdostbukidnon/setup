@@ -7,6 +7,6 @@ angular.module("dost-pstc-x", [
   "firebase",
   "md.data.table",
   "userAuth",
+  // "mainNav",
   "setupProject"
-  // "mainNav"
 ]);

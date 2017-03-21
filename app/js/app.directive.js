@@ -1,7 +1,6 @@
 "use strict"
 
-angular.
-module("dost-pstc-x").
+angular.module("dost-pstc-x").
 directive("currencyMask", function() {
   return {
     restrict: "A",

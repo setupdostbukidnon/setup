@@ -1,20 +1,40 @@
-<div layout="row" layout-align="center center" ng-controller="userAuthController" ng-cloak style="padding-top: 25vh;">
+<div layout="row" layout-align="center center" ng-controller="userAuthController" style="padding-top: 15vh" ng-cloak>
   <md-content layout-padding flex="40">
-    <!-- <div ng-show="firebaseUser" layout="row">
-      <p>Hello, {{ firebaseUser.email }}</p>
-      <button ng-click="auth.$signOut()">Sign Out</button>
-    </div> -->
     <md-card layout-padding style="padding-top: 45px; padding-left: 20px; padding-right: 20px;">
-      <md-input-container class="md-block">
-        <label>Email Address</label>
-        <input ng-model="user.emailAddress" type="email">
-      </md-input-container>
-      <md-input-container class="md-block">
-        <label>Password</label>
-        <input ng-model="user.password" type="password">
-      </md-input-container>
-      <md-button class="md-raised md-primary" ng-click="signIn()">Sign In</md-button>
+      <div ng-show="showSignIn">
+        <md-input-container class="md-block">
+          <label>Email Address</label>
+          <input ng-model="user.emailAddress" type="email">
+        </md-input-container>
+        <md-input-container class="md-block">
+          <label>Password</label>
+          <input ng-model="user.password" type="password">
+        </md-input-container>
+      </div>
+      <div ng-show="showSignUp">
+        <md-input-container class="md-block">
+          <label>Name</label>
+          <input ng-model="user.name" />
+        </md-input-container>
+        <md-input-container class="md-block">
+          <label>Email Address</label>
+          <input ng-model="user.emailAddress" type="email" />
+        </md-input-container>
+        <md-input-container class="md-block">
+          <label>Password</label>
+          <input ng-model="user.password" type="password" />
+        </md-input-container>
+      </div>
+      <div layout="row" ng-show="showSignIn">
+        <a ng-click="showSignUp=true; showSignIn=false" href="" style="padding-top: 20px;"><span >Create new account.</span></a>
+        <span flex></span>
+        <md-button class="md-raised md-primary" ng-click="signIn()">Sign In</md-button>
+      </div>
+      <div layout="row" ng-show="showSignUp">
+        <a ng-click="showSignUp=false; showSignIn=true" href="" style="padding-top: 20px;"><span >Back</span></a>
+        <span flex></span>
+        <md-button class="md-raised md-primary" ng-click="signUp()">Sign Up</md-button>
+      </div>
     </md-card>
-
   </md-content>
 </div>

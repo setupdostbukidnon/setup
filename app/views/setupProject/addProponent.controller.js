@@ -4,7 +4,13 @@ controller("addProponentDialogController", function($scope, $firebaseArray, $mdD
   var ref = firebase.database().ref().child("setupProject");
   $scope.setupProjects = $firebaseArray(ref);
 
-  $scope.years = years;
+  $scope.years = [
+  '2010', '2011', '2012', '2013',
+  '2014', '2015', '2016', '2017',
+  '2018', '2019', '2020', '2021',
+  '2022', '2023', '2024', '2025',
+  '2026', '2027', '2028', '2029',
+  '2030', '2031', '2032', '2033'];
 
   $scope.toastPosition = angular.extend({},last);
 
@@ -61,7 +67,7 @@ controller("addProponentDialogController", function($scope, $firebaseArray, $mdD
   };
 
   $scope.closeDialog = function() {
-    window.selected = [];
+    selected = [];
     $mdDialog.hide();
   };
 });
