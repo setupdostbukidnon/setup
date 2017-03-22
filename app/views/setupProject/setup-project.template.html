@@ -97,11 +97,15 @@
         <md-list>
           <md-list-item>
             <md-icon class="material-icons md-dark md-24">account_circle</md-icon>
-            <p class="md-body-2">Account name</p>
+            <p class="md-body-2">{{currentUser}}</p>
           </md-list-item>
           <md-list-item ng-click="create($event)">
-            <md-icon class="material-icons md-dark md-24">add</md-icon>
+            <md-icon class="material-icons md-dark md-24">add_circle</md-icon>
             <p class="md-body-2">Add Proponent</p>
+          </md-list-item>
+          <md-list-item ng-click="null">
+            <md-icon class="material-icons md-dark md-24">history</md-icon>
+            <p class="md-body-2">History</p>
           </md-list-item>
           <md-list-item>
             <md-checkbox ng-model="showProponentWithDue" checked="true" ng-change="clearFilter()" ng-true-value="'true'" ng-false-value="'false'"></md-checkbox>
@@ -111,7 +115,7 @@
             <md-icon class="material-icons md-dark md-24">email</md-icon>
             <p class="md-body-2">Send Email</p>
           </md-list-item>
-          <md-list-item ng-click="auth.$signOut()">
+          <md-list-item ng-click="signOut($event)">
             <md-icon class="material-icons md-dark md-24">exit_to_app</md-icon>
             <p class="md-body-2">Sign Out</p>
           </md-list-item>

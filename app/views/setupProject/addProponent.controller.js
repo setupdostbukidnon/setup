@@ -1,8 +1,8 @@
 angular.
 module("setupProject").
 controller("addProponentDialogController", function($scope, $firebaseArray, $mdDialog, $mdToast, $timeout) {
-  var ref = firebase.database().ref().child("setupProject");
-  $scope.setupProjects = $firebaseArray(ref);
+  // var setupProjects = firebase.database().ref().child("setupProject");
+  $scope.setupProjects = $firebaseArray(setupProjects);
 
   $scope.years = [
   '2010', '2011', '2012', '2013',

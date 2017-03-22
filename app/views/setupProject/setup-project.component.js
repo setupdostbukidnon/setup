@@ -10,11 +10,21 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
   $scope.proponentWithDue = new Array();
   $scope.projectYear = "";
   var THIS = this;
-  var ref = firebase.database().ref().child("setupProject");
-  $scope.setupProjects = $firebaseArray(ref);
+  // var setupProjects = firebase.database().ref().child("setupProject");
+  $scope.setupProjects = $firebaseArray(setupProjects);
+
+  $scope.authObj.$onAuthStateChanged(function(firebaseUser) {
+    if (firebaseUser) {
+      $location.path("/setupProject");
+      console.log(`Signed in as ${firebaseUser.uid} --- ${firebaseUser.email}`);
+      $scope.currentUser = firebaseUser.email;
+    } else {
+      console.log("Signed out");
+      $location.path("/userAuth");
+    }
+  });
 
   $scope.setupProjects.$watch(function(e) {
-    // displays total number of items from firebase database
     $scope.setupProjectsLength = $scope.setupProjects.length;
   });
 
@@ -90,7 +100,6 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
     if (startDate <= nowDate && nowDate <= endDate && dueDateStart <= currentDay && currentDay <= dueDateEnd) {
     // if (startDate <= nowDate <= endDate && dueDateStart <= currentDay <= dueDateEnd) {
       $scope.proponentWithDue.push(param.proponent);
-
       return param;
     }
   };
@@ -100,6 +109,8 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
     $scope.filteredItems = $scope.proponentWithDue.filter(function(elem, index, self) {
       return index == self.indexOf(elem);
     });
+
+    console.log(`${$scope.filteredItems.length}`);
 
     var temp = "";
     for(var i = 0; i < $scope.filteredItems.length; i++) {
@@ -115,6 +126,7 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
     then(function(response) {
       console.log("SUCCESS", response);
       var pinTo = $scope.getToastPosition();
+      console.log(`${temp}`);
 
       $mdToast.show(
         $mdToast.simple()
@@ -132,10 +144,6 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
     console.log(setupProject.proponent);
     return setupProject;
   }
-
-  $scope.rightClick = function(param) {
-    console.log(param.proponent);
-  };
 
   $scope.selectRow = function(param) {
     THIS.SETUPPROJECT = param;
@@ -168,6 +176,23 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
       $log.debug("close RIGHT is done");
     });
   };
+
+  $scope.signOut = function (ev) {
+    var confirm = $mdDialog.confirm()
+          .title('Would you like to delete your debt?')
+          .textContent('All of the banks have agreed to forgive you your debts.')
+          .ariaLabel('Lucky day')
+          .targetEvent(ev)
+          .ok('Please do it!')
+          .cancel('Sounds like a scam');
+
+    $mdDialog.show(confirm).then(function() {
+      $scope.status = 'You decided to get rid of your debt.';
+      $scope.auth.$signOut();
+    }, function() {
+      $scope.status = 'You decided to keep your debt.';
+    });
+  }
 
   $scope.delete = function(ev) {
     console.log(THIS.SETUPPROJECT.proponent);
@@ -203,6 +228,7 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
       templateUrl: "views/dialog/proponentDialog.template.html",
       parent: angular.element(document.body),
       targetEvent: ev,
+      escapeToClose: false,
       locals: {
         setupProject: {
           id: THIS.SETUPPROJECT.$id,
@@ -232,22 +258,13 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
       controller: "addProponentDialogController",
       templateUrl: "views/dialog/proponentDialog.template.html",
       parent: angular.element(document.body),
-      targetEvent: ev
+      targetEvent: ev,
+      escapeToClose: false
     });
 
     $scope.closeDialog = function() {
       $mdDialog.hide();
     }
   };
-
-  $scope.authObj.$onAuthStateChanged(function(firebaseUser) {
-    if (firebaseUser) {
-      $location.path("/setupProject");
-      console.log("Signed in as:", firebaseUser.uid);
-    } else {
-      console.log("Signed out");
-      $location.path("/userAuth");
-    }
-  });
 
 });
