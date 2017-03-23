@@ -32,7 +32,7 @@
         </md-button>
         <md-button aria-label="Open for menu" class="md-icon-button" ng-click="delete($event)">
           <md-tooltip md-direction="{{tooltip.tipDirection}}">Delete Proponent</md-tooltip>
-          <md-icon class="material-icons">delete_forever</md-icon>
+          <md-icon class="material-icons">delete</md-icon>
         </md-button>
         <span flex></span>
         <md-button class="md-icon-button" ng-click="selected = []">
@@ -62,7 +62,7 @@
         </thead>
         <tbody md-body>
           <!-- ng-dblclick="edit($event)"  -->
-          <tr md-row md-select="setupProject" md-select-id="proponent" md-auto-select="options.autoSelect" ng-right-click="remindRefundIcon(setupProject)" ng-click="selectRow(setupProject)" ng-repeat="setupProject in filteredItems = (setupProjects | filter: {proponent: filterProponent} | filter: {projectYear: (filterOption == 'All' ? '' : filterOption)} | filter: (showProponentWithDue == 'true' ? filterRemindRefund : '') ) | orderBy: query.order | limitTo: query.limit: (query.page -1) * query.limit">
+          <tr md-row md-select="setupProject" md-select-id="proponent" md-auto-select="options.autoSelect" ng-click="selectRow(setupProject)" ng-repeat="setupProject in filteredItems = (setupProjects | filter: {proponent: filterProponent} | filter: {projectYear: (filterOption == 'All' ? '' : filterOption)} | filter: (showProponentWithDue == 'true' ? filterRemindRefund : '') ) | orderBy: query.order | limitTo: query.limit: (query.page -1) * query.limit">
             <td md-cell>
               <md-icon class="material-icons" ng-show="remindRefundIcon(setupProject) == 'false'" style="color: red;">priority_high</md-icon>
               <md-icon class="material-icons" ng-hide="remindRefundIcon(setupProject) == 'false'" style="color: white;">priority_high</md-icon>
@@ -97,13 +97,13 @@
         <md-list>
           <md-list-item>
             <md-icon class="material-icons md-dark md-24">account_circle</md-icon>
-            <p class="md-body-2">{{currentUser}}</p>
+            <p class="md-body-2">{{currentEmail}}</p>
           </md-list-item>
           <md-list-item ng-click="create($event)">
             <md-icon class="material-icons md-dark md-24">add_circle</md-icon>
             <p class="md-body-2">Add Proponent</p>
           </md-list-item>
-          <md-list-item ng-click="null">
+          <md-list-item ng-click="showHistory($event)">
             <md-icon class="material-icons md-dark md-24">history</md-icon>
             <p class="md-body-2">History</p>
           </md-list-item>

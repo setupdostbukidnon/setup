@@ -1,8 +1,19 @@
 angular.
 module("setupProject").
-controller("editProponentController", function($scope, $rootScope, $firebaseArray, $mdDialog, $window, $mdToast, setupProject) {
-  // var setupProjects = firebase.database().ref().child("setupProject");
+controller("editProponentController", function($scope, $rootScope, $firebaseArray, $firebaseAuth, $mdDialog, $window, $mdToast, setupProject, Auth) {
+  $scope.authObj = $firebaseAuth();
+  $scope.auth = Auth;
+  var setupProjects = firebase.database().ref().child("setupProject");
+  var historyRef = firebase.database().ref().child("history");
   $scope.setupProjects = $firebaseArray(setupProjects);
+  $scope.history = $firebaseArray(historyRef);
+
+  $scope.authObj.$onAuthStateChanged(function(firebaseUser) {
+    if (firebaseUser) {
+      console.log(`${firebaseUser.email}`);
+      $scope.currentEmail = firebaseUser.email;
+    }
+  });
 
   $scope.years = [
   '2010', '2011', '2012', '2013',
@@ -63,16 +74,15 @@ controller("editProponentController", function($scope, $rootScope, $firebaseArra
 
   $scope.submitProponent = function() {
     var record = $scope.setupProjects.$getRecord(setupProject.id);
-    console.log("id --- " + setupProject.id);
     record.proponent = $scope.proponent;
     record.projectYear = $scope.projectYear;
-    record.dateApproved = ($scope.dateApproved == null ? "" : moment($scope.dateApproved).format('MM DD YYYY'));
-    record.dateReleased = ($scope.dateReleased == null ? "" : moment($scope.dateReleased).format('MM DD YYYY'));
+    record.dateApproved = ($scope.dateApproved == null ? "" : moment($scope.dateApproved).format('MM-DD-YYYY'));
+    record.dateReleased = ($scope.dateReleased == null ? "" : moment($scope.dateReleased).format('MM-DD-YYYY'));
     record.actualFundRelease = $scope.actualFundRelease;
-    record.projectDurationStart = ($scope.projectDurationStart == null ? "" : moment($scope.projectDurationStart).format('MM DD YYYY'));
-    record.projectDurationEnd = ($scope.projectDurationEnd == null ? "" : moment($scope.projectDurationEnd).format('MM DD YYYY'));
-    record.refundScheduleStart = ($scope.refundScheduleStart == null ? "" : moment($scope.refundScheduleStart).format('MM DD YYYY'));
-    record.refundScheduleEnd = ($scope.refundScheduleEnd == null ? "" : moment($scope.refundScheduleEnd).format('MM DD YYYY'));
+    record.projectDurationStart = ($scope.projectDurationStart == null ? "" : moment($scope.projectDurationStart).format('MM-DD-YYYY'));
+    record.projectDurationEnd = ($scope.projectDurationEnd == null ? "" : moment($scope.projectDurationEnd).format('MM-DD-YYYY'));
+    record.refundScheduleStart = ($scope.refundScheduleStart == null ? "" : moment($scope.refundScheduleStart).format('MM-DD-YYYY'));
+    record.refundScheduleEnd = ($scope.refundScheduleEnd == null ? "" : moment($scope.refundScheduleEnd).format('MM-DD-YYYY'));
     record.latestProjectExtension = $scope.latestProjectExtension;
     record.refundMade = $scope.refundMade;
     record.balance = $scope.balance;
@@ -80,11 +90,16 @@ controller("editProponentController", function($scope, $rootScope, $firebaseArra
     record.remindRefund = $scope.remindRefund;
     record.emailAddress = $scope.emailAddress;
     record.contactNumber = $scope.contactNumber;
-
     $scope.setupProjects.$save(record);
 
-    var pinTo = $scope.getToastPosition();
+    $scope.history.$add({
+      action: "update",
+      proponent: ($scope.proponent == null ? "" : $scope.proponent),
+      date: new Date().getTime(),
+      emailAddress: $scope.currentEmail
+    });
 
+    var pinTo = $scope.getToastPosition();
     $mdToast.show(
       $mdToast.simple()
       .textContent($scope.proponent + " project successfully updated...")

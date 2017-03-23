@@ -1,0 +1,22 @@
+<md-dialog aria-label="History Dialog" flex="50">
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <span flex></span>
+      <p class="dialogTitle">History</p>
+      <md-button aria-label="Open for menu" class="md-icon-button" ng-click="closeDialog(); selected=[];">
+        <md-icon class="material-icons">close</md-icon>
+      </md-button>
+    </div>
+  </md-toolbar>
+  <md-dialog-content class="md-inline-form" layout-padding>
+    <md-list flex>
+      <md-list-item class="md-2-line" ng-repeat="item in history | orderBy:'-date'">
+        <md-icon class="material-icons">{{item.action}}</md-icon>
+        <div class="md-list-item-text" layout="column">
+          <p>{{item.action}} {{item.proponent}} {{formatDate(item.date)}}</p>
+          <p>{{item.emailAddress}}</p>
+        </div>
+      </md-list-item>
+    </md-list>
+  </md-dialog-content>
+</md-dialog>

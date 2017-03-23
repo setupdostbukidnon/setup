@@ -10,14 +10,16 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
   $scope.proponentWithDue = new Array();
   $scope.projectYear = "";
   var THIS = this;
-  // var setupProjects = firebase.database().ref().child("setupProject");
+  var setupProjects = firebase.database().ref().child("setupProject");
+  var historyRef = firebase.database().ref().child("history");
   $scope.setupProjects = $firebaseArray(setupProjects);
+  $scope.history = $firebaseArray(historyRef);
 
   $scope.authObj.$onAuthStateChanged(function(firebaseUser) {
     if (firebaseUser) {
       $location.path("/setupProject");
       console.log(`Signed in as ${firebaseUser.uid} --- ${firebaseUser.email}`);
-      $scope.currentUser = firebaseUser.email;
+      $scope.currentEmail = firebaseUser.email;
     } else {
       console.log("Signed out");
       $location.path("/userAuth");
@@ -155,7 +157,7 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
   };
 
   $scope.formatDate = function(param) {
-    return param == "" ? "" : moment(param).format("MMM DD YYYY");
+    return param == "" ? "" : moment(param, "MM-DD-YYYY").format("MMM DD YYYY");
   };
 
   $scope.toggleLeft = buildToggler('left');
@@ -177,14 +179,24 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
     });
   };
 
-  $scope.signOut = function (ev) {
+  $scope.showHistory = function(ev) {
+    $mdDialog.show({
+      controller: "historyController",
+      templateUrl: "views/dialog/historyDialog.template.html",
+      parent: angular.element(document.body),
+      targetEvent: ev,
+      escapeToClose: false
+    });
+  }
+
+  $scope.signOut = function(ev) {
     var confirm = $mdDialog.confirm()
-          .title('Would you like to delete your debt?')
-          .textContent('All of the banks have agreed to forgive you your debts.')
+          .title('Are you sure to Sign Out?')
+          // .textContent('All of the banks have agreed to forgive you your debts.')
           .ariaLabel('Lucky day')
           .targetEvent(ev)
-          .ok('Please do it!')
-          .cancel('Sounds like a scam');
+          .ok('Sign Out')
+          .cancel('Cancel');
 
     $mdDialog.show(confirm).then(function() {
       $scope.status = 'You decided to get rid of your debt.';
@@ -205,11 +217,19 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
     .cancel("Cancel");
 
     $mdDialog.show(confirm).then(function() {
+      $scope.history.$add({
+        action: "delete",
+        proponent: THIS.SETUPPROJECT.proponent,
+        date: new Date().getTime(),
+        emailAddress: $scope.currentEmail
+      });
+
       $scope.setupProjects.$remove(THIS.SETUPPROJECT);
+
       $scope.selected = [];
       $scope.showOption = true;
-      var pinTo = $scope.getToastPosition();
 
+      var pinTo = $scope.getToastPosition();
       $mdToast.show(
         $mdToast.simple()
         .textContent(THIS.SETUPPROJECT.proponent + " project successfully deleted...")
@@ -218,7 +238,6 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
       );
     }, function() {
       $mdDialog.hide();
-
     });
   };
 
@@ -261,10 +280,6 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
       targetEvent: ev,
       escapeToClose: false
     });
-
-    $scope.closeDialog = function() {
-      $mdDialog.hide();
-    }
   };
 
 });

@@ -1,4 +1,3 @@
-window.setupProjects = firebase.database().ref().child("setupProject");
 window.dueDateStart = 10;
 window.dueDateEnd = 25;
 window.selected = [];
