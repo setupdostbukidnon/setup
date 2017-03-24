@@ -26,9 +26,9 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
     }
   });
 
-  $scope.setupProjects.$watch(function(e) {
-    $scope.setupProjectsLength = $scope.setupProjects.length;
-  });
+  // $scope.setupProjects.$watch(function(e) {
+  //   $scope.setupProjectsLength = $scope.setupProjects.length;
+  // });
 
   $scope.promise = $scope.setupProjects.$loaded(function(item) {
     item === $scope.setupProjects; // true
@@ -81,26 +81,20 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
   };
 
   $scope.remindRefundIcon = function(param) {
-    var nowDate = new Date().getTime();
-    var currentDay = new Date().getDate();
     var startDate = (param.refundScheduleStart == "" ? null : new Date(param.refundScheduleStart).getTime());
     var endDate = (param.refundScheduleEnd == "" ? null : new Date(param.refundScheduleEnd).getTime());
 
-    // if (startDate <= nowDate && nowDate <= endDate && dueDateStart <= currentDay && currentDay <= dueDateEnd) {
-    if (startDate <= nowDate <= endDate && dueDateStart <= currentDay <= dueDateEnd) {
+    if (startDate <= nowDate && nowDate <= endDate && dueDateStart <= currentDay && currentDay <= dueDateEnd) {
       var proponent = param.proponent;
       return param.remindRefund;
     }
   };
 
   $scope.filterRemindRefund = function(param) {
-    var nowDate = new Date().getTime();
-    var currentDay = new Date().getDate();
     var startDate = (param.refundScheduleStart == "" ? null : new Date(param.refundScheduleStart).getTime());
     var endDate = (param.refundScheduleEnd == "" ? null : new Date(param.refundScheduleEnd).getTime());
 
     if (startDate <= nowDate && nowDate <= endDate && dueDateStart <= currentDay && currentDay <= dueDateEnd) {
-    // if (startDate <= nowDate <= endDate && dueDateStart <= currentDay <= dueDateEnd) {
       $scope.proponentWithDue.push(param.proponent);
       return param;
     }
@@ -160,22 +154,19 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
     return param == "" ? "" : moment(param, "MM-DD-YYYY").format("MMM DD YYYY");
   };
 
-  $scope.toggleLeft = buildToggler('left');
-
-  function buildToggler(navID) {
-    return function() {
-      $mdSidenav(navID)
-      .toggle()
-      .then(function () {
-        $log.debug("toggle " + navID + " is done");
-      });
-    }
+  $scope.toggleLeft = function() {
+    $mdSidenav('left').
+    toggle().
+    then(function () {
+      $log.debug("sideNav LEFT toggled.");
+    });
   }
 
-  $scope.closeSideNav = function () {
-    $mdSidenav('left').close()
-    .then(function () {
-      $log.debug("close RIGHT is done");
+  $scope.closeSideNav = function() {
+    $mdSidenav('left').
+    close().
+    then(function () {
+      $log.debug("sideNav LEFT closed.");
     });
   };
 
@@ -192,17 +183,13 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
   $scope.signOut = function(ev) {
     var confirm = $mdDialog.confirm()
           .title('Are you sure to Sign Out?')
-          // .textContent('All of the banks have agreed to forgive you your debts.')
           .ariaLabel('Lucky day')
           .targetEvent(ev)
           .ok('Sign Out')
           .cancel('Cancel');
 
     $mdDialog.show(confirm).then(function() {
-      $scope.status = 'You decided to get rid of your debt.';
       $scope.auth.$signOut();
-    }, function() {
-      $scope.status = 'You decided to keep your debt.';
     });
   }
 

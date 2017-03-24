@@ -7,7 +7,13 @@ controller("historyController", function($scope, $firebaseArray, $mdDialog, $mdT
   $scope.history = $firebaseArray(historyRef);
 
   $scope.formatDate = function(param) {
-    return param == "" ? "" : moment(param).format("MMM DD YYYY");
+    var date = moment(param).format("MMM DD YYYY");
+    var time = moment(param).format("h:mm a");
+
+    return {
+      date: date,
+      time: time
+    };
   };
 
   $scope.closeDialog = function() {

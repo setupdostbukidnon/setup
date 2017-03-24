@@ -3,19 +3,29 @@
     <div class="md-toolbar-tools">
       <span flex></span>
       <p class="dialogTitle">History</p>
-      <md-button aria-label="Open for menu" class="md-icon-button" ng-click="closeDialog(); selected=[];">
+      <md-button aria-label="Open for menu" class="md-icon-button" ng-click="closeDialog()">
         <md-icon class="material-icons">close</md-icon>
       </md-button>
     </div>
   </md-toolbar>
-  <md-dialog-content class="md-inline-form" layout-padding>
-    <md-list flex>
-      <md-list-item class="md-2-line" ng-repeat="item in history | orderBy:'-date'">
+  <md-dialog-content class="md-inline-form">
+    <md-list>
+      <md-list-item class="md-2-line" ng-click="null" ng-repeat="item in history | orderBy:'-date'">
+        <span flex="5"></span>
         <md-icon class="material-icons">{{item.action}}</md-icon>
-        <div class="md-list-item-text" layout="column">
-          <p>{{item.action}} {{item.proponent}} {{formatDate(item.date)}}</p>
-          <p>{{item.emailAddress}}</p>
+        <span flex="10"></span>
+        <div class="md-list-item-text" layout="row">
+          <div layout="column">
+            <p>{{item.action}} {{item.proponent}}</p>
+            <p>{{item.emailAddress}}</p>
+          </div>
+          <span flex></span>
+          <div layout="column">
+            <p>{{formatDate(item.date).date}}</p>
+            <p>{{formatDate(item.date).time}}</p>
+          </div>
         </div>
+        <span flex="5"></span>
       </md-list-item>
     </md-list>
   </md-dialog-content>
