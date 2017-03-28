@@ -7,11 +7,10 @@ component('userAuth', {
 controller('userAuthController', function($scope, $rootScope, $firebaseAuth, $firebaseArray, $mdToast, $mdDialog, $location, Auth) {
   $scope.authObj = $firebaseAuth();
   $scope.auth = Auth;
-  var ref = firebase.database().ref().child("users");
-  $scope.users = $firebaseArray(ref);
 
   $scope.showSignIn = true;
   $scope.showSignUp = false;
+  $scope.isMasterPassword = false;
 
   // any time auth state changes, add the user data to scope
   $scope.auth.$onAuthStateChanged(function(firebaseUser) {
@@ -23,6 +22,26 @@ controller('userAuthController', function($scope, $rootScope, $firebaseAuth, $fi
       console.log("Signed out");
     }
   });
+
+  $scope.proceed = function() {
+    if ($scope.masterPassword == "DostBukidnon") {
+      $scope.isMasterPassword = true;
+    } else {
+      console.log(`incorrect`);
+    }
+  }
+
+  $scope.createNewAccount = function() {
+    $scope.showSignUp = true;
+    $scope.showSignIn = false;
+    $scope.masterPassword = "";
+  }
+
+  $scope.back = function() {
+    $scope.showSignUp = false;
+    $scope.showSignIn = true;
+    $scope.isMasterPassword = false;
+  }
 
   $scope.signIn = function() {
     $scope.authObj.$signInWithEmailAndPassword($scope.user.emailAddress, $scope.user.password).
@@ -40,11 +59,6 @@ controller('userAuthController', function($scope, $rootScope, $firebaseAuth, $fi
     $scope.authObj.$createUserWithEmailAndPassword($scope.user.emailAddress, $scope.user.password).
     then(function(firebaseUser) {
       console.log(`User ${firebaseUser.uid} created successfully`);
-      $scope.users.$add({
-        name: $scope.user.name,
-        emailAddress: $scope.user.emailAddress,
-        password: $scope.user.password
-      });
     }).
     catch(function(error) {
       console.error("Error: ", error);

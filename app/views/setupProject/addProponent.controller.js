@@ -16,12 +16,12 @@ controller("addProponentDialogController", function($scope, $firebaseArray, $fir
   });
 
   $scope.years = [
-    '2010', '2011', '2012', '2013',
-    '2014', '2015', '2016', '2017',
-    '2018', '2019', '2020', '2021',
-    '2022', '2023', '2024', '2025',
-    '2026', '2027', '2028', '2029',
-    '2030', '2031', '2032', '2033'];
+  "2010", "2011", "2012", "2013",
+  "2014", "2015", "2016", "2017",
+  "2018", "2019", "2020", "2021",
+  "2022", "2023", "2024", "2025",
+  "2026", "2027", "2028", "2029",
+  "2030", "2031", "2032", "2033"];
 
     $scope.toastPosition = angular.extend({},last);
 
@@ -41,7 +41,7 @@ controller("addProponentDialogController", function($scope, $firebaseArray, $fir
       if ( current.right && last.left ) current.left = false;
       if ( current.left && last.right ) current.right = false;
 
-      last = angular.extend({},current);
+      last = angular.extend({}, current);
     }
 
     $scope.dialogTitle = "Add Proponent";
@@ -75,16 +75,15 @@ controller("addProponentDialogController", function($scope, $firebaseArray, $fir
 
       var pinTo = $scope.getToastPosition();
       $mdToast.show(
-        $mdToast.simple()
-        .textContent($scope.proponent + " project successfully added...")
-        .position(pinTo)
-        .hideDelay(5000)
+        $mdToast.simple().
+        textContent($scope.proponent + " project successfully added...").
+        position(pinTo).
+        hideDelay(5000)
       );
       $mdDialog.hide();
     };
 
     $scope.closeDialog = function() {
-      selected = [];
       $mdDialog.hide();
     };
   });

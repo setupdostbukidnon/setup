@@ -3,7 +3,7 @@ module("setupProject").
 component("setupProject", {
   templateUrl: "views/setupProject/setup-project.template.html"
 }).
-controller("setupProjectController", function($location, $scope, $rootScope, $firebaseArray,$firebaseAuth, $mdDialog, $mdMedia, $mdToast, $timeout, $mdSidenav, $log, Auth) {
+controller("setupProjectController", function($location, $scope, $rootScope, $firebaseArray, $firebaseObject, $firebaseAuth, $mdDialog, $mdMedia, $mdToast, $timeout, $mdSidenav, $log, Auth) {
   $scope.authObj = $firebaseAuth();
   $scope.auth = Auth;
   $scope.selected = [];
@@ -11,8 +11,8 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
   $scope.projectYear = "";
   var THIS = this;
   var setupProjects = firebase.database().ref().child("setupProject");
-  var historyRef = firebase.database().ref().child("history");
   $scope.setupProjects = $firebaseArray(setupProjects);
+  var historyRef = firebase.database().ref().child("history");
   $scope.history = $firebaseArray(historyRef);
 
   $scope.authObj.$onAuthStateChanged(function(firebaseUser) {
@@ -114,9 +114,9 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
     }
 
     emailjs.send("gmail","template_4nILbpzO", {
-      email_to: "janfrancistagadiad@gmail.com",
+      email_to: $scope.currentEmail,
       from_name: "jan weak",
-      to_name: "Maam Leslie",
+      to_name: "jan weak 2",
       message_body: "Proponents :<br><br>" + temp
     }).
     then(function(response) {
@@ -134,11 +134,6 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
     function(error) {
       console.log("FAILED", error);
     });
-  }
-
-  $scope.myCustomFilter = function(setupProject) {
-    console.log(setupProject.proponent);
-    return setupProject;
   }
 
   $scope.selectRow = function(param) {
@@ -182,11 +177,11 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
 
   $scope.signOut = function(ev) {
     var confirm = $mdDialog.confirm()
-          .title('Are you sure to Sign Out?')
-          .ariaLabel('Lucky day')
-          .targetEvent(ev)
-          .ok('Sign Out')
-          .cancel('Cancel');
+    .title('Are you sure to Sign Out?')
+    .ariaLabel('Lucky day')
+    .targetEvent(ev)
+    .ok('Sign Out')
+    .cancel('Cancel');
 
     $mdDialog.show(confirm).then(function() {
       $scope.auth.$signOut();

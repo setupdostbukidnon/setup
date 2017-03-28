@@ -1,5 +1,5 @@
 window.dueDateStart = 10;
-window.dueDateEnd = 25;
+window.dueDateEnd = 31;
 window.selected = [];
 window.currentDay = new Date().getDate();
 window.nowDate = new Date().getTime();
@@ -29,7 +29,7 @@ window.options = {
 };
 window.query = {
   filter: "",
-  limit: "10",
+  limit: "20",
   order: "-projectYear",
   page: 1
 };

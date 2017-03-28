@@ -34,12 +34,12 @@ directive("currencyMask", function() {
       element.bind("keyup", function(e) {
         var keycode = e.keyCode;
         var isTextInputKey =
-          (keycode > 47 && keycode < 58) || // number keys
-          keycode == 32 || keycode == 8 || // spacebar or backspace
-          (keycode > 64 && keycode < 91) || // letter keys
-          (keycode > 95 && keycode < 112) || // numpad keys
-          (keycode > 185 && keycode < 193) || // ;=,-./` (in order)
-          (keycode > 218 && keycode < 223); // [\]" (in order)
+        (keycode > 47 && keycode < 58) || // number keys
+        keycode == 32 || keycode == 8 || // spacebar or backspace
+        (keycode > 64 && keycode < 91) || // letter keys
+        (keycode > 95 && keycode < 112) || // numpad keys
+        (keycode > 185 && keycode < 193) || // ;=,-./` (in order)
+        (keycode > 218 && keycode < 223); // [\]" (in order)
         if (isTextInputKey) {
           applyFormatting();
         }
@@ -83,15 +83,15 @@ directive("currencyMask", function() {
   };
 }).
 directive("ngRightClick", function($parse) {
-    return function(scope, element, attrs) {
-        var fn = $parse(attrs.ngRightClick);
-        element.bind("contextmenu", function(event) {
-            scope.$apply(function() {
-                event.preventDefault();
-                fn(scope, {$event:event});
-            });
-        });
-    };
+  return function(scope, element, attrs) {
+    var fn = $parse(attrs.ngRightClick);
+    element.bind("contextmenu", function(event) {
+      scope.$apply(function() {
+        event.preventDefault();
+        fn(scope, {$event:event});
+      });
+    });
+  };
 }).
 directive("formOnChange", function($parse, $interpolate){
   return {

@@ -93,3 +93,7 @@ table[md-table] .md-checkbox-cell {
 .animate-show-hide.ng-hide-remove {
   transition: all linear 0.5s;
 }
+
+a {
+  text-decoration: none;
+}
