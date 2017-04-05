@@ -3,10 +3,9 @@ module("setupProject").
 controller("addProponentDialogController", function($scope, $firebaseArray, $firebaseAuth, $mdDialog, $mdToast, $timeout, Auth) {
   $scope.authObj = $firebaseAuth();
   $scope.auth = Auth;
-  var setupProjects = firebase.database().ref().child("setupProject");
-  var historyRef = firebase.database().ref().child("history");
-  $scope.setupProjects = $firebaseArray(setupProjects);
-  $scope.history = $firebaseArray(historyRef);
+  var ref = firebase.database().ref();
+  $scope.setupProjects = $firebaseArray(ref.child("setupProject"));
+  $scope.history = $firebaseArray(ref.child("history"));
 
   $scope.authObj.$onAuthStateChanged(function(firebaseUser) {
     if (firebaseUser) {

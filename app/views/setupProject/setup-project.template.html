@@ -9,7 +9,7 @@
           <span flex></span>
           <md-input-container md-no-float class="md-block">
             <md-icon class="material-icons">search</md-icon>
-            <input ng-model="filterProponent" ng-change="search.setupProjectProponent" class="toolbarFontsize" type="text" placeholder="Search Proponent..." style="width: 400px;">
+            <input ng-model="filterProponent" ng-change="search" class="toolbarFontsize" type="text" placeholder="Search Proponent..." style="width: 400px;">
           </md-input-container>
           <span flex></span>
           <md-input-container md-no-float class="md-block">
@@ -41,7 +41,7 @@
       </div>
     </md-toolbar>
     <md-table-container style="height: 83vh;">
-      <table md-table md-row-select="options.rowSelection" ng-model="selected" md-progress="promise">
+      <table md-table md-row-select="options.rowSelection" ng-model="selected">
         <thead md-head fix-head md-order="query.order">
           <tr md-row>
             <th md-column></th>
@@ -97,13 +97,13 @@
         <md-list>
           <md-list-item>
             <md-icon class="material-icons md-dark md-24">account_circle</md-icon>
-            <p class="md-body-2">{{currentUser}}</p>
+            <p class="md-body-2">{{currentEmail}}</p>
           </md-list-item>
           <md-list-item ng-click="create($event)">
             <md-icon class="material-icons md-dark md-24">add_circle</md-icon>
             <p class="md-body-2">Add Proponent</p>
           </md-list-item>
-          <md-list-item ng-click="null">
+          <md-list-item ng-click="showHistory($event)">
             <md-icon class="material-icons md-dark md-24">history</md-icon>
             <p class="md-body-2">History</p>
           </md-list-item>

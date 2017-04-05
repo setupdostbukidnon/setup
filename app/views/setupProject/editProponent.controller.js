@@ -1,12 +1,11 @@
 angular.
 module("setupProject").
-controller("editProponentController", function($scope, $rootScope, $firebaseArray, $firebaseAuth, $mdDialog, $window, $mdToast, setupProject, Auth, Toast) {
+controller("editProponentController", function($scope, $rootScope, $firebaseArray, $firebaseAuth, $mdDialog, $window, $mdToast, setupProject, Auth) {
   $scope.authObj = $firebaseAuth();
   $scope.auth = Auth;
-  var setupProjects = firebase.database().ref().child("setupProject");
-  var historyRef = firebase.database().ref().child("history");
-  $scope.setupProjects = $firebaseArray(setupProjects);
-  $scope.history = $firebaseArray(historyRef);
+  var ref = firebase.database().ref();
+  $scope.setupProjects = $firebaseArray(ref.child("setupProject"));
+  $scope.history = $firebaseArray(ref.child("history"));
 
   $scope.authObj.$onAuthStateChanged(function(firebaseUser) {
     if (firebaseUser) {

@@ -8,12 +8,12 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
   $scope.auth = Auth;
   $scope.selected = [];
   $scope.proponentWithDue = new Array();
+  $scope.filteredItems = new Array();
   $scope.projectYear = "";
   var THIS = this;
-  var setupProjects = firebase.database().ref().child("setupProject");
-  $scope.setupProjects = $firebaseArray(setupProjects);
-  var historyRef = firebase.database().ref().child("history");
-  $scope.history = $firebaseArray(historyRef);
+
+  var ref = firebase.database().ref();
+  $scope.setupProjects = $firebaseArray(ref.child("setupProject"));
 
   $scope.authObj.$onAuthStateChanged(function(firebaseUser) {
     if (firebaseUser) {
@@ -90,6 +90,10 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
     }
   };
 
+  $scope.clearFilter = function() {
+    $scope.filterProponent = "";
+  }
+
   $scope.filterRemindRefund = function(param) {
     var startDate = (param.refundScheduleStart == "" ? null : new Date(param.refundScheduleStart).getTime());
     var endDate = (param.refundScheduleEnd == "" ? null : new Date(param.refundScheduleEnd).getTime());
@@ -98,20 +102,20 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
       $scope.proponentWithDue.push(param.proponent);
       return param;
     }
+
   };
 
   $scope.sendEmail = function() {
-    $scope.filteredItems = new Array();
     $scope.filteredItems = $scope.proponentWithDue.filter(function(elem, index, self) {
       return index == self.indexOf(elem);
     });
-
-    console.log(`${$scope.filteredItems.length}`);
 
     var temp = "";
     for(var i = 0; i < $scope.filteredItems.length; i++) {
       temp += i+1 + ". " + $scope.filteredItems[i] + '<br>';
     }
+
+    console.log(`sendEmail - ${$scope.filteredItems.length}  -  ${temp}`);
 
     emailjs.send("gmail","template_4nILbpzO", {
       email_to: $scope.currentEmail,

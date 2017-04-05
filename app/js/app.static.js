@@ -1,5 +1,5 @@
-window.dueDateStart = 10;
-window.dueDateEnd = 31;
+window.dueDateStart = 1;
+window.dueDateEnd = 5;
 window.selected = [];
 window.currentDay = new Date().getDate();
 window.nowDate = new Date().getTime();
