@@ -47,7 +47,7 @@ controller('userAuthController', function($scope, $rootScope, $firebaseAuth, $fi
   });
 
   $scope.proceed = function() {
-    if ($scope.masterPassword == "DostBukidnon") {
+    if ($scope.masterPassword == masterPassword) {
       $scope.isMasterPassword = true;
     } else {
       console.log(`incorrect`);

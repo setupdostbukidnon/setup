@@ -14,13 +14,7 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
 
   var ref = firebase.database().ref();
   $scope.setupProjects = $firebaseArray(ref.child("setupProject"));
-
-  // $scope.flag = firebase.database().ref("flag").set({
-  //   isFirstDay: false,
-  //   isReset: false,
-  //   dueDateStart: 1,
-  //   dueDateEnd: 5
-  // });
+  $scope.history = $firebaseArray(ref.child("history"));
 
   // firebase.database().ref("flag").once('value').then(function(snapshot) {
   //   var isFirstDay = snapshot.val().isFirstDay;

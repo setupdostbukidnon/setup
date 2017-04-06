@@ -30,12 +30,14 @@ controller("settingsController", function($scope, $firebaseArray, $mdDialog, $md
     $scope.isReset = snapshot.val().isReset;
     $scope.dueDateStart = snapshot.val().dueDateStart;
     $scope.dueDateEnd = snapshot.val().dueDateEnd;
+    $scope.masterPassword = snapshot.val().masterPassword;
   });
 
   $scope.submitSetting = function() {
     firebase.database().ref("settings").update({
       dueDateStart: $scope.dueDateStart,
-      dueDateEnd: $scope.dueDateEnd
+      dueDateEnd: $scope.dueDateEnd,
+      masterPassword: $scope.masterPassword
     });
 
     var pinTo = $scope.getToastPosition();
