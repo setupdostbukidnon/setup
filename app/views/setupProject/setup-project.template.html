@@ -3,7 +3,7 @@
     <md-toolbar class="md-table-toolbar md-default" ng-hide="options.rowSelection && selected.length">
       <div class="md-toolbar-tools">
         <div layout="row"  style="margin-top: 26px;" flex="70">
-          <md-button class="md-icon-button md-primary" ng-click="toggleLeft()" aria-label="menu">
+          <md-button class="md-icon-button md-primary" ng-click="toggleSideNav()" aria-label="menu">
             <md-icon class="material-icons">menu</md-icon>
           </md-button>
           <span flex></span>
@@ -114,6 +114,10 @@
           <md-list-item ng-click="sendEmail()" ng-show="showProponentWithDue == 'true'">
             <md-icon class="material-icons md-dark md-24">email</md-icon>
             <p class="md-body-2">Send Email</p>
+          </md-list-item>
+          <md-list-item ng-click="showSettings($event)" >
+            <md-icon class="material-icons md-drak md-24">settings</md-icon>
+            <p class="md-body-2">Settings</p>
           </md-list-item>
           <md-list-item ng-click="signOut($)">
             <md-icon class="material-icons md-dark md-24">exit_to_app</md-icon>

@@ -1,0 +1,25 @@
+<md-dialog aria-label="History Dialog" flex="50">
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <md-button ng-click="submitSetting()">Submit</md-button>
+      <span flex></span>
+      <p class="dialogTitle">Settings</p>
+      <md-button aria-label="Open for menu" class="md-icon-button" ng-click="closeDialog(); selected=[];">
+        <md-icon class="material-icons">close</md-icon>
+      </md-button>
+    </div>
+  </md-toolbar>
+  <md-dialog-content class="md-inline-form">
+    <md-content layout-padding style="padding-top: 5vh;">
+      <div layout="row">
+        <md-input-container class="md-block">
+          <input ng-model="dueDateStart" placeholder="Due Date Starts on">
+        </md-input-container>
+        <md-input-container class="md-block">
+          <input ng-model="dueDateEnd" placeholder="Due Date Ends on">
+        </md-input-container>
+      </div>
+
+    </md-content>
+  </md-dialog-content>
+</md-dialog>

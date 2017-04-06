@@ -1,5 +1,13 @@
+firebase.database().ref("settings").on('value', function(snapshot) {
+  var isFirstDay = snapshot.val().isFirstDay;
+  var isReset = snapshot.val().isReset;
+  window.dueDateStart = snapshot.val().dueDateStart;
+  window.dueDateEnd = snapshot.val().dueDateEnd;
+  console.log(` isFirstDay -- ${isFirstDay} \n isReset -- ${isReset} \n dueDateStart -- ${dueDateStart} \n dueDateEnd -- ${dueDateEnd}`);
+});
+
 window.dueDateStart = 1;
-window.dueDateEnd = 5;
+window.dueDateEnd = 31;
 window.selected = [];
 window.currentDay = new Date().getDate();
 window.nowDate = new Date().getTime();
@@ -29,7 +37,7 @@ window.options = {
 };
 window.query = {
   filter: "",
-  limit: "20",
+  limit: "15",
   order: "-projectYear",
   page: 1
 };

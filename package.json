@@ -8,9 +8,5 @@
     "postinstall": "bower install",
     "prestart": "npm install",
     "start": "http-server -a localhost -p 8000 -c-1 ./app"
-  },
-  "dependencies": {
-    "angular-fixed-table-header": "^0.2.1",
-    "moment": "^2.18.1"
   }
 }

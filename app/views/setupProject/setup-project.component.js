@@ -15,6 +15,21 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
   var ref = firebase.database().ref();
   $scope.setupProjects = $firebaseArray(ref.child("setupProject"));
 
+  // $scope.flag = firebase.database().ref("flag").set({
+  //   isFirstDay: false,
+  //   isReset: false,
+  //   dueDateStart: 1,
+  //   dueDateEnd: 5
+  // });
+
+  // firebase.database().ref("flag").once('value').then(function(snapshot) {
+  //   var isFirstDay = snapshot.val().isFirstDay;
+  //   var isReset = snapshot.val().isReset;
+  //   var dueDateStart = snapshot.val().dueDateStart;
+  //   var dueDateEnd = snapshot.val().dueDateEnd;
+  //   console.log(` isFirstDay -- ${isFirstDay} \n isReset -- ${isReset} \n dueDateStart -- ${dueDateStart} \n dueDateEnd -- ${dueDateEnd}`);
+  // });
+
   $scope.authObj.$onAuthStateChanged(function(firebaseUser) {
     if (firebaseUser) {
       $location.path("/setupProject");
@@ -75,11 +90,6 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
     last = angular.extend({},current);
   }
 
-  $scope.logPagination = function (page, limit) {
-    console.log("page: ", page);
-    console.log("limit: ", limit);
-  };
-
   $scope.remindRefundIcon = function(param) {
     var startDate = (param.refundScheduleStart == "" ? null : new Date(param.refundScheduleStart).getTime());
     var endDate = (param.refundScheduleEnd == "" ? null : new Date(param.refundScheduleEnd).getTime());
@@ -109,6 +119,8 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
     $scope.filteredItems = $scope.proponentWithDue.filter(function(elem, index, self) {
       return index == self.indexOf(elem);
     });
+
+    console.log(`${$scope.filteredItems.length}`);
 
     var temp = "";
     for(var i = 0; i < $scope.filteredItems.length; i++) {
@@ -153,26 +165,30 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
     return param == "" ? "" : moment(param, "MM-DD-YYYY").format("MMM DD YYYY");
   };
 
-  $scope.toggleLeft = function() {
+  $scope.toggleSideNav = function() {
     $mdSidenav('left').
-    toggle().
-    then(function () {
-      $log.debug("sideNav LEFT toggled.");
-    });
+    toggle();
   }
 
   $scope.closeSideNav = function() {
     $mdSidenav('left').
-    close().
-    then(function () {
-      $log.debug("sideNav LEFT closed.");
-    });
+    close();
   };
 
   $scope.showHistory = function(ev) {
     $mdDialog.show({
       controller: "historyController",
       templateUrl: "views/dialog/historyDialog.template.html",
+      parent: angular.element(document.body),
+      targetEvent: ev,
+      escapeToClose: false
+    });
+  };
+
+  $scope.showSettings = function(ev) {
+    $mdDialog.show({
+      controller: "settingsController",
+      templateUrl: "views/dialog/settingsDialog.template.html",
       parent: angular.element(document.body),
       targetEvent: ev,
       escapeToClose: false
@@ -188,6 +204,10 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
     .cancel('Cancel');
 
     $mdDialog.show(confirm).then(function() {
+      // $scope.flag = firebase.database().ref("flag").update({
+      //   dueDateStart: 10,
+      //   dueDateEnd: 15
+      // });
       $scope.auth.$signOut();
     });
   }
