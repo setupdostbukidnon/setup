@@ -94,6 +94,16 @@ table[md-table] .md-checkbox-cell {
   transition: all linear 0.5s;
 }
 
-a {
+/*a {
   text-decoration: none;
+}*/
+
+.lgLeftPadding {
+  padding-left: 10px;
+  padding-right: 10px;
+  font-size: 13px;
+}
+
+.lgLeftPadding a {
+    color: black;
 }

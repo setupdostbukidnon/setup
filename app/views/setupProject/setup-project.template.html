@@ -64,8 +64,8 @@
           <!-- ng-dblclick="edit($event)"  -->
           <tr md-row md-select="setupProject" md-select-id="proponent" md-auto-select="options.autoSelect" ng-right-click="remindRefundIcon(setupProject)" ng-click="selectRow(setupProject)" ng-repeat="setupProject in filteredItems = (setupProjects | filter: {proponent: filterProponent} | filter: {projectYear: (filterOption == 'All' ? '' : filterOption)} | filter: (showProponentWithDue == 'true' ? filterRemindRefund : '') ) | orderBy: query.order | limitTo: query.limit: (query.page -1) * query.limit">
             <td md-cell>
-              <md-icon class="material-icons" ng-show="remindRefundIcon(setupProject) == 'false'" style="color: red;">priority_high</md-icon>
-              <md-icon class="material-icons" ng-hide="remindRefundIcon(setupProject) == 'false'" style="color: white;">priority_high</md-icon>
+              <md-icon class="material-icons" ng-show="remindRefundIcon(setupProject) == false" style="color: red;">priority_high</md-icon>
+              <md-icon class="material-icons" ng-hide="remindRefundIcon(setupProject) == false" style="color: white;">priority_high</md-icon>
             </td>
             <td md-cell id="setupProjectNotification">{{setupProject.proponent}}</td>
             <td md-cell>{{setupProject.projectYear}}</td>
@@ -85,7 +85,7 @@
       </table>
     </md-table-container>
     <md-sidenav class="md-sidenav-left md-whiteframe-4dp" md-component-id="left" style="width: 45vh;">
-      <md-toolbar>
+      <md-toolbar class="md-tall">
         <div class="md-toolbar-tools">
           <md-button class="md-icon-button" ng-click="closeSideNav()">
             <md-icon class="material-icons">arrow_back</md-icon>

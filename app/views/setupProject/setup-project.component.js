@@ -15,20 +15,24 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
   var ref = firebase.database().ref();
   $scope.setupProjects = $firebaseArray(ref.child("setupProject"));
   $scope.history = $firebaseArray(ref.child("history"));
-
-  // firebase.database().ref("flag").once('value').then(function(snapshot) {
-  //   var isFirstDay = snapshot.val().isFirstDay;
-  //   var isReset = snapshot.val().isReset;
-  //   var dueDateStart = snapshot.val().dueDateStart;
-  //   var dueDateEnd = snapshot.val().dueDateEnd;
-  //   console.log(` isFirstDay -- ${isFirstDay} \n isReset -- ${isReset} \n dueDateStart -- ${dueDateStart} \n dueDateEnd -- ${dueDateEnd}`);
-  // });
+  var settingsRef = firebase.database().ref("settings");
 
   $scope.authObj.$onAuthStateChanged(function(firebaseUser) {
     if (firebaseUser) {
       $location.path("/setupProject");
-      console.log(`Signed in as ${firebaseUser.uid} --- ${firebaseUser.email}`);
+      console.log(`Signed in as ${firebaseUser.uid} - email: ${firebaseUser.email}`);
       $scope.currentEmail = firebaseUser.email;
+      $scope.setupProjects.$loaded(function(item) {
+        angular.forEach($scope.setupProjects, function(value, key) {
+          if(currentDay == 1) {
+            console.log(`its currentDay: ${currentDay}`);
+            // console.log(`${key}   ${value.$id} - ${value.proponent}`);
+            var record = $scope.setupProjects.$getRecord(value.$id);
+            record.remindRefund = false;
+            $scope.setupProjects.$save(record);
+          }
+        });
+      });
     } else {
       console.log("Signed out");
       $location.path("/userAuth");
@@ -38,18 +42,6 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
   // $scope.setupProjects.$watch(function(e) {
   //   $scope.setupProjectsLength = $scope.setupProjects.length;
   // });
-
-  $scope.promise = $scope.setupProjects.$loaded(function(item) {
-    item === $scope.setupProjects; // true
-    angular.forEach($scope.setupProjects, function(value, key) {
-      // console.log(`${value.$id} - ${value.proponent}: ${key}`);
-      // if (false) {
-      //   var record = $scope.setupProjects.$getRecord(value.$id);
-      //   record.remindRefund = "false";
-      //   $scope.setupProjects.$save(record);
-      // }
-    });
-  });
 
   $scope.limitOptions = limitOptions;
 
@@ -65,7 +57,6 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
 
   $scope.getToastPosition = function() {
     sanitizePosition();
-
     return Object.keys($scope.toastPosition)
     .filter(function(pos) {
       return $scope.toastPosition[pos];
@@ -75,20 +66,18 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
 
   function sanitizePosition() {
     var current = $scope.toastPosition;
-
     if ( current.bottom && last.top ) current.top = false;
     if ( current.top && last.bottom ) current.bottom = false;
     if ( current.right && last.left ) current.left = false;
     if ( current.left && last.right ) current.right = false;
-
     last = angular.extend({},current);
   }
 
   $scope.remindRefundIcon = function(param) {
-    var startDate = (param.refundScheduleStart == "" ? null : new Date(param.refundScheduleStart).getTime());
+    // var startDate = (param.refundScheduleStart == "" ? null : new Date(param.refundScheduleStart).getTime());
+    var startDate = (param.refundScheduleStart == "" ? null : new Date(moment(param.refundScheduleStart, "MM DD YYYY").subtract(14, 'day').format("MMM DD YYYY")).getTime());
     var endDate = (param.refundScheduleEnd == "" ? null : new Date(param.refundScheduleEnd).getTime());
-
-    if (startDate <= nowDate && nowDate <= endDate && dueDateStart <= currentDay && currentDay <= dueDateEnd) {
+    if (startDate <= currentDate && currentDate <= endDate && dueDateStart <= currentDay && currentDay <= dueDateEnd) {
       var proponent = param.proponent;
       return param.remindRefund;
     }
@@ -99,30 +88,25 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
   }
 
   $scope.filterRemindRefund = function(param) {
-    var startDate = (param.refundScheduleStart == "" ? null : new Date(param.refundScheduleStart).getTime());
+    // var startDate = (param.refundScheduleStart == "" ? null : new Date(param.refundScheduleStart).getTime());
+    var startDate = (param.refundScheduleStart == "" ? null : new Date(moment(param.refundScheduleStart, "MM DD YYYY").subtract(14, 'day').format("MMM DD YYYY")).getTime());
     var endDate = (param.refundScheduleEnd == "" ? null : new Date(param.refundScheduleEnd).getTime());
-
-    if (startDate <= nowDate && nowDate <= endDate && dueDateStart <= currentDay && currentDay <= dueDateEnd) {
+    if (startDate <= currentDate && currentDate <= endDate && dueDateStart <= currentDay && currentDay <= dueDateEnd) {
       $scope.proponentWithDue.push(param.proponent);
       return param;
     }
-
   };
 
   $scope.sendEmail = function() {
     $scope.filteredItems = $scope.proponentWithDue.filter(function(elem, index, self) {
       return index == self.indexOf(elem);
     });
-
     console.log(`${$scope.filteredItems.length}`);
-
     var temp = "";
     for(var i = 0; i < $scope.filteredItems.length; i++) {
       temp += i+1 + ". " + $scope.filteredItems[i] + '<br>';
     }
-
     console.log(`sendEmail - ${$scope.filteredItems.length}  -  ${temp}`);
-
     emailjs.send("gmail","template_4nILbpzO", {
       email_to: $scope.currentEmail,
       from_name: "jan weak",
@@ -133,7 +117,6 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
       console.log("SUCCESS", response);
       var pinTo = $scope.getToastPosition();
       console.log(`${temp}`);
-
       $mdToast.show(
         $mdToast.simple()
         .textContent("Email sent...")
@@ -196,26 +179,19 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
     .targetEvent(ev)
     .ok('Sign Out')
     .cancel('Cancel');
-
     $mdDialog.show(confirm).then(function() {
-      // $scope.flag = firebase.database().ref("flag").update({
-      //   dueDateStart: 10,
-      //   dueDateEnd: 15
-      // });
       $scope.auth.$signOut();
     });
   }
 
   $scope.delete = function(ev) {
     console.log(THIS.SETUPPROJECT.proponent);
-
     var confirm = $mdDialog.confirm()
     .title("Would you like to delete " + THIS.SETUPPROJECT.proponent + " SETUP project?")
     .ariaLabel("DELETE SETUP project")
     .targetEvent(ev)
     .ok("Delete")
     .cancel("Cancel");
-
     $mdDialog.show(confirm).then(function() {
       $scope.history.$add({
         action: "delete",
@@ -223,12 +199,9 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
         date: new Date().getTime(),
         emailAddress: $scope.currentEmail
       });
-
       $scope.setupProjects.$remove(THIS.SETUPPROJECT);
-
       $scope.selected = [];
       $scope.showOption = true;
-
       var pinTo = $scope.getToastPosition();
       $mdToast.show(
         $mdToast.simple()

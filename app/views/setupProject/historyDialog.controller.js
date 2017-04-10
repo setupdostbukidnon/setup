@@ -9,7 +9,6 @@ controller("historyController", function($scope, $firebaseArray, $mdDialog, $mdT
   $scope.formatDate = function(param) {
     var date = moment(param).format("MMM DD YYYY");
     var time = moment(param).format("h:mm a");
-
     return {
       date: date,
       time: time
