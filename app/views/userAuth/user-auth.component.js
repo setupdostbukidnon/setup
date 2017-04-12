@@ -8,12 +8,13 @@ controller('userAuthController', function($scope, $rootScope, $firebaseAuth, $fi
   $scope.authObj = $firebaseAuth();
   $scope.auth = Auth;
 
+  var userRef = firebase.database().ref("users");
+
   $scope.showCreateAccount = false;
   $scope.showHome = true;
   $scope.retrieveAccount = false;
 
   $scope.toast = function(param) {
-    console.log(error.code);
     $scope.toastPosition = angular.extend({}, last);
     $scope.getToastPosition = function() {
       sanitizePosition();
@@ -46,6 +47,10 @@ controller('userAuthController', function($scope, $rootScope, $firebaseAuth, $fi
     if (firebaseUser) {
       $location.path("/setupProject").replace();
       console.log(`Signed in as ${firebaseUser.uid} - email: ${firebaseUser.email}`);
+
+      firebaseUser.email
+      userRef.child(firebaseUser.uid)
+
     } else {
       $location.path("/userAuth").replace();
       console.log("Signed out");
@@ -53,10 +58,18 @@ controller('userAuthController', function($scope, $rootScope, $firebaseAuth, $fi
   });
 
   $scope.submitCreateAccount = function() {
-    $scope.authObj.$createUserWithEmailAndPassword($scope.create.emailAddress, $scope.create.password).
+    $scope.authObj.$createUserWithEmailAndPassword($scope.createEmailaddress, $scope.password1).
     then(function(firebaseUser) {
       console.log(`User ${firebaseUser.uid} created successfully`);
       $scope.toast(`User ${firebaseUser.uid} created successfully`);
+      firebaseUser.updateProfile({
+        displayName: $scope.createName
+      }).then(function() {
+        console.log(`Profile updated successfully`);
+        console.log(firebaseUser.displayName);
+      }, function(error) {
+        $scope.toast(`Error: ${error}`);
+      });
     }).
     catch(function(error) {
       console.error("Error: ", error);
@@ -66,7 +79,6 @@ controller('userAuthController', function($scope, $rootScope, $firebaseAuth, $fi
 
   $scope.submitRetrieveAccount = function() {
     $scope.authObj.$sendPasswordResetEmail($scope.retrieve.emailAddress).then(function() {
-      console.log("Password reset email sent successfully!");
       $scope.toast(`Password reset email sent successfully!`);
     }).catch(function(error) {
       $scope.toast(`Error: ${error}`);

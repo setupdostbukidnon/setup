@@ -3,6 +3,7 @@
 angular.module("dost-pstc-x", [
   "ngMaterial",
   "ngMessages",
+  "ngAnimate",
   "ngRoute",
   "firebase",
   "md.data.table",

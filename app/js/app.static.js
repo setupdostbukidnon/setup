@@ -18,7 +18,7 @@ window.last = {
   left: false,
   right: true
 };
-window.limitOptions = [5, 10, 15];
+window.limitOptions = [5, 10, 15, 20, 25];
 window.years = ["All",
 "2010", "2011", "2012", "2013",
 "2014", "2015", "2016", "2017",

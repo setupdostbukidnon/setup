@@ -2,7 +2,7 @@
   <div>
     <md-toolbar class="md-table-toolbar md-default" ng-hide="options.rowSelection && selected.length">
       <div class="md-toolbar-tools">
-        <div layout="row"  style="margin-top: 26px;" flex="70">
+        <div layout="row"  style="margin-top: 26px;" flex="60">
           <md-button class="md-icon-button md-primary" ng-click="toggleSideNav()" aria-label="menu">
             <md-icon class="material-icons">menu</md-icon>
           </md-button>
@@ -19,9 +19,10 @@
               </md-option>
             </md-select>
           </md-input-container>
+          <span flex></span>
         </div>
         <span flex></span>
-        <md-table-pagination md-limit="query.limit" md-page="query.page" md-total="{{filteredItems.length}}" md-boundary-links="options.boundaryLinks" md-page-select="options.pageSelect" md-on-paginate="logPagination" style="margin-top: 12px;"></md-table-pagination>
+        <md-table-pagination md-limit="query.limit" md-limit-options="limitOptions" md-page="query.page" md-total="{{filteredItems.length}}" md-boundary-links="options.boundaryLinks" md-page-select="options.pageSelect" md-on-paginate="logPagination" style="margin-top: 12px;"></md-table-pagination>
       </div>
     </md-toolbar>
     <md-toolbar class="md-table-toolbar alternate" ng-show="options.rowSelection && selected.length" ng-show="showOption">
@@ -97,7 +98,7 @@
         <md-list>
           <md-list-item>
             <md-icon class="material-icons md-dark md-24">account_circle</md-icon>
-            <p class="md-body-2">{{currentEmail}}</p>
+            <p class="md-body-2">{{currentUser}}</p>
           </md-list-item>
           <md-list-item ng-click="create($event)">
             <md-icon class="material-icons md-dark md-24">add_circle</md-icon>

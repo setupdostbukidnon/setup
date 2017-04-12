@@ -2,7 +2,7 @@
   <div layout="column" flex>
     <header style="height: 20vh">
       <div layout="row" layout-padding>
-        <img height="100vh" width="220vh" src="https://firebasestorage.googleapis.com/v0/b/setupproject-d239f.appspot.com/o/setup.png?alt=media&token=46855b82-d9c7-4dfb-9660-5b2617778e01"/>
+        <img alt="setuplogo" height="100vh" width="220vh" src="https://firebasestorage.googleapis.com/v0/b/setupproject-d239f.appspot.com/o/setup.png?alt=media&token=46855b82-d9c7-4dfb-9660-5b2617778e01"/>
         <span flex></span>
         <div layout="column">
           <span flex></span>
@@ -38,28 +38,33 @@
         </div>
         <div layout-padding>
           <md-card layout="column" flex="40" layout-padding style="padding-top: 30px;">
-            <form ng-submit="submitCreateAccount()">
+            <form ng-submit="submitCreateAccount()" name="createAccount">
               <md-input-container class="md-block">
                 <label>Name</label>
-                <input ng-model="create.name">
+                <input ng-model="createName" required>
               </md-input-container>
               <md-input-container class="md-block">
                 <label>Email Address</label>
-                <input ng-model="create.emailAddress">
+                <input ng-model="createEmailaddress" type="email" required>
               </md-input-container>
               <div layout="row" flex>
-                <md-input-container class="md-block" flex>
+                <md-input-container class="md-block" flex >
                   <label>Password</label>
-                  <input ng-model="create.password" type="password" maxlength="20">
+                  <input type="password" id="password1" name="password1" ng-model="password1" required />
                 </md-input-container>
-                <md-input-container class="md-block" flex>
+                <md-input-container class="md-block" flex >
                   <label>Confirm Password</label>
-                  <input ng-model="create.confirmPassword" type="password" maxlength="20">
+                  <input type="password" id="password2" name="password2" ng-model="password2" required pw-check="password1" />
                 </md-input-container>
               </div>
-              <span flex></span>
-              <md-button class="md-raised md-primary" type="submit">Sign Up</md-button>
-              <input type="submit" ng-hide="true">
+              <div layout="row">
+                <div class="msg-block" ng-show="createAccount.$error" style="padding-top: 25px;">
+                  <span class="msg-error" style="font-size: 14px;" ng-show="createAccount.password2.$error.pwmatch">Passwords don't match.</span>
+                </div>
+                <span flex></span>
+                <md-button class="md-raised md-primary" ng-disabled="!createAccount.$valid" type="submit">Sign Up</md-button>
+                <input type="submit" ng-hide="true">
+              </div>
             </form>
           </md-card>
         </div>
