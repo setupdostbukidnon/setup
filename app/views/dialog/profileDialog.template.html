@@ -1,0 +1,103 @@
+<md-dialog aria-label="Profile Dialog" flex="50">
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <!-- <md-button ng-click="submitSetting()">Submit</md-button> -->
+      <span flex></span>
+      <p class="dialogTitle">Profile</p>
+      <md-button aria-label="Open for menu" class="md-icon-button" ng-click="closeDialog()">
+        <md-icon class="material-icons">close</md-icon>
+      </md-button>
+    </div>
+  </md-toolbar>
+  <md-dialog-content class="md-inline-form">
+    <md-content layout-padding flex>
+      <ul>
+        <li ng-hide="showEditUsername" class="pdt-ul-li" style="border-top: 1px solid #616161; border-bottom: 1px dashed #BDBDBD;">
+          <div layout="row">
+            <span style="width: 30%">Username</span>
+            <span class="pdt-spn-value">{{displayName}}</span>
+            <span class="pdt-spn-edit"><a ng-click="showEditUsername=true; showEditEmailAddress=false; showEditPassword=false;">Edit</a></span>
+          </div>
+        </li>
+        <div ng-show="showEditUsername" class="pdt-ul-div" id="editUsername">
+          <li style="margin-bottom: 10px;">
+            <div layout="row">
+              <span style="width: 30%">Edit Username</span>
+              <span flex></span>
+              <span class="pdt-spn-edit"><a ng-click="showEditUsername=false;">Cancel</a></span>
+            </div>
+          </li>
+          <div style="padding: 8px;">
+            <div layout="row" layout-align="center center" style="padding-top: 5vh;">
+              <span flex></span>
+              <md-input-container flex="50">
+                <label>Username</label>
+                <input ng-model="newDisplayName"/>
+              </md-input-container>
+              <span flex></span>
+              <md-button class="md-raised md-primary md-raised md-cornered" style="margin-top: -35px;">Save Changes</md-button>
+            </div>
+          </div>
+        </div>
+        <li ng-hide="showEditEmailAddress" class="pdt-ul-li" style="border-bottom: 1px dashed #BDBDBD;">
+          <div layout="row">
+            <span style="width: 30%">Email Address</span>
+            <span class="pdt-spn-value">{{email}}</span>
+            <span class="pdt-spn-edit"><a ng-click="showEditUsername=false; showEditEmailAddress=true; showEditPassword=false;">Edit</a></span>
+          </div>
+        </li>
+        <div ng-show="showEditEmailAddress" class="pdt-ul-div" id="editEmail">
+          <li style="margin-bottom: 10px;">
+            <div layout="row">
+              <span style="width: 30%">Edit Email Address</span>
+              <span flex></span>
+              <span class="pdt-spn-edit"><a ng-click="showEditEmailAddress=false;">Cancel</a></span>
+            </div>
+          </li>
+          <div style="padding: 8px;">
+            <div layout="row" layout-align="center center" style="padding-top: 5vh;">
+              <span flex></span>
+              <md-input-container flex="50">
+                <label>Email Address</label>
+                <input ng-model="newDisplayName"/>
+              </md-input-container>
+              <span flex></span>
+              <md-button class="md-raised md-primary md-raised md-cornered" style="margin-top: -35px;">Save Changes</md-button>
+            </div>
+          </div>
+        </div>
+        <li ng-hide="showEditPassword" class="pdt-ul-li" style="border-bottom: 1px solid #616161;">
+          <div layout="row">
+            <span style="width: 30%">Password</span>
+            <span class="pdt-spn-value"></span>
+            <span class="pdt-spn-edit"><a ng-click="showEditUsername=false; showEditEmailAddress=false; showEditPassword=true;">Edit</a></span>
+          </div>
+        </li>
+        <div ng-show="showEditPassword" class="pdt-ul-div" id="editPassword" >
+          <li style="margin-bottom: 10px;">
+            <div layout="row">
+              <span style="width: 30%">Edit Password</span>
+              <span flex></span>
+              <span class="pdt-spn-edit"><a ng-click="showEditPassword=false">Cancel</a></span>
+            </div>
+          </li>
+          <div style="padding: 8px;">
+            <div layout="row" layout-align="center center" style="padding-top: 5vh;">
+              <span flex></span>
+              <md-input-container flex="35">
+                <label>Old Password</label>
+                <input ng-model="newDisplayName"/>
+              </md-input-container>
+              <md-input-container flex="35">
+                <label>New Password</label>
+                <input ng-model="newDisplayName"/>
+              </md-input-container>
+              <span flex></span>
+              <md-button class="md-raised md-primary md-raised md-cornered" style="margin-top: -20px;">Save Changes</md-button>
+            </div>
+          </div>
+        </div>
+      </ul>
+    </md-content>
+  </md-dialog-content>
+</md-dialog>

@@ -40,30 +40,36 @@
           <md-card layout="column" flex="40" layout-padding style="padding-top: 30px;">
             <form ng-submit="submitCreateAccount()" name="createAccount">
               <md-input-container class="md-block">
-                <label>Name</label>
-                <input ng-model="createName" required>
+                <label>Master Password</label>
+                <input ng-model="inputMasterPassword" type="password" ng-change="compareMasterPassword()"/>
               </md-input-container>
-              <md-input-container class="md-block">
-                <label>Email Address</label>
-                <input ng-model="createEmailaddress" type="email" required>
-              </md-input-container>
-              <div layout="row" flex>
-                <md-input-container class="md-block" flex >
-                  <label>Password</label>
-                  <input type="password" id="password1" name="password1" ng-model="password1" required />
+              <div ng-hide="true" ng-show=compareMasterPassword()>
+                <md-input-container class="md-block">
+                  <label>Name</label>
+                  <input ng-model="createName" required>
                 </md-input-container>
-                <md-input-container class="md-block" flex >
-                  <label>Confirm Password</label>
-                  <input type="password" id="password2" name="password2" ng-model="password2" required pw-check="password1" />
+                <md-input-container class="md-block">
+                  <label>Email Address</label>
+                  <input ng-model="createEmailaddress" type="email" required>
                 </md-input-container>
-              </div>
-              <div layout="row">
-                <div class="msg-block" ng-show="createAccount.$error" style="padding-top: 25px;">
-                  <span class="msg-error" style="font-size: 14px;" ng-show="createAccount.password2.$error.pwmatch">Passwords don't match.</span>
+                <div layout="row" flex>
+                  <md-input-container class="md-block" flex >
+                    <label>Password</label>
+                    <input type="password" id="password1" name="password1" ng-model="password1" required />
+                  </md-input-container>
+                  <md-input-container class="md-block" flex >
+                    <label>Confirm Password</label>
+                    <input type="password" id="password2" name="password2" ng-model="password2" required pw-check="password1" />
+                  </md-input-container>
                 </div>
-                <span flex></span>
-                <md-button class="md-raised md-primary" ng-disabled="!createAccount.$valid" type="submit">Sign Up</md-button>
-                <input type="submit" ng-hide="true">
+                <div layout="row">
+                  <div class="msg-block" ng-show="createAccount.$error" style="padding-top: 25px;">
+                    <span class="msg-error" style="font-size: 14px;" ng-show="createAccount.password2.$error.pwmatch">Passwords don't match.</span>
+                  </div>
+                  <span flex></span>
+                  <md-button class="md-raised md-primary" ng-disabled="!createAccount.$valid" type="submit">Sign Up</md-button>
+                  <input type="submit" ng-hide="true">
+                </div>
               </div>
             </form>
           </md-card>
@@ -84,8 +90,8 @@
                 <input ng-model="retrieve.emailAddress">
               </md-input-container>
               <input type="submit" ng-hide="true">
+              <md-button class="md-raised md-primary" type="submit">Submit</md-button>
             </form>
-            <md-button class="md-raised md-primary" type="submit">Submit</md-button>
           </md-card>
         </div>
       </div>

@@ -1,14 +1,23 @@
-
 angular.
 module('userAuth').
 component('userAuth', {
   templateUrl: 'views/userAuth/user-auth.template.html'
 }).
-controller('userAuthController', function($scope, $rootScope, $firebaseAuth, $firebaseArray, $mdToast, $mdDialog, $location, Auth) {
+controller("userAuthController", function($location, $scope, $rootScope, $firebaseArray, $firebaseObject, $firebaseAuth, $mdDialog, $mdMedia, $mdToast, $timeout, $mdSidenav, $log, Auth) {
   $scope.authObj = $firebaseAuth();
   $scope.auth = Auth;
 
   var userRef = firebase.database().ref("users");
+  var settingsRef = firebase.database().ref("settings");
+
+  settingsRef.on('value', function(snapshot) {
+    $scope.masterPassword = snapshot.val().masterPassword;
+  });
+
+  $scope.compareMasterPassword = function() {
+    console.log(`${$scope.masterPassword} -- masterPassword        ${$scope.inputMasterPassword} -- inputMasterPassword ${$scope.masterPassword == $scope.inputMasterPassword}`);
+    return ($scope.masterPassword == $scope.inputMasterPassword);
+  }
 
   $scope.showCreateAccount = false;
   $scope.showHome = true;
@@ -80,6 +89,7 @@ controller('userAuthController', function($scope, $rootScope, $firebaseAuth, $fi
   $scope.submitRetrieveAccount = function() {
     $scope.authObj.$sendPasswordResetEmail($scope.retrieve.emailAddress).then(function() {
       $scope.toast(`Password reset email sent successfully!`);
+      console.log(``)
     }).catch(function(error) {
       $scope.toast(`Error: ${error}`);
     });

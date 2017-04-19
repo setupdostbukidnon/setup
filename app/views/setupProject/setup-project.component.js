@@ -26,7 +26,7 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
       $scope.setupProjects.$loaded(function(item) {
         angular.forEach($scope.setupProjects, function(value, key) {
           // if(currentDay == 1) {
-            console.log(`its currentDay: ${currentDay}`);
+            // console.log(`its currentDay: ${currentDay}`);
             // console.log(`${key}   ${value.$id} - ${value.proponent}`);
             var record = $scope.setupProjects.$getRecord(value.$id);
             record.remindRefund = false;
@@ -45,6 +45,7 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
   // });
 
   $scope.limitOptions = limitOptions;
+  console.log(limitOptions);
 
   $scope.filterOptions = years;
 
@@ -152,6 +153,16 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
     $mdSidenav('left').
     close();
   };
+
+  $scope.profile = function(ev) {
+    $mdDialog.show({
+      controller: "profileController",
+      templateUrl: "views/dialog/historyDialog.template.html",
+      parent: angular.element(document.body),
+      targetEvent: ev,
+      escapeToClose: false
+    });
+  }
 
   $scope.showHistory = function(ev) {
     $mdDialog.show({
