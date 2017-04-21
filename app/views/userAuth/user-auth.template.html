@@ -37,16 +37,20 @@
           <span>Create Account</span>
         </div>
         <div layout-padding>
-          <md-card layout="column" flex="40" layout-padding style="padding-top: 30px;">
+          <md-card layout="column" flex="40" layout-padding style="padding-top: 20px;">
             <form ng-submit="submitCreateAccount()" name="createAccount">
-              <md-input-container class="md-block">
-                <label>Master Password</label>
-                <input ng-model="inputMasterPassword" type="password" ng-change="compareMasterPassword()"/>
-              </md-input-container>
-              <div ng-hide="true" ng-show=compareMasterPassword()>
+              <section ng-hide="passwordStatus" layout="row" layout-align="center center" layout-wrap flex>
+                <md-input-container class="md-block" flex="75">
+                  <label>Master Password</label>
+                  <input ng-model="inputMasterPassword" type="password" maxlength="20"/>
+                </md-input-container>
+                <span flex></span>
+                <md-button class="md-cornered" ng-click="compareMasterPassword()" style="margin-top: -40px;">Submit</md-button>
+              </section>
+              <div ng-hide="true" ng-show="passwordStatus">
                 <md-input-container class="md-block">
-                  <label>Name</label>
-                  <input ng-model="createName" required>
+                  <label>Username</label>
+                  <input ng-model="createDisplayName" required>
                 </md-input-container>
                 <md-input-container class="md-block">
                   <label>Email Address</label>
@@ -67,7 +71,8 @@
                     <span class="msg-error" style="font-size: 14px;" ng-show="createAccount.password2.$error.pwmatch">Passwords don't match.</span>
                   </div>
                   <span flex></span>
-                  <md-button class="md-raised md-primary" ng-disabled="!createAccount.$valid" type="submit">Sign Up</md-button>
+                   <md-progress-circular ng-show="showPromise" style="margin: 10px 10px 10px 0px;" md-mode="indeterminate" md-diameter="25px"></md-progress-circular>
+                  <md-button ng-hide="showPromise" class="md-raised md-primary" ng-disabled="!createAccount.$valid" type="submit">Sign Up</md-button>
                   <input type="submit" ng-hide="true">
                 </div>
               </div>
@@ -89,8 +94,12 @@
                 <label>Email Address</label>
                 <input ng-model="retrieve.emailAddress">
               </md-input-container>
-              <input type="submit" ng-hide="true">
-              <md-button class="md-raised md-primary" type="submit">Submit</md-button>
+              <section layout="row">
+                <input type="submit" ng-hide="true">
+                <span flex></span>
+                <md-progress-circular ng-show="showPromise" style="margin: 10px 25px 10px 0px;" md-mode="indeterminate" md-diameter="25px"></md-progress-circular>
+                <md-button ng-hide="showPromise" class="md-raised md-primary" type="submit">Submit</md-button>
+              </section>
             </form>
           </md-card>
         </div>

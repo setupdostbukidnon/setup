@@ -4,7 +4,7 @@ firebase.database().ref("settings").on('value', function(snapshot) {
   window.dueDateStart = snapshot.val().dueDateStart;
   window.dueDateEnd = snapshot.val().dueDateEnd;
   window.masterPassword = snapshot.val().masterPassword;
-  console.log(` isFirstDay -- ${isFirstDay} \n isReset -- ${isReset} \n dueDateStart -- ${dueDateStart} \n dueDateEnd -- ${dueDateEnd} \n masterPassword -- ${masterPassword}`);
+  // console.log(` isFirstDay -- ${isFirstDay} \n isReset -- ${isReset} \n dueDateStart -- ${dueDateStart} \n dueDateEnd -- ${dueDateEnd} \n masterPassword -- ${masterPassword}`);
 });
 window.dueDateStart = 1;
 window.dueDateEnd = 31;

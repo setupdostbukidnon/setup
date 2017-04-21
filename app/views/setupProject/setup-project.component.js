@@ -3,26 +3,31 @@ module("setupProject").
 component("setupProject", {
   templateUrl: "views/setupProject/setup-project.template.html"
 }).
-controller("setupProjectController", function($location, $scope, $rootScope, $firebaseArray, $firebaseObject, $firebaseAuth, $mdDialog, $mdMedia, $mdToast, $timeout, $mdSidenav, $log, Auth) {
+controller("setupProjectController", function($location, $scope, $rootScope, $firebaseArray, $firebaseAuth, $mdDialog, $mdMedia, $mdToast, $timeout, $mdSidenav, $log, Auth) {
+  var THIS = this;
+  var ref = firebase.database().ref();
+  var firebaseUser = firebase.auth().currentUser;
+  var settingsRef = firebase.database().ref("settings");
+  var usersRef = firebase.database().ref("users");
+  $scope.setupProjects = $firebaseArray(ref.child("setupProject"));
+  $scope.history = $firebaseArray(ref.child("history"));
   $scope.authObj = $firebaseAuth();
   $scope.auth = Auth;
   $scope.selected = [];
   $scope.proponentWithDue = new Array();
   $scope.filteredItems = new Array();
   $scope.projectYear = "";
-  var THIS = this;
-
-  var ref = firebase.database().ref();
-  $scope.setupProjects = $firebaseArray(ref.child("setupProject"));
-  $scope.history = $firebaseArray(ref.child("history"));
-  var settingsRef = firebase.database().ref("settings");
 
   $scope.authObj.$onAuthStateChanged(function(firebaseUser) {
     if (firebaseUser) {
       $location.path("/setupProject");
       console.log(`Signed in as ${firebaseUser.uid} - email: ${firebaseUser.email} displayName: ${firebaseUser.displayName}`);
-      $scope.currentUser = firebaseUser.displayName;
-      $scope.currentEmail = firebaseUser.email;
+
+      usersRef.child(firebaseUser.uid).on('value', function(snapshot) {
+        $scope.userDisplayName = snapshot.val().displayName;
+        $scope.userEmailAddress = snapshot.val().email;
+      });
+
       $scope.setupProjects.$loaded(function(item) {
         angular.forEach($scope.setupProjects, function(value, key) {
           // if(currentDay == 1) {
@@ -40,12 +45,7 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
     }
   });
 
-  // $scope.setupProjects.$watch(function(e) {
-  //   $scope.setupProjectsLength = $scope.setupProjects.length;
-  // });
-
   $scope.limitOptions = limitOptions;
-  console.log(limitOptions);
 
   $scope.filterOptions = years;
 
@@ -75,6 +75,10 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
     last = angular.extend({},current);
   }
 
+  $scope.clearFilter = function() {
+    $scope.filterProponent = "";
+  }
+
   $scope.remindRefundIcon = function(param) {
     // var startDate = (param.refundScheduleStart == "" ? null : new Date(param.refundScheduleStart).getTime());
     var startDate = (param.refundScheduleStart == "" ? null : new Date(moment(param.refundScheduleStart, "MM DD YYYY").subtract(14, 'day').format("MMM DD YYYY")).getTime());
@@ -84,10 +88,6 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
       return param.remindRefund;
     }
   };
-
-  $scope.clearFilter = function() {
-    $scope.filterProponent = "";
-  }
 
   $scope.filterRemindRefund = function(param) {
     // var startDate = (param.refundScheduleStart == "" ? null : new Date(param.refundScheduleStart).getTime());
@@ -110,7 +110,7 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
     }
     console.log(`sendEmail - ${$scope.filteredItems.length}  -  ${temp}`);
     emailjs.send("gmail","template_4nILbpzO", {
-      email_to: $scope.currentEmail,
+      email_to: $scope.userEmail,
       from_name: "jan weak",
       to_name: "jan weak 2",
       message_body: "Proponents :<br><br>" + temp
@@ -157,7 +157,7 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
   $scope.profile = function(ev) {
     $mdDialog.show({
       controller: "profileController",
-      templateUrl: "views/dialog/historyDialog.template.html",
+      templateUrl: "views/dialog/profileDialog.template.html",
       parent: angular.element(document.body),
       targetEvent: ev,
       escapeToClose: false
@@ -209,7 +209,7 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
         action: "delete",
         proponent: THIS.SETUPPROJECT.proponent,
         date: new Date().getTime(),
-        emailAddress: $scope.currentEmail
+        emailAddress: $scope.userEmail
       });
       $scope.setupProjects.$remove(THIS.SETUPPROJECT);
       $scope.selected = [];
