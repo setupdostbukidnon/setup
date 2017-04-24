@@ -20,33 +20,6 @@ controller("editProponentController", function($scope, $rootScope, $firebaseArra
   "2026", "2027", "2028", "2029",
   "2030", "2031", "2032", "2033"];
 
-  $scope.toastPosition = angular.extend({},last);
-
-  function sanitizePosition() {
-    var current = $scope.toastPosition;
-    if ( current.bottom && last.top ) current.top = false;
-    if ( current.top && last.bottom ) current.bottom = false;
-    if ( current.right && last.left ) current.left = false;
-    if ( current.left && last.right ) current.right = false;
-    last = angular.extend({},current);
-  }
-
-  $scope.getToastPosition = function() {
-    sanitizePosition();
-    return Object.keys($scope.toastPosition)
-    .filter(function(pos) { return $scope.toastPosition[pos]; })
-    .join(" ");
-  };
-
-  $scope.remindRefundIcon = function() {
-    // var startDate = (setupProject.refundScheduleStart == "" ? null : new Date(setupProject.refundScheduleStart).getTime());
-    var startDate = (setupProject.refundScheduleStart == "" ? null : new Date(moment(setupProject.refundScheduleStart, "MM DD YYYY").subtract(14, 'day').format("MMM DD YYYY")).getTime());
-    var endDate = (setupProject.refundScheduleEnd == "" ? null : new Date(setupProject.refundScheduleEnd).getTime());
-    if (startDate <= currentDate && currentDate <= endDate && dueDateStart <= currentDay && currentDay <= dueDateEnd) {
-      return false;
-    }
-  };
-
   $scope.dialogTitle = "Edit Proponent";
   $scope.proponent = setupProject.proponent;
   $scope.projectYear = setupProject.projectYear;
@@ -62,8 +35,46 @@ controller("editProponentController", function($scope, $rootScope, $firebaseArra
   $scope.balance = setupProject.balance;
   $scope.status = setupProject.status;
   $scope.remindRefund = setupProject.remindRefund;
-  $scope.emailAddress = setupProject.emailAddress;
+  $scope.email = setupProject.email;
   $scope.contactNumber = setupProject.contactNumber;
+
+  $scope.toast = function(param) {
+    $scope.toastPosition = angular.extend({}, last);
+    $scope.getToastPosition = function() {
+      sanitizePosition();
+      return Object.keys($scope.toastPosition)
+      .filter(function(pos) {
+        return $scope.toastPosition[pos];
+      })
+      .join(" ");
+    };
+
+    function sanitizePosition() {
+      var current = $scope.toastPosition;
+      if ( current.bottom && last.top ) current.top = false;
+      if ( current.top && last.bottom ) current.bottom = false;
+      if ( current.right && last.left ) current.left = false;
+      if ( current.left && last.right ) current.right = false;
+      last = angular.extend({},current);
+    }
+
+    var pinTo = $scope.getToastPosition();
+    $mdToast.show(
+      $mdToast.simple()
+      .textContent(param)
+      .position(pinTo)
+      .hideDelay(3000)
+    );
+  }
+
+  $scope.remindRefundIcon = function() {
+    // var startDate = (setupProject.refundScheduleStart == "" ? null : new Date(setupProject.refundScheduleStart).getTime());
+    var startDate = (setupProject.refundScheduleStart == "" ? null : new Date(moment(setupProject.refundScheduleStart, "MM DD YYYY").subtract(14, 'day').format("MMM DD YYYY")).getTime());
+    var endDate = (setupProject.refundScheduleEnd == "" ? null : new Date(setupProject.refundScheduleEnd).getTime());
+    if (startDate <= currentDate && currentDate <= endDate && dueDateStart <= currentDay && currentDay <= dueDateEnd) {
+      return false;
+    }
+  };
 
   $scope.submitProponent = function() {
     var record = $scope.setupProjects.$getRecord(setupProject.id);
@@ -81,22 +92,16 @@ controller("editProponentController", function($scope, $rootScope, $firebaseArra
     record.balance = $scope.balance;
     record.status = $scope.status;
     record.remindRefund = $scope.remindRefund;
-    record.emailAddress = $scope.emailAddress;
+    record.email = $scope.email;
     record.contactNumber = $scope.contactNumber;
     $scope.setupProjects.$save(record);
     $scope.history.$add({
       action: "update",
       proponent: ($scope.proponent == null ? "" : $scope.proponent),
       date: new Date().getTime(),
-      emailAddress: $scope.currentEmail
+      email: $scope.currentEmail
     });
-    var pinTo = $scope.getToastPosition();
-    $mdToast.show(
-      $mdToast.simple().
-      textContent($scope.proponent + " project successfully updated...").
-      position(pinTo).
-      hideDelay(5000)
-    );
+    $scope.toast(`${$scope.proponent} project successfully updated.`);
     $mdDialog.hide();
   };
 

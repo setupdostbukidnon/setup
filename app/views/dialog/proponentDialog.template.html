@@ -9,7 +9,6 @@
       </md-button>
     </div>
   </md-toolbar>
-
   <md-dialog-content class="md-inline-form" layout-padding>
     <form name="formProponent" ng-submit="submitProponent()">
       <div layout="row">
@@ -99,7 +98,7 @@
             <div flex layout="row">
               <md-input-container class="md-block" flex="50">
                 <label>Email address</label>
-                <input ng-model="emailAddress" type="email" />
+                <input ng-model="email" type="email" />
               </md-input-container>
               <md-input-container class="md-block" flex="50">
                 <label>Contact Number</label>
@@ -107,7 +106,7 @@
               </md-input-container>
             </div>
             <md-input-container class="md-block" flex>
-              <md-checkbox ng-model="remindRefund" checked="true" ng-show="remindRefundIcon() == false" ng-true-value="'true'" ng-false-value="'false'">
+              <md-checkbox ng-model="remindRefund" checked="true" ng-show="remindRefundIcon() == false" ng-true-value="true" ng-false-value="false">
                 <span>Remind refund due</span>
               </md-checkbox>
             </md-input-container>
@@ -118,3 +117,4 @@
     </form>
   </md-dialog-content>
 </md-dialog>
+  

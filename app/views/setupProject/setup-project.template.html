@@ -1,5 +1,6 @@
 <md-card ng-controller="setupProjectController" flex style="margin: 0px;">
   <div>
+    <md-progress-linear ng-hide="hidenow" md-mode="indeterminate"></md-progress-linear>
     <md-toolbar class="md-table-toolbar md-default" ng-hide="options.rowSelection && selected.length">
       <div class="md-toolbar-tools">
         <div layout="row"  style="margin-top: 26px;" flex="60">
@@ -41,7 +42,49 @@
         </md-button>
       </div>
     </md-toolbar>
-    <md-table-container style="height: 83vh;">
+    <md-sidenav class="md-sidenav-left md-whiteframe-4dp" md-component-id="left" style="width: 25vw;">
+      <md-toolbar class="md-tall">
+        <div class="md-toolbar-tools">
+          <md-button class="md-icon-button" ng-click="closeSideNav()">
+            <md-icon class="material-icons">arrow_back</md-icon>
+          </md-button>
+          <h1 class="md-toolbar-tools">SETUP Project</h1>
+        </div>
+      </md-toolbar>
+      <md-content>
+        <md-list>
+          <md-list-item ng-click="profile($event)">
+            <md-icon class="material-icons md-dark md-24">account_circle</md-icon>
+            <p class="md-body-2">{{userDisplayName}}</p>
+          </md-list-item>
+          <md-list-item ng-click="create($event)">
+            <md-icon class="material-icons md-dark md-24">add_circle</md-icon>
+            <p class="md-body-2">Add Proponent</p>
+          </md-list-item>
+          <md-list-item ng-click="showHistory($event)">
+            <md-icon class="material-icons md-dark md-24">history</md-icon>
+            <p class="md-body-2">History</p>
+          </md-list-item>
+          <md-list-item>
+            <md-checkbox ng-model="showProponentWithDue" checked="true" ng-change="clearFilter()" ng-true-value="'true'" ng-false-value="'false'"></md-checkbox>
+            <p class="md-body-2">Show Proponents With Due</p>
+          </md-list-item>
+          <md-list-item ng-click="sendEmail()" ng-show="showProponentWithDue == 'true'">
+            <md-icon class="material-icons md-dark md-24">email</md-icon>
+            <p class="md-body-2">Send Email</p>
+          </md-list-item>
+          <md-list-item ng-click="showSettings($event)" >
+            <md-icon class="material-icons md-drak md-24">settings</md-icon>
+            <p class="md-body-2">Settings</p>
+          </md-list-item>
+          <md-list-item ng-click="signOut($)">
+            <md-icon class="material-icons md-dark md-24">exit_to_app</md-icon>
+            <p class="md-body-2">Sign Out</p>
+          </md-list-item>
+        </md-list>
+      </md-content>
+    </md-sidenav>
+    <md-table-container id="table-container" >
       <table md-table md-row-select="options.rowSelection" ng-model="selected">
         <thead md-head fix-head md-order="query.order">
           <tr md-row>
@@ -85,47 +128,5 @@
         </tbody>
       </table>
     </md-table-container>
-    <md-sidenav class="md-sidenav-left md-whiteframe-4dp" md-component-id="left" style="width: 45vh;">
-      <md-toolbar class="md-tall">
-        <div class="md-toolbar-tools">
-          <md-button class="md-icon-button" ng-click="closeSideNav()">
-            <md-icon class="material-icons">arrow_back</md-icon>
-          </md-button>
-          <h1 class="md-toolbar-tools">SETUP Project</h1>
-        </div>
-      </md-toolbar>
-      <md-content>
-        <md-list>
-          <md-list-item ng-click="profile($event)">
-            <md-icon class="material-icons md-dark md-24">account_circle</md-icon>
-            <p class="md-body-2">{{userDisplayName}}</p>
-          </md-list-item>
-          <md-list-item ng-click="create($event)">
-            <md-icon class="material-icons md-dark md-24">add_circle</md-icon>
-            <p class="md-body-2">Add Proponent</p>
-          </md-list-item>
-          <md-list-item ng-click="showHistory($event)">
-            <md-icon class="material-icons md-dark md-24">history</md-icon>
-            <p class="md-body-2">History</p>
-          </md-list-item>
-          <md-list-item>
-            <md-checkbox ng-model="showProponentWithDue" checked="true" ng-change="clearFilter()" ng-true-value="'true'" ng-false-value="'false'"></md-checkbox>
-            <p class="md-body-2">Show Proponents With Due</p>
-          </md-list-item>
-          <md-list-item ng-click="sendEmail()" ng-show="showProponentWithDue == 'true'">
-            <md-icon class="material-icons md-dark md-24">email</md-icon>
-            <p class="md-body-2">Send Email</p>
-          </md-list-item>
-          <md-list-item ng-click="showSettings($event)" >
-            <md-icon class="material-icons md-drak md-24">settings</md-icon>
-            <p class="md-body-2">Settings</p>
-          </md-list-item>
-          <md-list-item ng-click="signOut($)">
-            <md-icon class="material-icons md-dark md-24">exit_to_app</md-icon>
-            <p class="md-body-2">Sign Out</p>
-          </md-list-item>
-        </md-list>
-      </md-content>
-    </md-sidenav>
   </div>
 </md-card>

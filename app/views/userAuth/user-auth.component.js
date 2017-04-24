@@ -11,6 +11,7 @@ controller("userAuthController", function($location, $scope, $rootScope, $fireba
   $scope.showCreateAccount = false;
   $scope.retrieveAccount = false;
   $scope.showPromise = false;
+  $scope.hideMe = false;
 
   var usersRef = firebase.database().ref("users");
   var settingsRef = firebase.database().ref("settings");
@@ -31,6 +32,7 @@ controller("userAuthController", function($location, $scope, $rootScope, $fireba
       $location.path("/userAuth").replace();
       console.log("Signed out");
     }
+    $scope.$apply();
   });
 
   $scope.compareMasterPassword = function() {

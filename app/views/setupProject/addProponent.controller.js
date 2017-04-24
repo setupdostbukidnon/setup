@@ -21,25 +21,36 @@ controller("addProponentDialogController", function($scope, $firebaseArray, $fir
   "2026", "2027", "2028", "2029",
   "2030", "2031", "2032", "2033"];
 
-  $scope.toastPosition = angular.extend({},last);
-
-  $scope.getToastPosition = function() {
-    sanitizePosition();
-    return Object.keys($scope.toastPosition)
-    .filter(function(pos) { return $scope.toastPosition[pos]; })
-    .join(" ");
-  };
-
-  function sanitizePosition() {
-    var current = $scope.toastPosition;
-    if ( current.bottom && last.top ) current.top = false;
-    if ( current.top && last.bottom ) current.bottom = false;
-    if ( current.right && last.left ) current.left = false;
-    if ( current.left && last.right ) current.right = false;
-    last = angular.extend({}, current);
-  }
-
   $scope.dialogTitle = "Add Proponent";
+
+  $scope.toast = function(param) {
+    $scope.toastPosition = angular.extend({}, last);
+    $scope.getToastPosition = function() {
+      sanitizePosition();
+      return Object.keys($scope.toastPosition)
+      .filter(function(pos) {
+        return $scope.toastPosition[pos];
+      })
+      .join(" ");
+    };
+
+    function sanitizePosition() {
+      var current = $scope.toastPosition;
+      if ( current.bottom && last.top ) current.top = false;
+      if ( current.top && last.bottom ) current.bottom = false;
+      if ( current.right && last.left ) current.left = false;
+      if ( current.left && last.right ) current.right = false;
+      last = angular.extend({},current);
+    }
+
+    var pinTo = $scope.getToastPosition();
+    $mdToast.show(
+      $mdToast.simple()
+      .textContent(param)
+      .position(pinTo)
+      .hideDelay(3000)
+    );
+  }
 
   $scope.submitProponent = function() {
     $scope.setupProjects.$add({
@@ -56,7 +67,7 @@ controller("addProponentDialogController", function($scope, $firebaseArray, $fir
       refundMade: ($scope.refundMade == null ? "" : $scope.refundMade),
       balance: ($scope.balance == null ? "" : $scope.balance),
       status: ($scope.status == null ? "" : $scope.status),
-      emailAddress: ($scope.emailAddress == null ? "" : $scope.emailAddress),
+      email: ($scope.email == null ? "" : $scope.email),
       contactNumber: ($scope.contactNumber == null ? "" : $scope.contactNumber),
       remindRefund: "false"
     });
@@ -65,16 +76,9 @@ controller("addProponentDialogController", function($scope, $firebaseArray, $fir
       action: "add",
       proponent: ($scope.proponent == null ? "" : $scope.proponent),
       date: new Date().getTime(),
-      emailAddress: $scope.currentEmail
+      email: $scope.currentEmail
     });
-
-    var pinTo = $scope.getToastPosition();
-    $mdToast.show(
-      $mdToast.simple().
-      textContent($scope.proponent + " project successfully added...").
-      position(pinTo).
-      hideDelay(5000)
-    );
+    $scope.toast(`${$scope.proponent} project successfully added.`);
     $mdDialog.hide();
   };
 

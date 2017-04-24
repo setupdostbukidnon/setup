@@ -17,6 +17,20 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
   $scope.proponentWithDue = new Array();
   $scope.filteredItems = new Array();
   $scope.projectYear = "";
+  $scope.limitOptions = limitOptions;
+  $scope.filterOptions = years;
+  $scope.options = options;
+  $scope.query = query;
+  $scope.tooltip = tooltip;
+
+  console.log(`${window.screen.availWidth} x ${window.screen.availHeight}`);
+
+  if(window.screen.availWidth == 1366 && window.screen.availHeight == 738) {
+    document.getElementById('table-container').style.height = '80.5vh';
+  } else if (window.screen.availWidth == 1920 && window.screen.availHeight == 1080) {
+    document.getElementById('table-container').style.height = '88.5vh';
+    $scope.query.limit = 25;
+  }
 
   $scope.authObj.$onAuthStateChanged(function(firebaseUser) {
     if (firebaseUser) {
@@ -29,15 +43,25 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
       });
 
       $scope.setupProjects.$loaded(function(item) {
-        angular.forEach($scope.setupProjects, function(value, key) {
-          // if(currentDay == 1) {
-            // console.log(`its currentDay: ${currentDay}`);
-            // console.log(`${key}   ${value.$id} - ${value.proponent}`);
-            var record = $scope.setupProjects.$getRecord(value.$id);
-            record.remindRefund = false;
-            $scope.setupProjects.$save(record);
-          // }
-        });
+        $scope.hidenow = true;
+        if(window.screen.availWidth == 1366 && window.screen.availHeight == 738) {
+          document.getElementById('table-container').style.height = '81.5vh';
+        } else if (window.screen.availWidth == 1920 && window.screen.availHeight == 1080) {
+          document.getElementById('table-container').style.height = '88.5vh';
+          $scope.query.limit = 25;
+        }
+        if(currentDay > 1) {
+          angular.forEach($scope.setupProjects, function(value, key) {
+            console.log(`a`);
+            // if(currentDay == 1) {
+              // console.log(`its currentDay: ${currentDay}`);
+              // console.log(`${key}   ${value.$id} - ${value.proponent}`);
+              // var record = $scope.setupProjects.$getRecord(value.$id);
+              // record.remindRefund = false;
+              // $scope.setupProjects.$save(record);
+            // }
+          });
+        }
       });
     } else {
       console.log("Signed out");
@@ -45,34 +69,33 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
     }
   });
 
-  $scope.limitOptions = limitOptions;
+  $scope.toast = function(param) {
+    $scope.toastPosition = angular.extend({}, last);
+    $scope.getToastPosition = function() {
+      sanitizePosition();
+      return Object.keys($scope.toastPosition)
+      .filter(function(pos) {
+        return $scope.toastPosition[pos];
+      })
+      .join(" ");
+    };
 
-  $scope.filterOptions = years;
+    function sanitizePosition() {
+      var current = $scope.toastPosition;
+      if ( current.bottom && last.top ) current.top = false;
+      if ( current.top && last.bottom ) current.bottom = false;
+      if ( current.right && last.left ) current.left = false;
+      if ( current.left && last.right ) current.right = false;
+      last = angular.extend({},current);
+    }
 
-  $scope.options = options;
-
-  $scope.query = query;
-
-  $scope.tooltip = tooltip;
-
-  $scope.toastPosition = angular.extend({}, last);
-
-  $scope.getToastPosition = function() {
-    sanitizePosition();
-    return Object.keys($scope.toastPosition)
-    .filter(function(pos) {
-      return $scope.toastPosition[pos];
-    })
-    .join(" ");
-  };
-
-  function sanitizePosition() {
-    var current = $scope.toastPosition;
-    if ( current.bottom && last.top ) current.top = false;
-    if ( current.top && last.bottom ) current.bottom = false;
-    if ( current.right && last.left ) current.left = false;
-    if ( current.left && last.right ) current.right = false;
-    last = angular.extend({},current);
+    var pinTo = $scope.getToastPosition();
+    $mdToast.show(
+      $mdToast.simple()
+      .textContent(param)
+      .position(pinTo)
+      .hideDelay(3000)
+    );
   }
 
   $scope.clearFilter = function() {
@@ -99,6 +122,11 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
     }
   };
 
+  $scope.selectRow = function(param) {
+    THIS.SETUPPROJECT = param;
+    console.log(THIS.SETUPPROJECT.proponent);
+  };
+
   $scope.sendEmail = function() {
     $scope.filteredItems = $scope.proponentWithDue.filter(function(elem, index, self) {
       return index == self.indexOf(elem);
@@ -110,31 +138,20 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
     }
     console.log(`sendEmail - ${$scope.filteredItems.length}  -  ${temp}`);
     emailjs.send("gmail","template_4nILbpzO", {
-      email_to: $scope.userEmail,
+      email_to: $scope.userEmailAddress,
       from_name: "jan weak",
-      to_name: "jan weak 2",
+      to_name: `${$scope.userDisplayName} - ${$scope.userEmailAddress}`,
       message_body: "Proponents :<br><br>" + temp
     }).
     then(function(response) {
       console.log("SUCCESS", response);
-      var pinTo = $scope.getToastPosition();
       console.log(`${temp}`);
-      $mdToast.show(
-        $mdToast.simple()
-        .textContent("Email sent...")
-        .position(pinTo)
-        .hideDelay(3000)
-      );
+      $scope.toast(`Email Sent.`);
     },
     function(error) {
       console.log("FAILED", error);
     });
   }
-
-  $scope.selectRow = function(param) {
-    THIS.SETUPPROJECT = param;
-    console.log(THIS.SETUPPROJECT.proponent);
-  };
 
   $scope.formatThousand = function(param) {
     return param.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -209,18 +226,12 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
         action: "delete",
         proponent: THIS.SETUPPROJECT.proponent,
         date: new Date().getTime(),
-        emailAddress: $scope.userEmail
+        email: $scope.userEmailAddress
       });
       $scope.setupProjects.$remove(THIS.SETUPPROJECT);
       $scope.selected = [];
       $scope.showOption = true;
-      var pinTo = $scope.getToastPosition();
-      $mdToast.show(
-        $mdToast.simple()
-        .textContent(THIS.SETUPPROJECT.proponent + " project successfully deleted...")
-        .position(pinTo)
-        .hideDelay(5000)
-      );
+      $scope.toast(`${THIS.SETUPPROJECT.proponent} project successfully deleted.`);
     }, function() {
       $mdDialog.hide();
     });
@@ -250,7 +261,7 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
           balance: THIS.SETUPPROJECT.balance,
           status: THIS.SETUPPROJECT.status,
           remindRefund: THIS.SETUPPROJECT.remindRefund,
-          emailAddress: THIS.SETUPPROJECT.emailAddress,
+          email: THIS.SETUPPROJECT.email,
           contactNumber: THIS.SETUPPROJECT.contactNumber
         }
       }
