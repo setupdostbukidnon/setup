@@ -1,4 +1,4 @@
-<md-dialog class="fullscreen-dialog" aria-label="Add Proponent Dialog">
+<md-dialog class="fullscreen-dialog" aria-label="Add Proponent Dialog" style="background-color: #F5F5F5;">
   <md-toolbar>
     <div class="md-toolbar-tools">
       <md-button ng-show="formProponent.$dirty" onClick="document.getElementById('submit').click()">Submit</md-button>
@@ -11,110 +11,116 @@
   </md-toolbar>
   <md-dialog-content class="md-inline-form" layout-padding>
     <form name="formProponent" ng-submit="submitProponent()">
-      <div layout="row">
-        <md-card flex layout-padding style="padding-top: 20px;">
-          <div layout="row">
-            <md-input-container class="md-block leftCard" flex style="margin-bottom: 0px;">
-              <label>Proponent</label>
-              <input ng-model="proponent" required />
-            </md-input-container>
-            <md-input-container md-no-float class="md-block" flex="20" >
-              <md-select ng-model="projectYear" placeholder="Year" class="toolbarFontsize">
-                <md-option>All</md-option>
-                <md-option ng-repeat="year in years" ng-value="year">
-                  {{year}}
-                </md-option>
-              </md-select>
-            </md-input-container>
-          </div>
-          <div layout="row">
-            <md-input-container class="leftCard" style="margin-bottom: 0px;">
-              <label>Date Approved</label>
-              <md-datepicker ng-model="dateApproved" md-current-view="year" class="inputDatepicker" md-open-on-focus></md-datepicker>
-            </md-input-container>
-            <span flex="10"></span>
-            <md-input-container class="leftCard" style="margin-bottom: 0px;">
-              <label>Date Released</label>
-              <md-datepicker ng-model="dateReleased" md-current-view="year" class="inputDatepicker" md-open-on-focus></md-datepicker>
-            </md-input-container>
-          </div>
-          <div layout="row">
-            <md-input-container class="md-block leftCard" flex style="margin-bottom: 0px;">
-              <label>Actual Fund Release</label>
-              <input currency-mask ng-model="actualFundRelease"/>
-            </md-input-container>
-          </div>
-          <div layout="column">
-            <label><p>
-              Project Duration
-            </p></label>
+      <div layout="row" layout-xl="column" flex-xl layout-fill>
+        <div layout="row" flex layout-xl="row" flex-xl>
+          <span flex-xl="20" flex="0"></span>
+          <md-card flex flex-xl layout-padding style="padding-top: 20px;">
             <div layout="row">
-              <md-input-container class="leftCard">
-                <label>Start</label>
-                <md-datepicker ng-model="projectDurationStart" md-current-view="year" md-open-on-focus></md-datepicker>
+              <md-input-container class="md-block leftCard" flex style="margin-bottom: 0px;">
+                <label>Proponent</label>
+                <input ng-model="proponent" required />
+              </md-input-container>
+              <md-input-container md-no-float class="md-block" flex="20" >
+                <md-select ng-model="projectYear" placeholder="Year" class="toolbarFontsize">
+                  <md-option ng-repeat="year in years" ng-value="year">
+                    {{year}}
+                  </md-option>
+                </md-select>
+              </md-input-container>
+            </div>
+            <div layout="row">
+              <md-input-container class="leftCard" style="margin-bottom: 0px;">
+                <label>Date Approved</label>
+                <md-datepicker ng-model="dateApproved" md-current-view="year" class="inputDatepicker" md-open-on-focus></md-datepicker>
               </md-input-container>
               <span flex="10"></span>
-              <md-input-container class="leftCard">
-                <label>End</label>
-                <md-datepicker ng-model="projectDurationEnd" md-current-view="year" md-open-on-focus></md-datepicker>
+              <md-input-container class="leftCard" style="margin-bottom: 0px;">
+                <label>Date Released</label>
+                <md-datepicker ng-model="dateReleased" md-current-view="year" class="inputDatepicker" md-open-on-focus></md-datepicker>
               </md-input-container>
             </div>
-          </div>
-          <div layout="column">
-            <label><p>
-              Refund Schedule
-            </p></label>
             <div layout="row">
-              <md-input-container class="leftCard">
-                <label>Start</label>
-                <md-datepicker ng-model="refundScheduleStart" md-current-view="year" md-open-on-focus></md-datepicker>
-              </md-input-container>
-              <span flex="10"></span>
-              <md-input-container class="leftCard">
-                <label>End</label>
-                <md-datepicker ng-model="refundScheduleEnd" md-current-view="year"md-open-on-focus></md-datepicker>
+              <md-input-container class="md-block leftCard" flex style="margin-bottom: 0px;">
+                <label>Actual Fund Release</label>
+                <input currency-mask ng-model="actualFundRelease"/>
               </md-input-container>
             </div>
-          </div>
-        </md-card>
-        <md-card flex layout-padding style="padding-top: 20px;">
-          <div layout="column">
-            <md-input-container class="md-block" flex>
-              <label>Latest Project extension</label>
-              <input ng-model="latestProjectExtension" />
-            </md-input-container>
-            <md-input-container class="md-block" flex>
-              <label>Refund made</label>
-              <input currency-mask ng-model="refundMade" />
-            </md-input-container>
-            <md-input-container class="md-block" flex>
-              <label>Balance</label>
-              <input currency-mask ng-model="balance" />
-            </md-input-container>
-            <md-input-container class="md-block" flex>
-              <label>Status</label>
-              <input ng-model="status" />
-            </md-input-container>
-            <div flex layout="row">
-              <md-input-container class="md-block" flex="50">
-                <label>Email address</label>
-                <input ng-model="email" type="email" />
+            <div layout="column">
+              <label><p>
+                Project Duration
+              </p></label>
+              <div layout="row">
+                <md-input-container class="leftCard">
+                  <label>Start</label>
+                  <md-datepicker ng-model="projectDurationStart" md-current-view="year" md-open-on-focus></md-datepicker>
+                </md-input-container>
+                <span flex="10"></span>
+                <md-input-container class="leftCard">
+                  <label>End</label>
+                  <md-datepicker ng-model="projectDurationEnd" md-current-view="year" md-open-on-focus></md-datepicker>
+                </md-input-container>
+              </div>
+            </div>
+            <div layout="column">
+              <label><p>
+                Refund Schedule
+              </p></label>
+              <div layout="row">
+                <md-input-container class="leftCard">
+                  <label>Start</label>
+                  <md-datepicker ng-model="refundScheduleStart" md-current-view="year" md-open-on-focus></md-datepicker>
+                </md-input-container>
+                <span flex="10"></span>
+                <md-input-container class="leftCard">
+                  <label>End</label>
+                  <md-datepicker ng-model="refundScheduleEnd" md-current-view="year"md-open-on-focus></md-datepicker>
+                </md-input-container>
+              </div>
+            </div>
+          </md-card>
+          <span flex-xl="20" flex="0"></span>
+        </div>
+        <div layout="row" flex layout-xl="row" flex-xl>
+          <span flex-xl="20" flex="0"></span>
+          <md-card flex flex-xl layout-padding style="padding-top: 20px;">
+            <div layout="column">
+              <md-input-container class="md-block" flex>
+                <label>Latest Project extension</label>
+                <input ng-model="latestProjectExtension" />
               </md-input-container>
-              <md-input-container class="md-block" flex="50">
-                <label>Contact Number</label>
-                <input ng-model="contactNumber" type="tel" />
+              <md-input-container class="md-block" flex>
+                <label>Refund made</label>
+                <input currency-mask ng-model="refundMade"/>
+              </md-input-container>
+              <md-input-container class="md-block" flex>
+                <label>Balance</label>
+                <input currency-mask ng-model="balance" />
+              </md-input-container>
+              <md-input-container class="md-block" flex>
+                <label>Status</label>
+                <input ng-model="status" />
+              </md-input-container>
+              <div flex layout="row">
+                <md-input-container class="md-block" flex="50">
+                  <label>Email address</label>
+                  <input ng-model="email" type="email" />
+                </md-input-container>
+                <md-input-container class="md-block" flex="50">
+                  <label>Contact Number</label>
+                  <input ng-model="contactNumber" type="tel" />
+                </md-input-container>
+              </div>
+              <md-input-container class="md-block" flex>
+                <md-checkbox ng-model="remindRefund" checked="true" ng-show="remindRefundIcon() == false" ng-true-value="true" ng-false-value="false">
+                  <span>Remind refund due</span>
+                </md-checkbox>
               </md-input-container>
             </div>
-            <md-input-container class="md-block" flex>
-              <md-checkbox ng-model="remindRefund" checked="true" ng-show="remindRefundIcon() == false" ng-true-value="true" ng-false-value="false">
-                <span>Remind refund due</span>
-              </md-checkbox>
-            </md-input-container>
-          </div>
-        </md-card>
+          </md-card>
+          <span flex-xl="20" flex="0"></span>
+      </div>
       </div>
       <md-button id="submit" type="submit" ng-show="false" >Submit</md-button>
     </form>
   </md-dialog-content>
 </md-dialog>
-  

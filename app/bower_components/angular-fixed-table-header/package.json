@@ -1,58 +1,15 @@
 {
-  "_args": [
-    [
-      {
-        "raw": "angular-fixed-table-header",
-        "scope": null,
-        "escapedName": "angular-fixed-table-header",
-        "name": "angular-fixed-table-header",
-        "rawSpec": "",
-        "spec": "latest",
-        "type": "tag"
-      },
-      "C:\\Users\\jan_frncs\\Desktop\\setup"
-    ]
-  ],
-  "_from": "angular-fixed-table-header@latest",
-  "_id": "angular-fixed-table-header@0.2.1",
-  "_inCache": true,
-  "_location": "/angular-fixed-table-header",
-  "_nodeVersion": "5.4.0",
-  "_npmOperationalInternal": {
-    "host": "packages-12-west.internal.npmjs.com",
-    "tmp": "tmp/angular-fixed-table-header-0.2.1.tgz_1458057460002_0.273225900484249"
+  "name": "angular-fixed-table-header",
+  "version": "0.2.1",
+  "description": "Fixed table header directive.",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/daniel-nagy/fixed-table-header.git"
   },
-  "_npmUser": {
-    "name": "daniel-nagy",
-    "email": "daniel_nagy@me.com"
-  },
-  "_npmVersion": "3.3.12",
-  "_phantomChildren": {},
-  "_requested": {
-    "raw": "angular-fixed-table-header",
-    "scope": null,
-    "escapedName": "angular-fixed-table-header",
-    "name": "angular-fixed-table-header",
-    "rawSpec": "",
-    "spec": "latest",
-    "type": "tag"
-  },
-  "_requiredBy": [
-    "#USER",
-    "/"
-  ],
-  "_resolved": "https://registry.npmjs.org/angular-fixed-table-header/-/angular-fixed-table-header-0.2.1.tgz",
-  "_shasum": "232a714f0a2158a75ddc31fc72fbd5923795418d",
-  "_shrinkwrap": null,
-  "_spec": "angular-fixed-table-header",
-  "_where": "C:\\Users\\jan_frncs\\Desktop\\setup",
-  "bugs": {
-    "url": "https://github.com/daniel-nagy/fixed-table-header/issues"
-  },
+  "main": "index.js",
   "dependencies": {
     "angular": "^1.4.0"
   },
-  "description": "Fixed table header directive.",
   "devDependencies": {
     "bower": "^1.3.9",
     "grunt": "^0.4.5",
@@ -66,28 +23,5 @@
     "grunt-processhtml": "^0.3.7",
     "jshint-stylish": "^1.0.0",
     "load-grunt-tasks": "^0.6.0"
-  },
-  "directories": {},
-  "dist": {
-    "shasum": "232a714f0a2158a75ddc31fc72fbd5923795418d",
-    "tarball": "https://registry.npmjs.org/angular-fixed-table-header/-/angular-fixed-table-header-0.2.1.tgz"
-  },
-  "gitHead": "a5ebefc181af1b5c3e440daa9539a6d57633ca12",
-  "homepage": "https://github.com/daniel-nagy/fixed-table-header#readme",
-  "main": "index.js",
-  "maintainers": [
-    {
-      "name": "daniel-nagy",
-      "email": "daniel_nagy@me.com"
-    }
-  ],
-  "name": "angular-fixed-table-header",
-  "optionalDependencies": {},
-  "readme": "ERROR: No README data found!",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/daniel-nagy/fixed-table-header.git"
-  },
-  "scripts": {},
-  "version": "0.2.1"
+  }
 }

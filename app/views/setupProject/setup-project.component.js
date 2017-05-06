@@ -3,27 +3,29 @@ module("setupProject").
 component("setupProject", {
   templateUrl: "views/setupProject/setup-project.template.html"
 }).
-controller("setupProjectController", function($location, $scope, $rootScope, $firebaseArray, $firebaseAuth, $mdDialog, $mdMedia, $mdToast, $timeout, $mdSidenav, $log, Auth) {
-  var THIS = this;
-  var ref = firebase.database().ref();
-  var firebaseUser = firebase.auth().currentUser;
-  var settingsRef = firebase.database().ref("settings");
-  var usersRef = firebase.database().ref("users");
-  $scope.setupProjects = $firebaseArray(ref.child("setupProject"));
-  $scope.history = $firebaseArray(ref.child("history"));
+controller("setupProjectController", function($location, $scope, $rootScope, $firebaseArray, $firebaseAuth, $mdDialog, $mdMedia, $mdToast, $timeout, $mdSidenav, Auth) {
+
   $scope.authObj = $firebaseAuth();
   $scope.auth = Auth;
+  var ref = firebase.database().ref();
+
+  var THIS = this;
+  var usersRef = firebase.database().ref("users");
+  var settingsRef = firebase.database().ref("settings");
+  $scope.setupProjects = $firebaseArray(ref.child("setupProject"));
+  $scope.history = $firebaseArray(ref.child("history"));
+
   $scope.selected = [];
   $scope.proponentWithDue = new Array();
   $scope.filteredItems = new Array();
   $scope.projectYear = "";
   $scope.limitOptions = limitOptions;
-  $scope.filterOptions = years;
+  $scope.filterOptions = projectYears;
   $scope.options = options;
   $scope.query = query;
   $scope.tooltip = tooltip;
 
-  console.log(`${window.screen.availWidth} x ${window.screen.availHeight}`);
+  console.log(`${window.screen.availWidth} x ${window.screen.availHeight} hello`);
 
   if(window.screen.availWidth == 1366 && window.screen.availHeight == 738) {
     document.getElementById('table-container').style.height = '80.5vh';
@@ -34,38 +36,71 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
 
   $scope.authObj.$onAuthStateChanged(function(firebaseUser) {
     if (firebaseUser) {
-      $location.path("/setupProject");
+      $location.path("/setupProject").replace;
       console.log(`Signed in as ${firebaseUser.uid} - email: ${firebaseUser.email} displayName: ${firebaseUser.displayName}`);
-
-      usersRef.child(firebaseUser.uid).on('value', function(snapshot) {
-        $scope.userDisplayName = snapshot.val().displayName;
-        $scope.userEmailAddress = snapshot.val().email;
-      });
 
       $scope.setupProjects.$loaded(function(item) {
         $scope.hidenow = true;
+        $scope.query.page = 1;
         if(window.screen.availWidth == 1366 && window.screen.availHeight == 738) {
           document.getElementById('table-container').style.height = '81.5vh';
         } else if (window.screen.availWidth == 1920 && window.screen.availHeight == 1080) {
           document.getElementById('table-container').style.height = '88.5vh';
           $scope.query.limit = 25;
         }
-        if(currentDay > 1) {
-          angular.forEach($scope.setupProjects, function(value, key) {
-            console.log(`a`);
-            // if(currentDay == 1) {
-              // console.log(`its currentDay: ${currentDay}`);
-              // console.log(`${key}   ${value.$id} - ${value.proponent}`);
-              // var record = $scope.setupProjects.$getRecord(value.$id);
-              // record.remindRefund = false;
-              // $scope.setupProjects.$save(record);
-            // }
+      }).then(function(response) {
+        console.log(`done`);
+        usersRef.child(firebaseUser.uid).on('value', function(snapshot) {
+          $scope.userDisplayName = snapshot.val().displayName;
+          $scope.userEmailAddress = snapshot.val().email;
+          $scope.userSendEmailStatus = snapshot.val().sendEmailStatus;
+          if (!$scope.userSendEmailStatus && (dueDateStart <= currentDay && currentDay < dueDateEnd) && usersRef.child(firebaseUser.uid) != null) {
+            console.log(`send now`);
+            angular.forEach($scope.setupProjects, function(value, key) {
+              $scope.filterWithRefund(value);
+            });
+            $scope.sendEmail();
+            usersRef.child(firebaseUser.uid).update({
+              sendEmailStatus: true
+            });
+          }
+        }, function(error) {
+          console.log(`${error}`);
+        });
+
+        if  (dueDateStart <= currentDay && !isReset) {
+          console.log(`isReset set to true`);
+          // angular.forEach($scope.setupProjects, function(value, key) {
+          //   console.log(`${key}   ${value.$id} - ${value.proponent}`);
+          //   var record = $scope.setupProjects.$getRecord(value.$id);
+          //   record.remindRefund = false;
+          //   $scope.setupProjects.$save(record);
+          // });
+          settingsRef.update({
+            isReset: true
           });
+        } else if (currentDay < dueDateStart && isReset) {
+          // set remindRefund = false to every proponent
+          console.log(`isReset set to false`);
+          settingsRef.update({
+            isReset: false
+          });
+          usersRef.child(firebaseUser.uid).update({
+            sendEmailStatus: false
+          });
+          angular.forEach($scope.setupProjects, function(value, key) {
+            console.log(`${key}   ${value.$id} - ${value.proponent}`);
+            var record = $scope.setupProjects.$getRecord(value.$id);
+            record.remindRefund = false;
+            $scope.setupProjects.$save(record);
+          });
+          location.reload();
         }
+
       });
     } else {
       console.log("Signed out");
-      $location.path("/userAuth");
+      $location.path("/userAuth").replace;
     }
   });
 
@@ -100,23 +135,29 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
 
   $scope.clearFilter = function() {
     $scope.filterProponent = "";
+    $scope.query.page = 1;
   }
 
   $scope.remindRefundIcon = function(param) {
     // var startDate = (param.refundScheduleStart == "" ? null : new Date(param.refundScheduleStart).getTime());
+    // var endDate = (param.refundScheduleEnd == "" ? null : new Date(param.refundScheduleEnd).getTime());
     var startDate = (param.refundScheduleStart == "" ? null : new Date(moment(param.refundScheduleStart, "MM DD YYYY").subtract(14, 'day').format("MMM DD YYYY")).getTime());
-    var endDate = (param.refundScheduleEnd == "" ? null : new Date(param.refundScheduleEnd).getTime());
-    if (startDate <= currentDate && currentDate <= endDate && dueDateStart <= currentDay && currentDay <= dueDateEnd) {
+    var endDate = (param.refundScheduleEnd == "" ? null : new Date(moment(param.refundScheduleEnd, "MM DD YYYY").add(14, 'day').format("MMM DD YYYY")).getTime());
+    // if (startDate <= currentDate && currentDate <= endDate && dueDateStart <= currentDay && currentDay <= dueDateEnd) {
+
+    if (startDate <= currentDate && currentDate <= endDate && dueDateStart <= currentDay) {
       var proponent = param.proponent;
       return param.remindRefund;
     }
   };
 
-  $scope.filterRemindRefund = function(param) {
+  $scope.filterWithRefund = function(param) {
     // var startDate = (param.refundScheduleStart == "" ? null : new Date(param.refundScheduleStart).getTime());
+    // var endDate = (param.refundScheduleEnd == "" ? null : new Date(param.refundScheduleEnd).getTime());
     var startDate = (param.refundScheduleStart == "" ? null : new Date(moment(param.refundScheduleStart, "MM DD YYYY").subtract(14, 'day').format("MMM DD YYYY")).getTime());
-    var endDate = (param.refundScheduleEnd == "" ? null : new Date(param.refundScheduleEnd).getTime());
-    if (startDate <= currentDate && currentDate <= endDate && dueDateStart <= currentDay && currentDay <= dueDateEnd) {
+    var endDate = (param.refundScheduleEnd == "" ? null : new Date(moment(param.refundScheduleEnd, "MM DD YYYY").add(14, 'day').format("MMM DD YYYY")).getTime());
+    // if (startDate <= currentDate && currentDate <= endDate && dueDateStart <= currentDay && currentDay <= dueDateEnd) {
+    if (startDate <= currentDate && currentDate <= endDate) {
       $scope.proponentWithDue.push(param.proponent);
       return param;
     }
@@ -128,29 +169,30 @@ controller("setupProjectController", function($location, $scope, $rootScope, $fi
   };
 
   $scope.sendEmail = function() {
+    $scope.emailStatus = true;
+    var temp = "";
     $scope.filteredItems = $scope.proponentWithDue.filter(function(elem, index, self) {
       return index == self.indexOf(elem);
     });
-    console.log(`${$scope.filteredItems.length}`);
-    var temp = "";
     for(var i = 0; i < $scope.filteredItems.length; i++) {
       temp += i+1 + ". " + $scope.filteredItems[i] + '<br>';
     }
-    console.log(`sendEmail - ${$scope.filteredItems.length}  -  ${temp}`);
-    emailjs.send("gmail","template_4nILbpzO", {
-      email_to: $scope.userEmailAddress,
-      from_name: "jan weak",
-      to_name: `${$scope.userDisplayName} - ${$scope.userEmailAddress}`,
-      message_body: "Proponents :<br><br>" + temp
-    }).
-    then(function(response) {
-      console.log("SUCCESS", response);
-      console.log(`${temp}`);
-      $scope.toast(`Email Sent.`);
-    },
-    function(error) {
-      console.log("FAILED", error);
-    });
+    console.log(`Proponent size: ${$scope.filteredItems.length}\n${temp}`);
+    if($scope.filteredItems.length > 0) {
+      emailjs.send("gmail","template_4nILbpzO", {
+        email_to: $scope.userEmailAddress,
+        from_name: "jan weak",
+        to_name: $scope.userDisplayName,
+        message_body: "Proponents :<br><br>" + temp
+      }).then(function(response) {
+        $scope.emailStatus = false;
+        console.log("SUCCESS", response);
+        $scope.toast(`Email Sent.`);
+      },function(error) {
+        console.log("FAILED", error);
+        $scope.toast(`${error.message}`);
+      });
+    }
   }
 
   $scope.formatThousand = function(param) {

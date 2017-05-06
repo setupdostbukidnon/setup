@@ -6,12 +6,16 @@ component('userAuth', {
 controller("userAuthController", function($location, $scope, $rootScope, $firebaseArray, $firebaseObject, $firebaseAuth, $mdDialog, $mdMedia, $mdToast, $timeout, $mdSidenav, $log, Auth) {
   $scope.authObj = $firebaseAuth();
   $scope.auth = Auth;
-  $scope.showHome = true;
+  $scope.showLogin = true;
   $scope.passwordStatus = false;
   $scope.showCreateAccount = false;
   $scope.retrieveAccount = false;
   $scope.showPromise = false;
   $scope.hideMe = false;
+  $scope.showProgress = false;
+  $scope.optSignIn = false;
+  $scope.optCreateAccount = true;
+  $scope.optRetrieveAccount = true;
 
   var usersRef = firebase.database().ref("users");
   var settingsRef = firebase.database().ref("settings");
@@ -19,6 +23,16 @@ controller("userAuthController", function($location, $scope, $rootScope, $fireba
   settingsRef.on('value', function(snapshot) {
     $scope.masterPassword = snapshot.val().masterPassword;
   });
+
+  // if(window.screen.availWidth == 1366 && window.screen.availHeight == 738) {
+  //   document.getElementById('header').style.height = '20vh';
+  //   document.getElementById('content').style.height = '75vh';
+  //   document.getElementById('footer').style.height = '5vh';
+  // } else if (window.screen.availWidth == 1920 && window.screen.availHeight == 1080) {
+  //   document.getElementById('header').style.height = '15vh';
+  //   document.getElementById('content').style.height = '82vh';
+  //   document.getElementById('footer').style.height = '3vh';
+  // }
 
   $scope.auth.$onAuthStateChanged(function(firebaseUser) {
     if (firebaseUser) {
@@ -73,7 +87,7 @@ controller("userAuthController", function($location, $scope, $rootScope, $fireba
   }
 
   $scope.submitCreateAccount = function() {
-    $scope.showPromise = true;
+    $scope.showProgress = true;
     $scope.submitCreateAccountPromise = $scope.authObj.$createUserWithEmailAndPassword($scope.createEmailaddress, $scope.password1).
     then(function(firebaseUser) {
       console.log(`User ${firebaseUser.uid} created successfully`);
@@ -83,7 +97,8 @@ controller("userAuthController", function($location, $scope, $rootScope, $fireba
         console.log(`profile displayName success`);
         usersRef.child(firebaseUser.uid).set({
           displayName: $scope.createDisplayName,
-          email: $scope.createEmailaddress
+          email: $scope.createEmailaddress,
+          sendEmailStatus: false
         });
       }, function(error) {
         console.log(error.code);
@@ -91,25 +106,29 @@ controller("userAuthController", function($location, $scope, $rootScope, $fireba
     }).catch(function(error) {
       console.error("Error: ", error);
       $scope.toast(`${error.message}`);
-      $scope.showPromise = false;
+      $scope.showProgress = false;
     });
   }
 
   $scope.submitRetrieveAccount = function() {
-    $scope.showPromise = true;
+    $scope.showProgress = true;
     $scope.authObj.$sendPasswordResetEmail($scope.retrieve.emailAddress).then(function() {
       $scope.toast(`Password reset email sent.`);
-      $scope.showPromise = false;
+      $scope.showProgress = false;
       $scope.retrieve.emailAddress = '';
       $scope.showRetrieveAccount = false;
-      $scope.showHome = true;
+      $scope.showLogin = true;
+      $scope.optSignIn=false;
+      $scope.optCreateAccount=true;
+      $scope.optRetrieveAccount=true;
     }).catch(function(error) {
       $scope.toast(`Error: ${error.message}`);
-      $scope.showPromise = false;
+      $scope.showProgress = false;
     });
   }
 
   $scope.signIn = function() {
+    $scope.showProgress = true;
     console.log(`triggered`);
     $scope.authObj.$signInWithEmailAndPassword($scope.user.emailAddress, $scope.user.password).
     then(function(firebaseUser) {
@@ -117,6 +136,7 @@ controller("userAuthController", function($location, $scope, $rootScope, $fireba
     }).
     catch(function(error) {
       $scope.toast(error);
+      $scope.showProgress = false;
     });
   }
 });

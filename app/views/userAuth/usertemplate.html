@@ -1,0 +1,133 @@
+<md-content ng-controller="userAuthController" flex ng-cloak>
+  <div layout="column" flex>
+    <header style="height: 15vh">
+      <md-progress-linear ng-show="showProgress" md-mode="indeterminate"></md-progress-linear>
+      <div layout="row" layout-padding>
+        <img alt="setuplogo" height="80vh" width="200vh" src="https://firebasestorage.googleapis.com/v0/b/setupproject-d239f.appspot.com/o/setup.png?alt=media&token=46855b82-d9c7-4dfb-9660-5b2617778e01"/>
+        <span flex></span>
+        <div layout="column">
+          <span flex></span>
+          <form ng-submit="signIn()" flex>
+            <div layout="row" layout-align="center center">
+                <md-input-container class="md-block" style="margin-top: 10px;">
+                  <label>Email</label>
+                  <input ng-model="user.emailAddress">
+                </md-input-container>
+                <md-input-container class="md-block" style="margin-top: 10px;">
+                  <label>Password</label>
+                  <input ng-model="user.password" type="password" maxlength="20">
+                </md-input-container>
+                <md-button class="md-raised md-primary" ng-disabled="showProgress" type="submit" style="margin-top: -35px;">Sign In</md-button>
+                <input type="submit" ng-hide="true">
+              </div>
+          </form>
+        </div>
+      </div>
+    </header>
+    <div style="height: 80vh;">
+      <div id="home" ng-show="showHome">
+        <div layout-padding>
+          <!--<span>Homesss</span>-->
+          <ul class="cb-slideshow">
+            <li><span>Image 01</span><div><h1>DOST-PSTC BUKIDNON</h1></div></li>
+            <li><span>Image 02</span></li>
+            <li><span>Image 03</span></li>
+            <li><span>Image 04</span></li>
+            <li><span>Image 05</span></li>
+            <li><span>Image 06</span></li>
+            <li><span>Image 07</span></li>
+            <li><span>Image 08</span></li>
+            <li><span>Image 09</span></li>
+            <li><span>Image 10</span></li>
+          </ul>
+        </div>
+      </div>
+      <div id="createAccount" ng-show="showCreateAccount">
+        <div layout-padding>
+          <md-button class="md-icon-button" ng-click="showHome=true; showCreateAccount=false; showRetrieveAccount=false">
+            <md-icon class="material-icons">arrow_back</md-icon>
+          </md-button>
+          <span>Create Account</span>
+        </div>
+        <div layout-padding>
+          <md-card layout="column" flex="40" layout-padding style="padding-top: 20px;">
+            <form ng-submit="submitCreateAccount()" name="createAccount">
+              <div ng-hide="passwordStatus" layout="row" layout-align="center center" layout-wrap flex>
+                <div flex>
+                  <md-input-container class="md-block">
+                    <label>Master Password</label>
+                    <input ng-model="inputMasterPassword" type="password" maxlength="20"/>
+                    <div class="hint">Some text here...</div>
+                  </md-input-container>
+                </div>
+                <md-button class="md-raised md-primary md-cornered" ng-click="compareMasterPassword()" style="margin-top: -40px;">Submit</md-button>
+              </div>
+              <div ng-hide="true" ng-show="passwordStatus">
+                <md-input-container class="md-block">
+                  <label>Username</label>
+                  <input ng-model="createDisplayName" required>
+                </md-input-container>
+                <md-input-container class="md-block">
+                  <label>Email Address</label>
+                  <input ng-model="createEmailaddress" type="email" required>
+                </md-input-container>
+                <div layout="row" flex>
+                  <md-input-container class="md-block" flex >
+                    <label>Password</label>
+                    <input type="password" id="password1" name="password1" ng-model="password1" required />
+                    <div class="hint" ng-show="createAccount.password2.$error.pwmatch && createAccount.$error">Passwords don't match.</div>
+                  </md-input-container>
+                  <md-input-container class="md-block" flex >
+                    <label>Confirm Password</label>
+                    <input type="password" id="password2" name="password2" ng-model="password2" required pw-check="password1" />
+                  </md-input-container>
+                </div>
+                <div layout="row">
+                  <span flex></span>
+                  <md-button ng-disabled="showProgress" class="md-raised md-primary md-cornered" ng-disabled="!createAccount.$valid" type="submit">Sign Up</md-button>
+                  <input type="submit" ng-hide="true">
+                </div>
+              </div>
+            </form>
+          </md-card>
+        </div>
+      </div>
+      <div id="retriveAccount" ng-show="showRetrieveAccount">
+        <div layout-padding>
+          <md-button class="md-icon-button" ng-click="showHome=true; showCreateAccount=false; showRetrieveAccount=false">
+            <md-icon class="material-icons">arrow_back</md-icon>
+          </md-button>
+          <span>Retrieve Account</span>
+        </div>
+        <div layout="row" layout-align="center center" layout-padding>
+          <md-card layout="column" flex="30" layout-padding style="padding-top: 40px;">
+            <form ng-submit="submitRetrieveAccount()">
+              <md-input-container class="md-block">
+                <label>Email Address</label>
+                <input ng-model="retrieve.emailAddress">
+                <div class="hint">Some text here...</div>
+              </md-input-container>
+              <section layout="row">
+                <input type="submit" ng-hide="true">
+                <span flex></span>
+                <md-button ng-disabled="showProgress" class="md-raised md-primary md-cornered" type="submit">Submit</md-button>
+              </section>
+            </form>
+          </md-card>
+        </div>
+      </div>
+    </div>
+    <footer layout="row" layout-align="start end" style="height: 5vh; padding: 3px; background-color:red;">
+      <table>
+        <tr>
+          <td class="lgLeftPadding">
+            <a href="" ng-click="showHome=false; showCreateAccount=true; showRetrieveAccount=false">Create account</a>
+          </td>
+          <td class="lgLeftPadding">
+            <a href="" ng-click="showHome=false; showCreateAccount=false; showRetrieveAccount=true">Forgotten account?</a>
+          </td>
+        </tr>
+      </table>
+    </footer>
+  </div>
+</md-content>

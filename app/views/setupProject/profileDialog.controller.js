@@ -14,12 +14,12 @@ controller("profileController", function($scope, $firebaseAuth, $firebaseArray, 
 
   $scope.userUid = firebaseUser.uid;
 
-  usersRef.child($scope.userUid).on('value', function(snapshot) {
+  usersRef.child(firebaseUser.uid).on('value', function(snapshot) {
     $scope.userDisplayName = snapshot.val().displayName;
     $scope.userEmail = snapshot.val().email;
   });
 
-  console.log($scope.userEmail);
+  console.log(`${firebaseUser.email} -- ${firebaseUser.uid}`);
 
   $scope.toast = function(param) {
     $scope.toastPosition = angular.extend({}, last);

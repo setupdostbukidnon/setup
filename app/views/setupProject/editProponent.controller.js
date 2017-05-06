@@ -69,9 +69,12 @@ controller("editProponentController", function($scope, $rootScope, $firebaseArra
 
   $scope.remindRefundIcon = function() {
     // var startDate = (setupProject.refundScheduleStart == "" ? null : new Date(setupProject.refundScheduleStart).getTime());
+    // var endDate = (setupProject.refundScheduleEnd == "" ? null : new Date(setupProject.refundScheduleEnd).getTime());
     var startDate = (setupProject.refundScheduleStart == "" ? null : new Date(moment(setupProject.refundScheduleStart, "MM DD YYYY").subtract(14, 'day').format("MMM DD YYYY")).getTime());
-    var endDate = (setupProject.refundScheduleEnd == "" ? null : new Date(setupProject.refundScheduleEnd).getTime());
-    if (startDate <= currentDate && currentDate <= endDate && dueDateStart <= currentDay && currentDay <= dueDateEnd) {
+    var endDate = (setupProject.refundScheduleEnd == "" ? null : new Date(moment(setupProject.refundScheduleEnd, "MM DD YYYY").add(14, 'day').format("MMM DD YYYY")).getTime());
+    // if (startDate <= currentDate && currentDate <= endDate && dueDateStart <= currentDay && currentDay <= dueDateEnd) {
+    if (startDate <= currentDate && currentDate <= endDate && dueDateStart <= currentDay) {
+      // console.log(`${startDate} ${endDate} ${dueDateStart} <= ${currentDay} false`);
       return false;
     }
   };

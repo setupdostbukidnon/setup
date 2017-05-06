@@ -1,7 +1,6 @@
 <md-dialog aria-label="Profile Dialog" flex="50">
   <md-toolbar>
     <div class="md-toolbar-tools">
-      <!-- <md-button ng-click="submitSetting()">Submit</md-button> -->
       <span flex></span>
       <p class="dialogTitle">Profile</p>
       <md-button aria-label="Open for menu" class="md-icon-button" ng-click="closeDialog()">
@@ -12,13 +11,14 @@
   <md-dialog-content class="md-inline-form">
     <md-content layout-padding flex>
       <ul>
-        <li ng-hide="showEditUsername" class="pdt-ul-li" style="border-top: 1px solid #616161; border-bottom: 1px dashed #BDBDBD;">
+        <li ng-hide="showEditUsername" class="pdt-ul-li">
           <div layout="row">
             <span style="width: 30%">Username</span>
             <span class="pdt-spn-value">{{userDisplayName}}</span>
             <span class="pdt-spn-edit"><a ng-click="showEditUsername=true; showEditEmailAddress=false; showEditPassword=false;">Edit</a></span>
           </div>
         </li>
+        <hr ng-hide="showEditUsername" style="border-style: dashed; border-width: 1  px; margin-top: 0px; margin-bottom: 0px; color: #9E9E9E;" />
         <div ng-show="showEditUsername" class="pdt-ul-div" id="editUsername">
           <li style="margin-bottom: 10px;">
             <div layout="row">
@@ -27,8 +27,8 @@
               <span class="pdt-spn-edit"><a ng-click="showEditUsername=false;">Cancel</a></span>
             </div>
           </li>
-          <div style="padding: 8px;">
-            <div layout="column" flex layout-align="center" style="padding-top: 5vh;">
+          <div layout="row" layout-align="center center" style="padding: 8px;">
+            <md-card layout="column" flex="80" layout-align="center" style="padding-top: 5vh; padding-bottom: 2vh;">
               <section layout="row" flex>
                 <span flex="20"></span>
                 <md-input-container flex>
@@ -42,21 +42,21 @@
                 <md-progress-circular ng-show="hideSaveShowProgress" md-mode="indeterminate" style="margin-top: -32px;" md-diameter="30px"></md-progress-circular>
                 <span flex></span>
               </section>
-              <section layout="row" flex>
-                <span flex="20"></span>
+              <section layout="row" layout-align="center center" style="padding-top: 2vh;">
                 <md-button ng-hide="hideSaveShowProgress" ng-click="submitChangeDisplayName(userDisplayName)" class="md-raised md-primary md-raised md-cornered" style="margin-top: -35px;">Save Changes</md-button>
-                <span flex="20"></span>
               </section>
-            </div>
+            </md-card>
           </div>
         </div>
-        <li ng-hide="showEditEmailAddress" class="pdt-ul-li" style="border-bottom: 1px dashed #BDBDBD;">
+        <hr ng-show="showEditUsername" style="border-style: dashed; border-width: 1  px; margin-top: 0px; margin-bottom: 0px; color: #9E9E9E;" />
+        <li ng-hide="showEditEmailAddress" class="pdt-ul-li">
           <div layout="row">
             <span style="width: 30%">Email Address</span>
             <span class="pdt-spn-value">{{userEmail}}</span>
             <span class="pdt-spn-edit"><a ng-click="showEditUsername=false; showEditEmailAddress=true; showEditPassword=false;">Edit</a></span>
           </div>
         </li>
+        <hr ng-hide="showEditEmailAddress" style="border-style: dashed; border-width: 1  px; margin-top: 0px; margin-bottom: 0px; color: #9E9E9E;" />
         <div ng-show="showEditEmailAddress" class="pdt-ul-div" id="editEmail">
           <li style="margin-bottom: 10px;">
             <div layout="row">
@@ -65,8 +65,8 @@
               <span class="pdt-spn-edit"><a ng-click="showEditEmailAddress=false;">Cancel</a></span>
             </div>
           </li>
-          <div style="padding: 8px;">
-            <div layout="column" layout-align="center stretch" style="padding-top: 5vh;">
+          <div layout="row" layout-align="center center" style="padding: 8px;">
+            <md-card layout="column" flex="80" layout-align="center" style="padding-top: 5vh; padding-bottom: 2vh;">
               <div layout="column">
                 <section layout="row" flex>
                   <span flex="20"></span>
@@ -98,15 +98,14 @@
                 <md-progress-circular ng-show="hideSaveShowProgress" md-mode="indeterminate" style="" md-diameter="30px"></md-progress-circular>
                 <span flex></span>
               </section>
-              <section layout="row" flex>
-                <span flex="20"></span>
+              <section layout="row" layout-align="center center" style="padding-top: 2vh;">
                 <md-button ng-hide="hideSaveShowProgress" ng-click="submitChangeEmailAddress()" class="md-raised md-primary md-raised md-cornered" style="margin-top: -35px;">Save Changes</md-button>
-                <span flex="20"></span>
               </section>
-            </div>
+            </md-card>
           </div>
         </div>
-        <li ng-hide="showEditPassword" class="pdt-ul-li" style="border-bottom: 1px solid #616161;">
+        <hr ng-show="showEditEmailAddress" style="border-style: dashed; border-width: 1  px; margin-top: 0px; margin-bottom: 0px; color: #9E9E9E;" />
+        <li ng-hide="showEditPassword" class="pdt-ul-li">
           <div layout="row">
             <span style="width: 30%">Password</span>
             <span class="pdt-spn-value">Reset your password here.</span>
@@ -121,35 +120,35 @@
               <span class="pdt-spn-edit"><a ng-click="showEditPassword=false">Cancel</a></span>
             </div>
           </li>
-          <div style="padding: 8px;">
-            <div layout="column" layout-align="center" layout-fill flex style="padding-top: 5vh;">
-              <section layout="row" flex>
-                <span flex="20"></span>
-                <md-input-container flex class="md-block">
-                  <label>Current Password</label>
-                  <input ng-model="currentPassword" type="password"/>
-                </md-input-container>
-                <span flex="20"></span>
-              </section>
-              <section layout="row" flex>
-                <span flex="20"></span>
-                <md-input-container class="md-block" flex>
-                  <label>New Password</label>
-                  <input ng-model="newPassword" type="password"/>
-                </md-input-container>
-                <span flex="20"></span>
-              </section>
+          <div layout="row" layout-align="center center" style="padding: 8px;">
+            <md-card layout="column" flex="80" layout-align="center" style="padding-top: 5vh; padding-bottom: 2vh;">
+              <div layout="column">
+                <section layout="row" flex>
+                  <span flex="20"></span>
+                  <md-input-container flex class="md-block">
+                    <label>Current Password</label>
+                    <input ng-model="currentPassword" type="password"/>
+                  </md-input-container>
+                  <span flex="20"></span>
+                </section>
+                <section layout="row" flex>
+                  <span flex="20"></span>
+                  <md-input-container class="md-block" flex>
+                    <label>New Password</label>
+                    <input ng-model="newPassword" type="password"/>
+                  </md-input-container>
+                  <span flex="20"></span>
+                </section>
+              </div>
               <section layout="row">
                 <span flex></span>
                 <md-progress-circular ng-show="hideSaveShowProgress" md-mode="indeterminate" style="" md-diameter="30px"></md-progress-circular>
                 <span flex></span>
               </section>
-              <section layout="row" flex>
-                <span flex="20"></span>
+              <section layout="row" layout-align="center center" style="padding-top: 2vh;">
                 <md-button ng-hide="hideSaveShowProgress" ng-click="submitChangePassword()" class="md-raised md-primary md-raised md-cornered" style="margin-top: -35px;">Save Changes</md-button>
-                <span flex="20"></span>
               </section>
-            </div>
+            </md-card>
           </div>
         </div>
       </ul>

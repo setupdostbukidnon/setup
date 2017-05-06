@@ -1,13 +1,10 @@
 firebase.database().ref("settings").on('value', function(snapshot) {
-  var isFirstDay = snapshot.val().isFirstDay;
   window.isReset = snapshot.val().isReset;
   window.dueDateStart = snapshot.val().dueDateStart;
   window.dueDateEnd = snapshot.val().dueDateEnd;
   window.masterPassword = snapshot.val().masterPassword;
   // console.log(` isFirstDay -- ${isFirstDay} \n isReset -- ${isReset} \n dueDateStart -- ${dueDateStart} \n dueDateEnd -- ${dueDateEnd} \n masterPassword -- ${masterPassword}`);
 });
-window.dueDateStart = 1;
-window.dueDateEnd = 31;
 window.selected = [];
 window.currentDay = new Date().getDate();
 window.currentDate = new Date().getTime();
@@ -18,7 +15,7 @@ window.last = {
   right: true
 };
 window.limitOptions = [5, 10, 15, 20, 25];
-window.years = ["All",
+window.projectYears = ["All",
 "2010", "2011", "2012", "2013",
 "2014", "2015", "2016", "2017",
 "2018", "2019", "2020", "2021",

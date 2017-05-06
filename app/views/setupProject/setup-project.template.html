@@ -4,7 +4,7 @@
     <md-toolbar class="md-table-toolbar md-default" ng-hide="options.rowSelection && selected.length">
       <div class="md-toolbar-tools">
         <div layout="row"  style="margin-top: 26px;" flex="60">
-          <md-button class="md-icon-button md-primary" ng-click="toggleSideNav()" aria-label="menu">
+          <md-button class="md-icon-button md-primary" ng-disabled="!hidenow" ng-click="toggleSideNav()" aria-label="menu">
             <md-icon class="material-icons">menu</md-icon>
           </md-button>
           <span flex></span>
@@ -43,7 +43,7 @@
       </div>
     </md-toolbar>
     <md-sidenav class="md-sidenav-left md-whiteframe-4dp" md-component-id="left" style="width: 25vw;">
-      <md-toolbar class="md-tall">
+      <md-toolbar>
         <div class="md-toolbar-tools">
           <md-button class="md-icon-button" ng-click="closeSideNav()">
             <md-icon class="material-icons">arrow_back</md-icon>
@@ -61,17 +61,20 @@
             <md-icon class="material-icons md-dark md-24">add_circle</md-icon>
             <p class="md-body-2">Add Proponent</p>
           </md-list-item>
-          <md-list-item ng-click="showHistory($event)">
+          <!-- <md-list-item ng-click="showHistory($event)">
             <md-icon class="material-icons md-dark md-24">history</md-icon>
-            <p class="md-body-2">History</p>
-          </md-list-item>
+            <p class="md-body-2">Hiasdasdstory</p>
+          </md-list-item> -->
           <md-list-item>
-            <md-checkbox ng-model="showProponentWithDue" checked="true" ng-change="clearFilter()" ng-true-value="'true'" ng-false-value="'false'"></md-checkbox>
+            <md-checkbox ng-model="showProponentWithDue" checked="true" ng-change="clearFilter()" ng-true-value="true" ng-false-value="false"></md-checkbox>
             <p class="md-body-2">Show Proponents With Due</p>
           </md-list-item>
-          <md-list-item ng-click="sendEmail()" ng-show="showProponentWithDue == 'true'">
+          <md-list-item ng-click="sendEmail()" ng-show="showProponentWithDue == true && filteredItems.length > 0">
             <md-icon class="material-icons md-dark md-24">email</md-icon>
             <p class="md-body-2">Send Email</p>
+            <div layout="row" layout-sm="column" layout-align="space-around">
+              <md-progress-circular ng-show="emailStatus" ng-hide="true" md-mode="indeterminate" md-diameter="20px"></md-progress-circular>
+            </div>
           </md-list-item>
           <md-list-item ng-click="showSettings($event)" >
             <md-icon class="material-icons md-drak md-24">settings</md-icon>
@@ -106,7 +109,7 @@
         </thead>
         <tbody md-body>
           <!-- ng-dblclick="edit($event)"  -->
-          <tr md-row md-select="setupProject" md-select-id="proponent" md-auto-select="options.autoSelect" ng-right-click="remindRefundIcon(setupProject)" ng-click="selectRow(setupProject)" ng-repeat="setupProject in filteredItems = (setupProjects | filter: {proponent: filterProponent} | filter: {projectYear: (filterOption == 'All' ? '' : filterOption)} | filter: (showProponentWithDue == 'true' ? filterRemindRefund : '') ) | orderBy: query.order | limitTo: query.limit: (query.page -1) * query.limit">
+          <tr md-row md-select="setupProject" md-select-id="proponent" md-auto-select="options.autoSelect" ng-right-click="remindRefundIcon(setupProject)" ng-click="selectRow(setupProject)" ng-repeat="setupProject in filteredItems = (setupProjects | filter: {proponent: filterProponent} | filter: {projectYear: (filterOption == 'All' ? '' : filterOption)} | filter: (showProponentWithDue == true ? filterWithRefund : '') ) | orderBy: query.order | limitTo: query.limit: (query.page -1) * query.limit">
             <td md-cell>
               <md-icon class="material-icons" ng-show="remindRefundIcon(setupProject) == false" style="color: red;">priority_high</md-icon>
               <md-icon class="material-icons" ng-hide="remindRefundIcon(setupProject) == false" style="color: white;">priority_high</md-icon>

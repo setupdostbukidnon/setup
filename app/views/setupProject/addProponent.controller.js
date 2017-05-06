@@ -69,7 +69,7 @@ controller("addProponentDialogController", function($scope, $firebaseArray, $fir
       status: ($scope.status == null ? "" : $scope.status),
       email: ($scope.email == null ? "" : $scope.email),
       contactNumber: ($scope.contactNumber == null ? "" : $scope.contactNumber),
-      remindRefund: "false"
+      remindRefund: false
     });
 
     $scope.history.$add({
